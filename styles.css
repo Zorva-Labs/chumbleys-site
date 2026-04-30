@@ -97,11 +97,15 @@ body::before {
   width: 48px; height: 48px; border-radius: 50%;
   background: var(--hero-yellow);
   border: 3px solid var(--ink);
-  font-family: 'Bangers', cursive;
-  font-size: 28px;
+  overflow: hidden;
   box-shadow: 3px 3px 0 var(--ink);
 }
-.logo-mark.sm { width: 38px; height: 38px; font-size: 22px; }
+.logo-mark img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.logo-mark.sm { width: 38px; height: 38px; }
 .logo-text { display: flex; flex-direction: column; line-height: 1; }
 .logo-text em {
   font-family: 'Permanent Marker', cursive; font-style: normal;
@@ -288,22 +292,23 @@ body::before {
   position: relative; z-index: 1;
   -webkit-text-stroke: 1px var(--ink);
 }
+/* SHINE burst on red halftone bg — use white rays + red center for contrast */
 .burst.burst-red::before {
   background:
     conic-gradient(from 0deg,
-      var(--hero-red) 0 18deg, transparent 18deg 36deg,
-      var(--hero-red) 36deg 54deg, transparent 54deg 72deg,
-      var(--hero-red) 72deg 90deg, transparent 90deg 108deg,
-      var(--hero-red) 108deg 126deg, transparent 126deg 144deg,
-      var(--hero-red) 144deg 162deg, transparent 162deg 180deg,
-      var(--hero-red) 180deg 198deg, transparent 198deg 216deg,
-      var(--hero-red) 216deg 234deg, transparent 234deg 252deg,
-      var(--hero-red) 252deg 270deg, transparent 270deg 288deg,
-      var(--hero-red) 288deg 306deg, transparent 306deg 324deg,
-      var(--hero-red) 324deg 342deg, transparent 342deg 360deg);
+      #fff 0 18deg, transparent 18deg 36deg,
+      #fff 36deg 54deg, transparent 54deg 72deg,
+      #fff 72deg 90deg, transparent 90deg 108deg,
+      #fff 108deg 126deg, transparent 126deg 144deg,
+      #fff 144deg 162deg, transparent 162deg 180deg,
+      #fff 180deg 198deg, transparent 198deg 216deg,
+      #fff 216deg 234deg, transparent 234deg 252deg,
+      #fff 252deg 270deg, transparent 270deg 288deg,
+      #fff 288deg 306deg, transparent 306deg 324deg,
+      #fff 324deg 342deg, transparent 342deg 360deg);
 }
-.burst.burst-red::after { background: var(--hero-yellow); }
-.burst.burst-red span   { color: #fff; -webkit-text-stroke: 1.5px var(--ink); }
+.burst.burst-red::after { background: var(--hero-red); }
+.burst.burst-red span   { color: var(--hero-yellow); -webkit-text-stroke: 1.5px var(--ink); }
 
 .burst.burst-bl { bottom: 18px; left: 12px; transform: rotate(-12deg); }
 .burst.burst-tr { top: 18px; right: 12px; transform: rotate(8deg); }

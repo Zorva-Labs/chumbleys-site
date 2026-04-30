@@ -12,7 +12,7 @@
 
   <link rel="stylesheet" href="styles.css?v=2" />
 
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23ffd400'/%3E%3Ctext x='32' y='44' font-family='Bangers,sans-serif' font-size='38' text-anchor='middle' fill='%23111'%3EC%3C/text%3E%3C/svg%3E" />
+  <link rel="icon" type="image/png" href="assets/logo-emblem.png" />
 </head>
 <body>
 
@@ -33,7 +33,7 @@
 <!-- =================== NAV =================== -->
 <header class="nav">
   <a class="logo" href="#top">
-    <span class="logo-mark">C!</span>
+    <span class="logo-mark"><img src="assets/logo-emblem.png" alt="Chumbley's logo"/></span>
     <span class="logo-text">
       <em>Chumbley's</em>
       <strong>AUTO DETAILING</strong>
@@ -122,29 +122,28 @@
     <article class="panel service">
       <div class="halftone-bg yellow"></div>
       <div class="service-icon">
-        <svg viewBox="0 0 64 64" aria-label="Pressure washer wand" xmlns="http://www.w3.org/2000/svg">
-          <g fill="none" stroke="#111" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-            <!-- handle / grip -->
-            <path d="M14 46 L14 38 Q14 34 18 34 L26 34" fill="#e3140f"/>
-            <!-- trigger -->
-            <path d="M16 38 Q12 38 12 42 L12 44" stroke-width="3"/>
-            <!-- main barrel -->
-            <rect x="22" y="30" width="14" height="8" rx="2" fill="#2563ff"/>
-            <!-- wand extension -->
-            <rect x="34" y="32.5" width="20" height="3" fill="#111"/>
-            <!-- nozzle tip -->
-            <path d="M54 30 L60 33 L54 36 Z" fill="#ffd400"/>
-            <!-- water spray -->
-            <g stroke="#2563ff" stroke-width="2.5" fill="none">
-              <line x1="60" y1="33" x2="62" y2="22"/>
-              <line x1="60" y1="33" x2="62" y2="44"/>
-              <line x1="60" y1="33" x2="60" y2="14"/>
-              <line x1="60" y1="33" x2="60" y2="52"/>
-            </g>
-            <!-- droplets -->
-            <circle cx="58" cy="18" r="1.5" fill="#2563ff" stroke="none"/>
-            <circle cx="58" cy="48" r="1.5" fill="#2563ff" stroke="none"/>
+        <svg viewBox="0 0 64 64" aria-label="Sudsy sponge" xmlns="http://www.w3.org/2000/svg">
+          <!-- big yellow sponge -->
+          <rect x="10" y="32" width="44" height="20" rx="4"
+                fill="#ffd400" stroke="#111" stroke-width="3"/>
+          <!-- sponge texture holes -->
+          <g fill="#e3140f">
+            <circle cx="20" cy="42" r="2"/>
+            <circle cx="32" cy="40" r="2"/>
+            <circle cx="44" cy="44" r="2"/>
+            <circle cx="26" cy="48" r="1.5"/>
+            <circle cx="40" cy="38" r="1.5"/>
           </g>
+          <!-- soap bubbles above -->
+          <g fill="#fff" stroke="#111" stroke-width="2.5">
+            <circle cx="18" cy="22" r="6"/>
+            <circle cx="32" cy="14" r="8"/>
+            <circle cx="46" cy="22" r="6"/>
+            <circle cx="26" cy="28" r="3.5"/>
+            <circle cx="40" cy="28" r="3.5"/>
+          </g>
+          <!-- shine on biggest bubble -->
+          <ellipse cx="29" cy="11" rx="2" ry="1.2" fill="#9be0ff"/>
         </svg>
       </div>
       <h3>EXTERIOR <br/>WASH &amp; WAX</h3>
@@ -155,29 +154,42 @@
     <article class="panel service">
       <div class="halftone-bg blue"></div>
       <div class="service-icon">
-        <svg viewBox="0 0 64 64" aria-label="Vacuum cleaner" xmlns="http://www.w3.org/2000/svg">
-          <g fill="none" stroke="#111" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
-            <!-- handle pole -->
-            <line x1="34" y1="6" x2="34" y2="38"/>
-            <!-- handle grip -->
-            <path d="M30 6 L42 6" stroke-width="4"/>
-            <!-- body / canister -->
-            <rect x="22" y="28" width="22" height="22" rx="3" fill="#e3140f"/>
-            <!-- canister window / detail line -->
-            <line x1="22" y1="40" x2="44" y2="40"/>
-            <!-- on/off light -->
-            <circle cx="38" cy="34" r="1.8" fill="#ffd400" stroke="none"/>
-            <!-- base / floor head -->
-            <rect x="14" y="50" width="38" height="8" rx="2" fill="#2563ff"/>
-            <!-- nozzle hose connecting body to base -->
-            <path d="M30 50 Q26 46 22 50" />
-            <!-- suction lines -->
-            <g stroke="#111" stroke-width="2" fill="none">
-              <line x1="18" y1="60" x2="22" y2="60"/>
-              <line x1="28" y1="60" x2="32" y2="60"/>
-              <line x1="38" y1="60" x2="42" y2="60"/>
-              <line x1="48" y1="60" x2="52" y2="60"/>
-            </g>
+        <svg viewBox="0 0 64 64" aria-label="Detailing vacuum" xmlns="http://www.w3.org/2000/svg">
+          <!-- canister body (round shop-vac shape) -->
+          <ellipse cx="20" cy="44" rx="14" ry="14"
+                   fill="#e3140f" stroke="#111" stroke-width="3"/>
+          <!-- top cap / motor housing -->
+          <path d="M10 30 Q10 24 20 24 Q30 24 30 30 L30 32 L10 32 Z"
+                fill="#2563ff" stroke="#111" stroke-width="3"
+                stroke-linejoin="round"/>
+          <!-- top handle -->
+          <path d="M14 24 Q14 16 20 16 Q26 16 26 24"
+                fill="none" stroke="#111" stroke-width="3"
+                stroke-linecap="round"/>
+          <!-- on/off light -->
+          <circle cx="20" cy="38" r="1.8" fill="#ffd400"/>
+          <!-- wheels -->
+          <circle cx="11" cy="58" r="3" fill="#111"/>
+          <circle cx="29" cy="58" r="3" fill="#111"/>
+          <!-- hose curving up + out -->
+          <path d="M33 40 Q44 36 48 28 Q52 20 60 18"
+                fill="none" stroke="#111" stroke-width="4"
+                stroke-linecap="round"/>
+          <!-- hose ribs -->
+          <g fill="none" stroke="#111" stroke-width="1.5">
+            <path d="M37 38 Q38 41 36 43"/>
+            <path d="M43 35 Q44 38 42 40"/>
+            <path d="M48 30 Q49 33 47 35"/>
+            <path d="M53 24 Q54 27 52 29"/>
+          </g>
+          <!-- crevice nozzle -->
+          <path d="M58 16 L62 16 L62 22 L58 22 Z"
+                fill="#ffd400" stroke="#111" stroke-width="2"/>
+          <!-- suction lines -->
+          <g stroke="#111" stroke-width="2" fill="none" stroke-linecap="round">
+            <line x1="60" y1="8"  x2="60" y2="14"/>
+            <line x1="56" y1="10" x2="58" y2="14"/>
+            <line x1="64" y1="10" x2="62" y2="14"/>
           </g>
         </svg>
       </div>
@@ -204,7 +216,29 @@
 
     <article class="panel service">
       <div class="halftone-bg blue"></div>
-      <div class="service-icon">💡</div>
+      <div class="service-icon">
+        <svg viewBox="0 0 64 64" aria-label="Headlight beam" xmlns="http://www.w3.org/2000/svg">
+          <!-- headlight housing -->
+          <ellipse cx="20" cy="32" rx="14" ry="16"
+                   fill="#111" stroke="#111" stroke-width="3"/>
+          <!-- lens -->
+          <ellipse cx="22" cy="32" rx="10" ry="13"
+                   fill="#ffd400" stroke="#111" stroke-width="2"/>
+          <!-- bright center bulb -->
+          <ellipse cx="22" cy="32" rx="4" ry="6" fill="#fff"/>
+          <ellipse cx="20" cy="29" rx="1.6" ry="2.5" fill="#fff"/>
+          <!-- beam rays -->
+          <g stroke="#ffd400" stroke-width="3" stroke-linecap="round" fill="none">
+            <line x1="38" y1="32" x2="58" y2="32"/>
+            <line x1="36" y1="20" x2="54" y2="14"/>
+            <line x1="36" y1="44" x2="54" y2="50"/>
+            <line x1="34" y1="14" x2="44" y2="6"/>
+            <line x1="34" y1="50" x2="44" y2="58"/>
+          </g>
+          <!-- sparkle on lens -->
+          <circle cx="18" cy="26" r="2" fill="#fff"/>
+        </svg>
+      </div>
       <h3>HEADLIGHT <br/>RESTORATION</h3>
       <p>Cloudy, yellow, hazy headlights restored to crystal-clear. Drive safer, look sharper. It's like new glass.</p>
       <span class="onomatopoeia">FLASH!</span>
@@ -286,43 +320,12 @@
     <div class="ba-card">
       <div class="ba-panel before">
         <span class="ba-tag">BEFORE</span>
-        <div class="ba-svg interior-bef">
-          <!-- dirty interior abstract -->
-          <svg viewBox="0 0 400 220" xmlns="http://www.w3.org/2000/svg" aria-label="Dirty interior">
-            <rect width="400" height="220" fill="#3a2e22"/>
-            <path d="M30 200 L80 80 L320 80 L370 200 Z" fill="#5a4030" stroke="#000" stroke-width="3"/>
-            <ellipse cx="120" cy="150" rx="55" ry="35" fill="#6b4f3a" stroke="#000" stroke-width="3"/>
-            <ellipse cx="280" cy="150" rx="55" ry="35" fill="#6b4f3a" stroke="#000" stroke-width="3"/>
-            <g fill="#1a0e08" opacity=".7">
-              <circle cx="100" cy="140" r="3"/>
-              <circle cx="140" cy="160" r="2.5"/>
-              <circle cx="270" cy="135" r="3.5"/>
-              <circle cx="300" cy="165" r="2"/>
-              <circle cx="200" cy="180" r="3"/>
-              <circle cx="220" cy="170" r="2"/>
-            </g>
-          </svg>
-        </div>
+        <img src="assets/truck-before.png" alt="Same pickup truck, mud-caked — before" class="ba-img" />
       </div>
       <div class="ba-arrow"><span>ZAP!</span></div>
       <div class="ba-panel after">
         <span class="ba-tag">AFTER</span>
-        <div class="ba-svg interior-aft">
-          <svg viewBox="0 0 400 220" xmlns="http://www.w3.org/2000/svg" aria-label="Clean interior">
-            <rect width="400" height="220" fill="#1976d2"/>
-            <g stroke="#fff" stroke-width="2" opacity=".25">
-              <circle cx="60" cy="50" r="3"/><circle cx="120" cy="40" r="2"/>
-              <circle cx="220" cy="55" r="2.5"/><circle cx="320" cy="45" r="3"/>
-              <circle cx="370" cy="80" r="2"/>
-            </g>
-            <path d="M30 200 L80 80 L320 80 L370 200 Z" fill="#0a0a0a" stroke="#000" stroke-width="3"/>
-            <ellipse cx="120" cy="150" rx="55" ry="35" fill="#222" stroke="#000" stroke-width="3"/>
-            <ellipse cx="280" cy="150" rx="55" ry="35" fill="#222" stroke="#000" stroke-width="3"/>
-            <ellipse cx="120" cy="140" rx="20" ry="10" fill="#fff" opacity=".6"/>
-            <ellipse cx="280" cy="140" rx="20" ry="10" fill="#fff" opacity=".6"/>
-            <text x="200" y="60" font-family="Bangers" font-size="32" fill="#ffd400" stroke="#000" stroke-width="2" text-anchor="middle">★</text>
-          </svg>
-        </div>
+        <img src="assets/truck-after.png" alt="Same pickup truck, gleaming — after" class="ba-img" />
       </div>
     </div>
 
@@ -443,7 +446,7 @@
 <footer class="foot">
   <div class="foot-grid">
     <div class="foot-brand">
-      <span class="logo-mark sm">C!</span>
+      <span class="logo-mark sm"><img src="assets/logo-emblem.png" alt="Chumbley's logo"/></span>
       <div>
         <strong>CHUMBLEY'S AUTO DETAILING</strong>
         <span>Nashville, TN</span>
