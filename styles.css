@@ -474,6 +474,10 @@ body::before {
   border-radius: 50%;
   box-shadow: 4px 4px 0 var(--ink);
 }
+.service-icon svg {
+  width: 64px; height: 64px;
+  display: block;
+}
 .service h3 {
   font-family: 'Bangers', cursive;
   font-weight: 400;
