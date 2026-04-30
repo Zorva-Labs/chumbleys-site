@@ -1,0 +1,8 @@
+.DS_Store
+node_modules/
+*.log
+.venice.log
+generate-images.sh
+inspiration.jpg
+maddox-1.png
+maddox-2.png
