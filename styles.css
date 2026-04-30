@@ -501,6 +501,10 @@ body::before {
   -webkit-text-stroke: 1px var(--ink);
   transform: rotate(-8deg);
 }
+/* On the red halftone cards, switch onomatopoeia to yellow so it pops */
+.service:has(.halftone-bg.red) .onomatopoeia {
+  color: var(--hero-yellow);
+}
 
 /* ======================================================================
    Origin
