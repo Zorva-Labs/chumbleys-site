@@ -602,6 +602,7 @@ body::before {
 }
 .ba-svg { width: 100%; height: 100%; }
 .ba-svg svg { width: 100%; height: 100%; display: block; }
+.ba-img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .ba-tag {
   position: absolute; top: 10px; left: 10px;
   background: var(--ink); color: var(--hero-yellow);
