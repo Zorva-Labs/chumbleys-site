@@ -383,7 +383,10 @@ body::before {
 .cta-row { display: flex; gap: 14px; flex-wrap: wrap; }
 
 .btn {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
   font-family: 'Bangers', cursive;
   font-size: 22px;
   letter-spacing: 1.5px;
@@ -399,6 +402,12 @@ body::before {
   word-break: break-word;
   text-align: center;
 }
+
+/* Comic-book inline icons */
+.ico { width: 1.2em; height: 1.2em; flex-shrink: 0; }
+.ico.sm { width: 1.05em; height: 1.05em; }
+.nav-cta { display: inline-flex; align-items: center; gap: 8px; }
+.meta-row { gap: 10px; }
 .btn:hover { transform: translate(-3px,-3px); box-shadow: 9px 9px 0 var(--ink); }
 .btn:active { transform: translate(2px,2px); box-shadow: 2px 2px 0 var(--ink); }
 
