@@ -1,0 +1,2 @@
+# Redirect www to apex
+https://www.chumbleysdetailing.com/* https://chumbleysdetailing.com/:splat 301!

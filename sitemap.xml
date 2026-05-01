@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <url>
+    <loc>https://chumbleysdetailing.com/</loc>
+    <lastmod>2026-05-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://chumbleysdetailing.com/assets/hero-portrait.png</image:loc>
+      <image:title>Maddox — Chumbley's Auto Detailing superhero</image:title>
+      <image:caption>Maddox Chumbley, Gallatin TN auto detailing superhero</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://chumbleysdetailing.com/assets/hero-action.png</image:loc>
+      <image:title>Maddox detailing a sports car</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://chumbleysdetailing.com/assets/og-image.png</image:loc>
+      <image:title>Chumbley's Auto Detailing share image</image:title>
+    </image:image>
+  </url>
+</urlset>

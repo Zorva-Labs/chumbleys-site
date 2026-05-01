@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /assets/maddox-*.png
+Disallow: /assets/inspiration.jpg
+
+Sitemap: https://chumbleysdetailing.com/sitemap.xml
