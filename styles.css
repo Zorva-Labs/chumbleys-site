@@ -23,6 +23,7 @@ html, body {
   font-family: 'Fredoka', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   scroll-behavior: smooth;
+  overflow-x: hidden; /* defensive: never allow a stray inner overflow to scroll the whole page */
 }
 
 img { max-width: 100%; display: block; }
@@ -186,7 +187,7 @@ body::before {
 }
 .strip-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 18px;
 }
 .strip-panel {
@@ -231,7 +232,7 @@ body::before {
 }
 @media (max-width: 480px) {
   .strip-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
@@ -244,7 +245,7 @@ body::before {
 }
 .hero-grid {
   display: grid;
-  grid-template-columns: 1.05fr .95fr;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr);
   gap: 24px;
   max-width: 1280px; margin: 0 auto;
 }
@@ -598,7 +599,7 @@ body::before {
 
 .origin-grid {
   display: grid;
-  grid-template-columns: 1fr 1.2fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
   gap: 28px;
   max-width: 1280px; margin: 0 auto;
 }
@@ -945,8 +946,8 @@ body::before {
    Responsive layouts
 ====================================================================== */
 @media (max-width: 980px) {
-  .hero-grid    { grid-template-columns: 1fr; }
-  .origin-grid  { grid-template-columns: 1fr; }
+  .hero-grid    { grid-template-columns: minmax(0, 1fr); }
+  .origin-grid  { grid-template-columns: minmax(0, 1fr); }
   .panel-hero   { min-height: 460px; }
   .burst.big    { width: 150px; height: 150px; font-size: 26px; top: -20px; right: -20px; }
 }
