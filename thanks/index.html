@@ -26,20 +26,25 @@
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-    gtag('config', 'G-ZM8FXXENGY');
 
-    // Fire the lead-conversion event on page load
-    gtag('event', 'generate_lead', {
-      'send_to': 'G-ZM8FXXENGY',
-      'currency': 'USD',
-      'value': 1,
-      'page_location': 'https://chumbleysdetailing.com/thanks/',
-      'page_title': 'Quote form submitted'
+    // Configure: use sendBeacon transport so events deliver even if the
+    // user clicks "Back to HQ" before gtag's normal flush.
+    gtag('config', 'G-ZM8FXXENGY', {
+      transport_type: 'beacon'
     });
+
+    // Lead-conversion event — currency + value are required for GA4 to
+    // populate revenue metrics. No page_location override (let gtag use
+    // the real URL — overriding to a different host can trigger GA4
+    // filtering).
+    gtag('event', 'generate_lead', {
+      currency: 'USD',
+      value: 1
+    });
+
+    // Secondary form_submit event (in case Enhanced Measurement is off)
     gtag('event', 'form_submit', {
-      'send_to': 'G-ZM8FXXENGY',
-      'form_id': 'quote',
-      'form_destination': 'chumbleysdetailing@gmail.com'
+      form_id: 'quote'
     });
   </script>
 </head>
