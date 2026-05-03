@@ -509,8 +509,9 @@ body::before {
 .btn:hover { transform: translate(-3px,-3px); box-shadow: 9px 9px 0 var(--ink); }
 .btn:active { transform: translate(2px,2px); box-shadow: 2px 2px 0 var(--ink); }
 
-.btn.btn-red    { background: var(--hero-red); color: #fff; }
+.btn.btn-red    { background: var(--hero-red);    color: #fff; }
 .btn.btn-yellow { background: var(--hero-yellow); }
+.btn.btn-blue   { background: var(--hero-blue);   color: #fff; }
 .btn.lg { font-size: 26px; padding: 18px 28px; }
 .btn.sm { font-size: 18px; padding: 10px 16px; box-shadow: 4px 4px 0 var(--ink); }
 
