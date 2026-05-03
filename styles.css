@@ -1009,6 +1009,102 @@ body::before {
 }
 
 /* ======================================================================
+   Contact Form (Get a Quote)
+====================================================================== */
+.section-form { }
+.form-panel {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 32px 32px 28px;
+}
+.form-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 18px;
+}
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.form-field-wide { grid-column: 1 / -1; }
+.form-field span em {
+  color: var(--hero-red);
+  font-style: normal;
+  margin-left: 2px;
+}
+.form-field input,
+.form-field select,
+.form-field textarea {
+  font-family: 'Fredoka', system-ui, sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 12px 14px;
+  border: 3px solid var(--ink);
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 4px 4px 0 var(--ink);
+  color: var(--ink);
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  transition: transform .1s, box-shadow .1s;
+}
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus {
+  outline: none;
+  transform: translate(-1px, -1px);
+  box-shadow: 6px 6px 0 var(--ink);
+}
+.form-field textarea {
+  resize: vertical;
+  min-height: 110px;
+  font-family: 'Fredoka', system-ui, sans-serif;
+}
+.form-field select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--ink) 50%),
+    linear-gradient(135deg, var(--ink) 50%, transparent 50%);
+  background-position: calc(100% - 18px) 19px, calc(100% - 13px) 19px;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+  padding-right: 36px;
+}
+.form-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+.form-actions button {
+  cursor: pointer;
+  font-family: 'Bangers', cursive;
+}
+.form-note {
+  font-size: 13px;
+  font-weight: 500;
+  margin: 0;
+  color: var(--ink);
+  flex: 1 1 220px;
+}
+
+@media (max-width: 600px) {
+  .form-panel { padding: 24px 18px 22px; }
+  .form-grid { grid-template-columns: minmax(0, 1fr); }
+  .form-actions { flex-direction: column; align-items: stretch; }
+  .form-actions button { width: 100%; }
+  .form-note { text-align: center; }
+}
+
+/* ======================================================================
    CTA
 ====================================================================== */
 .section-cta { }

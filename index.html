@@ -273,6 +273,7 @@
     <a href="#gallery">Before / After</a>
     <a href="#pricing">Pricing</a>
     <a href="#faq">FAQ</a>
+    <a href="#quote">Quote</a>
     <a href="#contact">Contact</a>
   </nav>
   <div class="social-row">
@@ -786,6 +787,79 @@
       <p>Always. Call or text <a href="tel:+16156703379">(615) 670-3379</a>, send a photo of your vehicle and a quick description of what you want done, and we'll give you an honest quote — <strong>no pressure, no upsells</strong>.</p>
     </details>
   </div>
+</section>
+
+<!-- =================== CONTACT FORM =================== -->
+<section id="quote" class="section section-form">
+  <div class="section-head">
+    <div class="bubble bubble-banner"><strong>SEND THE SIGNAL</strong></div>
+    <h2 class="kapow">GET A QUOTE <span>!</span></h2>
+  </div>
+
+  <form class="panel form-panel"
+        action="https://formsubmit.co/chumbleysdetailing@gmail.com"
+        method="POST">
+    <div class="halftone-bg"></div>
+
+    <!-- FormSubmit config -->
+    <input type="hidden" name="_subject" value="New quote request — Chumbley's Auto Detailing" />
+    <input type="hidden" name="_template" value="table" />
+    <input type="hidden" name="_captcha" value="true" />
+    <input type="hidden" name="_next" value="https://chumbleysdetailing.com/?sent=1" />
+    <!-- honeypot -->
+    <input type="text" name="_honey" tabindex="-1" autocomplete="off"
+           style="position:absolute;left:-9999px" aria-hidden="true" />
+
+    <div class="form-grid">
+      <label class="form-field">
+        <span>Your name <em>*</em></span>
+        <input type="text" name="name" required placeholder="Maddox McSparkle" />
+      </label>
+
+      <label class="form-field">
+        <span>Phone</span>
+        <input type="tel" name="phone" placeholder="(615) 555-0000" />
+      </label>
+
+      <label class="form-field form-field-wide">
+        <span>Email <em>*</em></span>
+        <input type="email" name="email" required placeholder="you@example.com" />
+      </label>
+
+      <label class="form-field form-field-wide">
+        <span>Vehicle (year / make / model)</span>
+        <input type="text" name="vehicle" placeholder="2017 Nissan 350Z" />
+      </label>
+
+      <label class="form-field form-field-wide">
+        <span>Service interested in <em>*</em></span>
+        <select name="service" required>
+          <option value="" disabled selected>— pick one —</option>
+          <option value="The Sidekick — $109+">The Sidekick — $109+ (basic detail)</option>
+          <option value="The Hero — $189+">The Hero — $189+ (full detail)</option>
+          <option value="The Legend — $449+">The Legend — $449+ (premium detail)</option>
+          <option value="The Patrol — $159/mo">The Patrol — $159/mo (bi-weekly plan)</option>
+          <option disabled>──────────</option>
+          <option value="Exterior Wash & Wax">Exterior Wash &amp; Wax</option>
+          <option value="Full Interior Detail">Full Interior Detail</option>
+          <option value="Headlight Restoration">Headlight Restoration</option>
+          <option value="Mobile Service">Mobile Service</option>
+          <option value="Not sure / just asking">Not sure — just asking</option>
+        </select>
+      </label>
+
+      <label class="form-field form-field-wide">
+        <span>Tell us about your ride</span>
+        <textarea name="message" rows="4"
+                  placeholder="Anything we should know? Pet hair, mud, ceramic interest, location for mobile service…"></textarea>
+      </label>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-yellow">SEND IT! ★</button>
+        <p class="form-note">We'll text or email you back same-day. No spam — pinky promise.</p>
+      </div>
+    </div>
+  </form>
 </section>
 
 <!-- =================== CTA / CONTACT =================== -->
