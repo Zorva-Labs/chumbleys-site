@@ -1,16 +1,23 @@
 /**
  * Cloudflare Pages Function — handles quote form submissions for Chumbley's.
- * Replaces the previous FormSubmit integration, which required per-recipient
- * email activation.
  *
- * Required env var: RESEND_API_KEY  (set in Cloudflare Pages → Settings →
- *   Environment variables → Production)
+ * Two side-effects:
+ *   1. Sends the lead via Resend to the client's inbox.
+ *   2. Fires a `generate_lead` conversion to GA4 via the Measurement
+ *      Protocol — server-side, so it can't be blocked by ad blockers,
+ *      consent mode, or browser quirks the way client-side gtag is.
+ *
+ * Required env vars:
+ *   RESEND_API_KEY      — Resend API key (sending access)
  *
  * Optional env vars:
- *   QUOTE_TO    — destination email (defaults to chumbleysdetailing@gmail.com)
- *   QUOTE_FROM  — sender (defaults to "Chumbley's Quote Form
- *                <onboarding@resend.dev>", which Resend provides without
- *                domain verification)
+ *   QUOTE_TO            — destination email (default: chumbleysdetailing@gmail.com)
+ *   QUOTE_FROM          — sender display + address (default uses onboarding@resend.dev)
+ *   GA4_MEASUREMENT_ID  — e.g. "G-ZM8FXXENGY"
+ *   GA4_API_SECRET      — created in GA4 Admin → Data Streams → Web →
+ *                          Measurement Protocol API secrets
+ *
+ * Set them all on Cloudflare Pages → Settings → Environment variables.
  */
 export async function onRequestPost({ request, env }) {
   const url = new URL(request.url);
@@ -107,7 +114,86 @@ export async function onRequestPost({ request, env }) {
     );
   }
 
+  // Server-side conversion tracking via GA4 Measurement Protocol.
+  // Runs after the Resend send succeeds so we never count a lead that
+  // didn't actually deliver. Errors here don't block the redirect —
+  // analytics failure shouldn't fail the user-facing form.
+  await sendGA4Lead(env, request, fields).catch(err => {
+    console.error("[quote] GA4 MP error:", err);
+  });
+
   return Response.redirect(thanksUrl, 303);
+}
+
+/**
+ * Fire a generate_lead event server-side via GA4 Measurement Protocol.
+ * Reads the visitor's `_ga` cookie if present so the conversion is linked
+ * to their existing client_id (and therefore to their other GA4 events
+ * like page_view). Falls back to a synthetic id if the cookie is missing.
+ */
+async function sendGA4Lead(env, request, fields) {
+  const measurementId = env.GA4_MEASUREMENT_ID;
+  const apiSecret     = env.GA4_API_SECRET;
+  if (!measurementId || !apiSecret) {
+    console.warn("[quote] GA4 MP not configured — skipping conversion event");
+    return;
+  }
+
+  // Pull client_id from _ga cookie if available (format: GA1.1.<client_id>)
+  let clientId = fields.ga_client_id || "";
+  if (!clientId) {
+    const cookieHeader = request.headers.get("cookie") || "";
+    const m = cookieHeader.match(/_ga=GA[0-9]+\.[0-9]+\.([0-9]+\.[0-9]+)/);
+    if (m) clientId = m[1];
+  }
+  if (!clientId) {
+    // Last resort: synthesize one. Conversion still counts but won't
+    // attribute to the visitor's other events.
+    clientId = `${Math.floor(Math.random() * 1e10)}.${Math.floor(Date.now() / 1000)}`;
+  }
+
+  // user_agent_string + ip_override give GA4 a more accurate signal
+  const userAgent = request.headers.get("user-agent") || "";
+  const ip        = request.headers.get("cf-connecting-ip") || "";
+
+  const payload = {
+    client_id: clientId,
+    non_personalized_ads: false,
+    events: [{
+      name:   "generate_lead",
+      params: {
+        currency:       "USD",
+        value:          1,
+        form_id:        "quote",
+        service:        fields.service        || "",
+        preferred_date: fields.preferred_date || "",
+        engagement_time_msec: 100,
+        // Note: page_location intentionally omitted — let GA4 infer from
+        // the referring page_view.
+      },
+    }],
+  };
+
+  const url = new URL("https://www.google-analytics.com/mp/collect");
+  url.searchParams.set("measurement_id", measurementId);
+  url.searchParams.set("api_secret",     apiSecret);
+
+  const res = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "User-Agent":   userAgent,
+      ...(ip && { "X-Forwarded-For": ip }),
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!res.ok) {
+    const body = await res.text();
+    console.error("[quote] GA4 MP non-OK:", res.status, body);
+  } else {
+    console.log("[quote] GA4 generate_lead fired for client_id", clientId);
+  }
 }
 
 // HTML-escape user-supplied values for the email body
