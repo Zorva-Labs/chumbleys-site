@@ -120,9 +120,10 @@ function escape(s) {
     .replace(/'/g, "&#39;");
 }
 
-// Reject anything that isn't POST so we don't expose the function to GET probes
-export async function onRequest({ request }) {
-  if (request.method === "POST") return onRequestPost(arguments[0]);
+// Cloudflare Pages routes POST to onRequestPost above. Anything else gets
+// an explicit 405 from this fallback (without it, non-POST methods would
+// fall through to static asset handling).
+export async function onRequestGet() {
   return new Response("Method Not Allowed", {
     status: 405,
     headers: { "Allow": "POST" },
