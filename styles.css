@@ -1076,6 +1076,16 @@ body::before {
   background-repeat: no-repeat;
   padding-right: 36px;
 }
+/* Date picker styling — match the chunky comic-book input look */
+.form-field input[type="date"] {
+  font-family: 'Fredoka', system-ui, sans-serif;
+  min-height: 49px; /* match the height of text/select inputs */
+}
+.form-field input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  filter: contrast(1.5);
+  opacity: .85;
+}
 .form-actions {
   grid-column: 1 / -1;
   display: flex;

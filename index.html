@@ -826,9 +826,14 @@
         <input type="email" name="email" required placeholder="you@example.com" />
       </label>
 
-      <label class="form-field form-field-wide">
+      <label class="form-field">
         <span>Vehicle (year / make / model)</span>
         <input type="text" name="vehicle" placeholder="2017 Nissan 350Z" />
+      </label>
+
+      <label class="form-field">
+        <span>Preferred date</span>
+        <input type="date" name="preferred_date" id="preferred_date" />
       </label>
 
       <label class="form-field form-field-wide">
@@ -953,6 +958,14 @@
 
 <script>
   document.getElementById('yr').textContent = new Date().getFullYear();
+  // Block past dates on the preferred-date picker
+  (function(){
+    var d = document.getElementById('preferred_date');
+    if (!d) return;
+    var t = new Date(); t.setHours(0,0,0,0);
+    var iso = t.toISOString().slice(0,10);
+    d.setAttribute('min', iso);
+  })();
 </script>
 
 </body>
