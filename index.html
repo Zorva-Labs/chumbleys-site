@@ -801,17 +801,12 @@
   </div>
 
   <form class="panel form-panel"
-        action="https://formsubmit.co/chumbleysdetailing@gmail.com"
+        action="/api/quote"
         method="POST">
     <div class="halftone-bg"></div>
 
-    <!-- FormSubmit config -->
-    <input type="hidden" name="_subject" value="New quote request — Chumbley's Auto Detailing" />
-    <input type="hidden" name="_template" value="table" />
-    <input type="hidden" name="_captcha" value="true" />
-    <input type="hidden" name="_next" value="https://chumbleysdetailing.com/thanks/" />
-    <!-- honeypot -->
-    <input type="text" name="_honey" tabindex="-1" autocomplete="off"
+    <!-- spam honey-pot — bots fill this, humans never see it -->
+    <input type="text" name="_gotcha" tabindex="-1" autocomplete="off"
            style="position:absolute;left:-9999px" aria-hidden="true" />
 
     <div class="form-grid">
