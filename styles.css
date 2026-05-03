@@ -1155,6 +1155,157 @@ body::before {
 }
 
 /* ======================================================================
+   Thank-you page
+====================================================================== */
+.thanks-body {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255,212,0,.18), transparent 60%),
+    radial-gradient(circle at 80% 80%, rgba(255,255,255,.15), transparent 50%),
+    var(--hero-blue);
+}
+.thanks-main {
+  width: 100%;
+  padding: 32px 18px;
+}
+.thanks-section {
+  max-width: 760px;
+  margin: 0 auto;
+  position: relative;
+}
+.thanks-stack { position: relative; }
+
+.thanks-burst {
+  position: absolute;
+  top: -42px; right: -20px;
+  width: 170px; height: 170px;
+  display: grid; place-items: center;
+  font-family: 'Bangers', cursive;
+  font-size: 26px;
+  text-align: center;
+  line-height: 1;
+  letter-spacing: 1px;
+  color: #fff;
+  -webkit-text-stroke: 1.5px var(--ink);
+  z-index: 5;
+  filter: drop-shadow(5px 5px 0 var(--ink));
+  transform: rotate(12deg);
+}
+.thanks-burst::before {
+  content: "";
+  position: absolute; inset: 0;
+  background:
+    conic-gradient(from 0deg,
+      var(--hero-red) 0 18deg, transparent 18deg 36deg,
+      var(--hero-red) 36deg 54deg, transparent 54deg 72deg,
+      var(--hero-red) 72deg 90deg, transparent 90deg 108deg,
+      var(--hero-red) 108deg 126deg, transparent 126deg 144deg,
+      var(--hero-red) 144deg 162deg, transparent 162deg 180deg,
+      var(--hero-red) 180deg 198deg, transparent 198deg 216deg,
+      var(--hero-red) 216deg 234deg, transparent 234deg 252deg,
+      var(--hero-red) 252deg 270deg, transparent 270deg 288deg,
+      var(--hero-red) 288deg 306deg, transparent 306deg 324deg,
+      var(--hero-red) 324deg 342deg, transparent 342deg 360deg);
+  -webkit-mask: radial-gradient(circle, transparent 22%, #000 22%);
+          mask: radial-gradient(circle, transparent 22%, #000 22%);
+}
+.thanks-burst::after {
+  content: "";
+  position: absolute; inset: 18%;
+  background: var(--hero-red);
+  border: 3px solid var(--ink);
+  border-radius: 50%;
+}
+.thanks-burst span { position: relative; z-index: 1; padding: 0 6px; }
+
+.thanks-panel {
+  padding: 36px 30px 32px;
+  text-align: center;
+}
+.thanks-logo { display: inline-block; margin-bottom: 14px; }
+.thanks-logo .logo-mark { width: 76px; height: 76px; box-shadow: 4px 4px 0 var(--ink); }
+.thanks-logo .logo-mark img { width: 100%; height: 100%; object-fit: cover; }
+
+.thanks-title {
+  font-family: 'Bowlby One', sans-serif;
+  font-size: clamp(40px, 7vw, 78px);
+  margin: 0 0 14px;
+  color: var(--hero-red);
+  -webkit-text-stroke: 3px var(--ink);
+  text-shadow: 4px 4px 0 var(--ink);
+  line-height: .95;
+  letter-spacing: -1.5px;
+}
+.thanks-sub {
+  font-size: 17px;
+  line-height: 1.55;
+  margin: 0 auto 22px;
+  max-width: 540px;
+  font-weight: 500;
+}
+
+.thanks-checks {
+  display: grid;
+  gap: 10px;
+  max-width: 420px;
+  margin: 0 auto 26px;
+  text-align: left;
+}
+.thanks-check {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #fff;
+  border: 3px solid var(--ink);
+  border-radius: 8px;
+  box-shadow: 4px 4px 0 var(--ink);
+  padding: 10px 14px;
+  font-size: 15px;
+  font-weight: 600;
+}
+.thanks-check .check-mark {
+  display: inline-grid; place-items: center;
+  width: 28px; height: 28px;
+  background: var(--hero-yellow);
+  border: 2.5px solid var(--ink);
+  border-radius: 50%;
+  font-family: 'Bangers', cursive;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.thanks-actions {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+}
+
+.thanks-socials {
+  border-top: 3px dashed var(--ink);
+  padding-top: 20px;
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+}
+.thanks-socials p {
+  margin: 0;
+  font-family: 'Bangers', cursive;
+  font-size: 15px;
+  letter-spacing: 1px;
+  color: var(--ink);
+}
+.thanks-socials .foot-socials .social-link svg { width: 38px; height: 38px; }
+
+@media (max-width: 540px) {
+  .thanks-burst { width: 130px; height: 130px; font-size: 20px; top: -22px; right: -10px; }
+  .thanks-panel { padding: 28px 20px 24px; }
+  .thanks-actions { flex-direction: column; align-items: stretch; }
+  .thanks-actions .btn { width: 100%; }
+}
+
+/* ======================================================================
    Footer
 ====================================================================== */
 .foot {
