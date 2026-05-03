@@ -141,28 +141,35 @@ body::before {
   transition: transform .1s, box-shadow .1s;
 }
 
-/* Facebook link — comic-style square button */
-.fb-link {
+/* Social links — comic-style square buttons */
+.social-row, .foot-socials {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
+}
+.foot-socials { margin-top: 4px; }
+.social-link {
+  display: inline-flex;
+  align-items: center;
   text-decoration: none;
   color: inherit;
 }
-.fb-link svg {
-  width: 40px; height: 40px;
+.social-link svg {
+  width: 38px; height: 38px;
   display: block;
   filter: drop-shadow(3px 3px 0 var(--ink));
   transition: transform .1s, filter .1s;
 }
-.fb-link:hover svg {
+.social-link:hover svg {
   transform: translate(-1px, -1px);
   filter: drop-shadow(5px 5px 0 var(--ink));
 }
-.foot-fb { gap: 10px; font-weight: 600; font-size: 14px; }
-.foot-fb svg { width: 32px; height: 32px; }
-.foot-fb span { color: #fff; }
-.foot-fb:hover span { color: var(--hero-yellow); }
+.foot-socials .social-link svg { width: 32px; height: 32px; }
+
+@media (max-width: 540px) {
+  .social-row { gap: 6px; }
+  .social-link svg { width: 32px; height: 32px; }
+}
 .nav-cta:hover { transform: translate(-2px,-2px); box-shadow: 6px 6px 0 var(--ink); }
 
 @media (max-width: 900px) {
