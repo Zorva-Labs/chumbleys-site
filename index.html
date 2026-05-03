@@ -244,6 +244,84 @@
 </head>
 <body>
 
+<!-- =================== INTRO OVERLAY =================== -->
+<div id="intro-overlay" class="intro-overlay" aria-hidden="false">
+  <video id="intro-video"
+         class="intro-video"
+         playsinline muted
+         preload="auto"
+         poster="assets/intro-poster.jpg">
+    <source src="assets/intro-video.mp4" type="video/mp4" />
+  </video>
+  <div class="intro-burst"><span>★ ISSUE&nbsp;#1 ★</span></div>
+  <button type="button" id="intro-skip" class="intro-skip" aria-label="Skip intro">
+    SKIP <span aria-hidden="true">›</span>
+  </button>
+</div>
+<script>
+  (function () {
+    var KEY     = "chumbleys_intro_seen_v1";
+    var overlay = document.getElementById("intro-overlay");
+    var video   = document.getElementById("intro-video");
+    var skip    = document.getElementById("intro-skip");
+
+    // Skip on repeat visits within the session, on prefers-reduced-motion,
+    // and if for any reason the video element didn't get created.
+    var prm = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!overlay || !video || sessionStorage.getItem(KEY) || prm) {
+      if (overlay) overlay.parentNode.removeChild(overlay);
+      document.documentElement.classList.remove("intro-active");
+      return;
+    }
+
+    document.documentElement.classList.add("intro-active");
+
+    function dismiss() {
+      sessionStorage.setItem(KEY, "1");
+      overlay.classList.add("is-leaving");
+      document.documentElement.classList.remove("intro-active");
+      setTimeout(function () {
+        if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay);
+      }, 800);
+    }
+
+    function showTapToPlay() {
+      // Autoplay was blocked. Reveal a "tap to play" hint so the user can
+      // start the video themselves. Don't dismiss — that would deny them
+      // the intro entirely.
+      var hint = document.createElement("div");
+      hint.className = "intro-tap";
+      hint.textContent = "▶ TAP TO PLAY";
+      overlay.appendChild(hint);
+    }
+
+    // Try to autoplay (muted + playsinline almost always works)
+    var playPromise = video.play();
+    if (playPromise && typeof playPromise.then === "function") {
+      playPromise.catch(showTapToPlay);
+    }
+
+    // Click anywhere on the overlay (except Skip) to retry play
+    overlay.addEventListener("click", function (e) {
+      if (e.target.closest(".intro-skip")) return;
+      if (video.paused) {
+        video.play().catch(function () { /* still no luck — let the safety timeout handle it */ });
+      } else {
+        // Video is already playing — click means dismiss
+        dismiss();
+      }
+    });
+
+    video.addEventListener("ended", dismiss);
+    skip.addEventListener("click", dismiss);
+
+    // Safety: if the video can't load or play within 8s, don't trap the user
+    setTimeout(function () {
+      if (video.paused && video.currentTime === 0) dismiss();
+    }, 8000);
+  })();
+</script>
+
 <!-- =================== TOP BURST BANNER =================== -->
 <div class="ticker">
   <div class="ticker-track">
