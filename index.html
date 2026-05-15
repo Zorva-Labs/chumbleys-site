@@ -4,8 +4,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <title>Chumbley's Auto Detailing | Mobile Detailing in Gallatin &amp; Hendersonville, TN</title>
-  <meta name="description" content="Chumbley's Auto Detailing — mobile auto detailing in Gallatin and Hendersonville, TN. Hand wash, wax, full interior detail, headlight restoration. Call or text (615) 670-3379 for a free quote." />
+  <title>Chumbley's Auto Detailing — Mobile Detailing Gallatin TN</title>
+  <meta name="description" content="Chumbley's Auto Detailing — mobile auto detailing in Gallatin &amp; Hendersonville TN. Hand wash, wax, interior detail, headlight restoration. (615) 670-3379." />
   <meta name="keywords" content="auto detailing Gallatin TN, mobile detailing Hendersonville, car wash Gallatin, interior detail Sumner County, headlight restoration Tennessee, Chumbley's Auto Detailing, Maddox detailer Gallatin" />
   <meta name="author" content="Chumbley's Auto Detailing" />
   <meta name="robots" content="index, follow, max-image-preview:large" />
@@ -42,6 +42,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Bowlby+One&family=Fredoka:wght@500;700&family=Permanent+Marker&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" href="styles.css?v=b921d99b27" />
+
+  <!-- LCP hero image preload — AVIF for fastest paint -->
+  <link rel="preload" as="image" href="assets/hero-portrait.avif" type="image/avif" fetchpriority="high" />
+  <link rel="preload" as="image" href="assets/hero-portrait.png" type="image/png" />
 
   <link rel="icon" type="image/png" href="assets/logo-emblem.png" />
   <link rel="apple-touch-icon" href="assets/logo-emblem.png" />
@@ -237,6 +241,22 @@
           { "@type": "ListItem", "position": 5, "name": "Pricing",      "item": "https://chumbleysdetailing.com/#pricing" },
           { "@type": "ListItem", "position": 6, "name": "Contact",      "item": "https://chumbleysdetailing.com/#contact" }
         ]
+      },
+      {
+        "@type": "Person",
+        "@id": "https://chumbleysdetailing.com/#maddox",
+        "name": "Maddox Chumbley",
+        "jobTitle": "Founder & Lead Detailer",
+        "worksFor": { "@id": "https://chumbleysdetailing.com/#business" },
+        "image": "https://chumbleysdetailing.com/assets/hero-portrait.png"
+      },
+      {
+        "@type": "WebPage",
+        "url": "https://chumbleysdetailing.com/",
+        "speakable": {
+          "@type": "SpeakableSpecification",
+          "cssSelector": ["h1", ".kicker", ".meta-row"]
+        }
       }
     ]
   }
@@ -416,7 +436,10 @@
       <div class="halftone-bg"></div>
 
       <div class="hero-photo ai">
-        <img src="assets/hero-portrait.png" alt="Maddox, the auto detailing superhero" />
+        <picture>
+          <source srcset="assets/hero-portrait.avif" type="image/avif" />
+          <img src="assets/hero-portrait.png" alt="Maddox, the auto detailing superhero" width="800" height="1000" fetchpriority="high" />
+        </picture>
       </div>
 
       <div class="speed-lines"></div>
@@ -471,22 +494,22 @@
 
   <div class="strip-grid">
     <figure class="strip-panel">
-      <img src="assets/strip-1.png" alt="A clean silver 350Z driving through a sunny suburb" />
+      <img loading="lazy" decoding="async" src="assets/strip-1.png" alt="A clean silver 350Z driving through a sunny suburb" />
       <figcaption><span>JUST ANOTHER DAY ON THE ROAD…</span></figcaption>
     </figure>
 
     <figure class="strip-panel">
-      <img src="assets/strip-2.png" alt="The Z covered in mud after an off-road adventure" />
+      <img loading="lazy" decoding="async" src="assets/strip-2.png" alt="The Z covered in mud after an off-road adventure" />
       <figcaption><span>UNTIL DISASTER STRUCK!</span></figcaption>
     </figure>
 
     <figure class="strip-panel">
-      <img src="assets/strip-3.png" alt="Maddox arrives in his cyan super-suit, cloth in hand, behind the muddy Z" />
+      <img loading="lazy" decoding="async" src="assets/strip-3.png" alt="Maddox arrives in his cyan super-suit, cloth in hand, behind the muddy Z" />
       <figcaption><span>NEVER FEAR — MADDOX IS HERE!</span></figcaption>
     </figure>
 
     <figure class="strip-panel">
-      <img src="assets/strip-4.png" alt="Maddox stands triumphantly next to the gleaming clean Z" />
+      <img loading="lazy" decoding="async" src="assets/strip-4.png" alt="Maddox stands triumphantly next to the gleaming clean Z" />
       <figcaption><span>SHAZAM! GOOD AS NEW.</span></figcaption>
     </figure>
   </div>
@@ -629,7 +652,7 @@
   <div class="origin-grid">
     <div class="panel origin-img">
       <div class="halftone-bg yellow"></div>
-      <img src="assets/hero-action.png" alt="Maddox detailing a sports car" class="comic-treat ai" />
+      <img loading="lazy" decoding="async" src="assets/hero-action.png" alt="Maddox detailing a sports car" class="comic-treat ai" />
       <div class="bubble bubble-bl">
         <span>BORN WITH</span>
         <strong>THE GIFT OF SHINE</strong>
@@ -686,24 +709,24 @@
     <div class="ba-card">
       <div class="ba-panel before">
         <span class="ba-tag">BEFORE</span>
-        <img src="assets/z-before.png" alt="Silver 350Z covered in mud — before detailing" class="ba-img" />
+        <img loading="lazy" decoding="async" src="assets/z-before.png" alt="Silver 350Z covered in mud — before detailing" class="ba-img" />
       </div>
       <div class="ba-arrow"><span>POW!</span></div>
       <div class="ba-panel after">
         <span class="ba-tag">AFTER</span>
-        <img src="assets/z-after.png" alt="Silver 350Z gleaming clean — after Maddox is done" class="ba-img" />
+        <img loading="lazy" decoding="async" src="assets/z-after.png" alt="Silver 350Z gleaming clean — after Maddox is done" class="ba-img" />
       </div>
     </div>
 
     <div class="ba-card">
       <div class="ba-panel before">
         <span class="ba-tag">BEFORE</span>
-        <img src="assets/truck-before.png" alt="Same pickup truck, mud-caked — before" class="ba-img" />
+        <img loading="lazy" decoding="async" src="assets/truck-before.png" alt="Same pickup truck, mud-caked — before" class="ba-img" />
       </div>
       <div class="ba-arrow"><span>ZAP!</span></div>
       <div class="ba-panel after">
         <span class="ba-tag">AFTER</span>
-        <img src="assets/truck-after.png" alt="Same pickup truck, gleaming — after" class="ba-img" />
+        <img loading="lazy" decoding="async" src="assets/truck-after.png" alt="Same pickup truck, gleaming — after" class="ba-img" />
       </div>
     </div>
 
