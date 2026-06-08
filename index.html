@@ -901,9 +901,10 @@
     <h2 class="kapow">GET A QUOTE <span>!</span></h2>
   </div>
 
-  <form class="panel form-panel"
-        action="/api/quote"
-        method="POST">
+  <form id="quote-form" class="panel form-panel"
+        action="mailto:chumbleysdetailing@gmail.com"
+        method="POST"
+        enctype="text/plain">
     <div class="halftone-bg"></div>
 
     <!-- spam honey-pot — bots fill this, humans never see it -->
@@ -965,6 +966,86 @@
       </div>
     </div>
   </form>
+
+  <script>
+    (function () {
+      var form = document.getElementById("quote-form");
+      if (!form) return;
+
+      form.addEventListener("submit", function (e) {
+        // Honey-pot — bot filled the hidden field, silently succeed without sending
+        var gotcha = form.querySelector('input[name="_gotcha"]');
+        if (gotcha && gotcha.value) {
+          e.preventDefault();
+          window.location.href = "/thanks/";
+          return;
+        }
+
+        // Stop the default form post (which would be a bare mailto without
+        // proper subject/body) and build a clean mailto: ourselves.
+        e.preventDefault();
+
+        function v(name) {
+          var el = form.elements[name];
+          return el && el.value ? el.value.trim() : "";
+        }
+
+        var name           = v("name");
+        var phone          = v("phone");
+        var email          = v("email");
+        var vehicle        = v("vehicle");
+        var preferred_date = v("preferred_date");
+        var service        = v("service");
+        var message        = v("message");
+
+        if (!name || !email) {
+          form.reportValidity && form.reportValidity();
+          return;
+        }
+
+        var lines = [];
+        lines.push("Name: "           + name);
+        if (phone)          lines.push("Phone: "          + phone);
+        lines.push("Email: "          + email);
+        if (vehicle)        lines.push("Vehicle: "        + vehicle);
+        if (preferred_date) lines.push("Preferred date: " + preferred_date);
+        if (service)        lines.push("Service: "        + service);
+        if (message) {
+          lines.push("");
+          lines.push("Message:");
+          lines.push(message);
+        }
+        lines.push("");
+        lines.push("— Submitted via chumbleysdetailing.com");
+
+        var subject = "Quote request from " + name;
+        var body    = lines.join("\r\n");
+        var href    = "mailto:chumbleysdetailing@gmail.com"
+                    + "?subject=" + encodeURIComponent(subject)
+                    + "&body="    + encodeURIComponent(body);
+
+        // Fire GA4 events client-side before navigating away
+        if (typeof window.gtag === "function") {
+          window.gtag("event", "generate_lead", {
+            currency: "USD",
+            value: 1,
+            form_id: "quote",
+            service: service
+          });
+          window.gtag("event", "form_submit", { form_id: "quote" });
+        }
+
+        // Open the user's email client (browser stays on the current page)
+        window.location.href = href;
+
+        // After the email client has had a moment to launch, send the
+        // visitor to the thanks page so they get visual confirmation.
+        setTimeout(function () {
+          window.location.href = "/thanks/";
+        }, 600);
+      });
+    })();
+  </script>
 </section>
 
 <!-- =================== CTA / CONTACT =================== -->
