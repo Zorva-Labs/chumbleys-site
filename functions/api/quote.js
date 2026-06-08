@@ -2,22 +2,29 @@
  * Cloudflare Pages Function — handles quote form submissions for Chumbley's.
  *
  * Two side-effects:
- *   1. Sends the lead via Resend to the client's inbox.
+ *   1. Sends the lead via Cloudflare MailChannels to the client's inbox.
+ *      MailChannels is invoked directly from Workers — no API key, no
+ *      third-party form service. Requires two DNS records on the sending
+ *      domain (chumbleysdetailing.com):
+ *        a. SPF                  — TXT  @
+ *           v=spf1 include:relay.mailchannels.net ~all
+ *        b. MailChannels lockdown — TXT _mailchannels
+ *           v=mc1 cfid=<cloudflare-account-id>
+ *      Without (b) MailChannels returns 401 to prevent open relay abuse.
+ *
  *   2. Fires a `generate_lead` conversion to GA4 via the Measurement
  *      Protocol — server-side, so it can't be blocked by ad blockers,
  *      consent mode, or browser quirks the way client-side gtag is.
  *
- * Required env vars:
- *   RESEND_API_KEY      — Resend API key (sending access)
- *
- * Optional env vars:
+ * Optional env vars (all have defaults):
  *   QUOTE_TO            — destination email (default: chumbleysdetailing@gmail.com)
- *   QUOTE_FROM          — sender display + address (default uses onboarding@resend.dev)
+ *   QUOTE_FROM_EMAIL    — sender address  (default: quotes@chumbleysdetailing.com)
+ *   QUOTE_FROM_NAME     — sender display  (default: "Chumbley's Quote Form")
  *   GA4_MEASUREMENT_ID  — e.g. "G-ZM8FXXENGY"
  *   GA4_API_SECRET      — created in GA4 Admin → Data Streams → Web →
  *                          Measurement Protocol API secrets
  *
- * Set them all on Cloudflare Pages → Settings → Environment variables.
+ * Set them on Cloudflare Pages → Settings → Environment variables.
  */
 export async function onRequestPost({ request, env }) {
   const url = new URL(request.url);
@@ -46,9 +53,10 @@ export async function onRequestPost({ request, env }) {
     return new Response("Missing required fields", { status: 400 });
   }
 
-  const to       = env.QUOTE_TO   || "chumbleysdetailing@gmail.com";
-  const from     = env.QUOTE_FROM || "Chumbley's Quote Form <onboarding@resend.dev>";
-  const subject  = `Quote request from ${fields.name}`;
+  const to        = env.QUOTE_TO         || "chumbleysdetailing@gmail.com";
+  const fromEmail = env.QUOTE_FROM_EMAIL || "quotes@chumbleysdetailing.com";
+  const fromName  = env.QUOTE_FROM_NAME  || "Chumbley's Quote Form";
+  const subject   = `Quote request from ${fields.name}`;
 
   const lines = [
     `Name:           ${fields.name || ""}`,
@@ -81,33 +89,27 @@ export async function onRequestPost({ request, env }) {
     </p>
   `;
 
-  if (!env.RESEND_API_KEY) {
-    // Still redirect so the user sees /thanks/, but log loudly so the missing
-    // setup is obvious in Cloudflare's deployment logs.
-    console.error("[quote] RESEND_API_KEY missing — submission discarded:", text);
-    return Response.redirect(thanksUrl, 303);
-  }
-
-  const res = await fetch("https://api.resend.com/emails", {
+  // ----- Send via Cloudflare MailChannels --------------------------------
+  const res = await fetch("https://api.mailchannels.net/tx/v1/send", {
     method: "POST",
-    headers: {
-      "Authorization": `Bearer ${env.RESEND_API_KEY}`,
-      "Content-Type":  "application/json",
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      from,
-      to:       [to],
-      reply_to: fields.email,
+      personalizations: [{
+        to: [{ email: to }],
+      }],
+      from:     { email: fromEmail, name: fromName },
+      reply_to: { email: fields.email, name: fields.name },
       subject,
-      text,
-      html,
+      content: [
+        { type: "text/plain", value: text },
+        { type: "text/html",  value: html },
+      ],
     }),
   });
 
   if (!res.ok) {
     const body = await res.text();
-    console.error("[quote] Resend error", res.status, body);
-    // Surface a friendly error rather than a raw 500.
+    console.error("[quote] MailChannels error", res.status, body);
     return new Response(
       "Sorry — something went wrong sending your quote request. Please call (615) 670-3379 or email chumbleysdetailing@gmail.com directly.",
       { status: 502, headers: { "Content-Type": "text/plain" } }
@@ -115,7 +117,7 @@ export async function onRequestPost({ request, env }) {
   }
 
   // Server-side conversion tracking via GA4 Measurement Protocol.
-  // Runs after the Resend send succeeds so we never count a lead that
+  // Runs after the email send succeeds so we never count a lead that
   // didn't actually deliver. Errors here don't block the redirect —
   // analytics failure shouldn't fail the user-facing form.
   await sendGA4Lead(env, request, fields).catch(err => {
