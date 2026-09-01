@@ -6,3 +6,6 @@ generate-images.sh
 inspiration.jpg
 maddox-1.png
 maddox-2.png
+dist/
+.wrangler/
+.dev.vars
