@@ -9,3 +9,4 @@ maddox-2.png
 dist/
 .wrangler/
 .dev.vars
+.claude/settings.local.json
