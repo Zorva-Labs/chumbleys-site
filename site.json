@@ -1,0 +1,79 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Zorva-Labs/fleet/main/schema/site.schema.json",
+  "kind": "client-site",
+  "services": [
+    "website",
+    "hosting",
+    "seo"
+  ],
+  "platform": "cloudflare-pages",
+  "generator": "hand",
+  "canonicalHost": "chumbleysdetailing.com",
+  "previewHost": "chumbleys.pages.dev",
+  "cloudflare": {
+    "zoneId": null,
+    "d1": {},
+    "r2": {},
+    "workers": [],
+    "secrets": [],
+    "vars": {}
+  },
+  "traffic": null,
+  "crm": null,
+  "forms": {
+    "transport": "none",
+    "to": "chumbleysdetailing@gmail.com",
+    "activated": null,
+    "notes": "quote form is mailto: only since 2026-06-08 (Resend, then MailChannels, were both removed)"
+  },
+  "mail": null,
+  "google": {
+    "ga4Property": null,
+    "ga4Measurement": "G-ZM8FXXENGY",
+    "gsc": null,
+    "adsCustomerId": null,
+    "adsConversionId": null,
+    "businessProfile": null,
+    "notes": "generate_lead fires on /thanks/ and server-side via the GA4 Measurement Protocol (2026-05-03)"
+  },
+  "meta": {
+    "pixelId": null,
+    "adAccountId": null,
+    "notes": ""
+  },
+  "billing": {
+    "stripeCustomer": null,
+    "stripeSubscription": null,
+    "plan": null,
+    "notes": ""
+  },
+  "geo": null,
+  "launched": "2026-04-30",
+  "built": "2026-04-30",
+  "updated": "2026-09-17",
+  "notes": "",
+  "name": "Chumbley's Detailing",
+  "slug": "chumbleys",
+  "status": "live",
+  "domain": "chumbleysdetailing.com",
+  "repo": "Zorva-Labs/chumbleys-site",
+  "localPath": "~/chumbleys-site",
+  "project": "chumbleys",
+  "client": {
+    "name": "Chumbley's Detailing",
+    "contact": "Maddox",
+    "email": "chumbleysdetailing@gmail.com",
+    "phone": "(615) 670-3379",
+    "notes": "Auto detailing, Nashville; comic-strip design with an intro video of the owner’s silver 350Z"
+  },
+  "build": {
+    "command": null,
+    "output": ".",
+    "check": null
+  },
+  "deploy": {
+    "command": "npx wrangler pages deploy . --project-name=chumbleys --branch=main --commit-dirty=true",
+    "auth": "CLOUDFLARE_API_KEY + CLOUDFLARE_EMAIL (unset CLOUDFLARE_API_TOKEN)",
+    "notes": "deploys the repo root; nothing to build"
+  }
+}
