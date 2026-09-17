@@ -1,0 +1,12 @@
+name = "chumbleys"
+compatibility_date = "2026-09-17"
+pages_build_output_dir = "."
+
+[vars]
+GEO_ALLOW = ""
+CF_ZONE_ID = ""
+
+[[d1_databases]]
+binding = "DB"
+database_name = "chumbleys-analytics"
+database_id = "193889f6-2713-42b9-acc1-7f88e2899553"

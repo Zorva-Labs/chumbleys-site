@@ -28,6 +28,7 @@ npx wrangler pages deploy . --project-name=chumbleys --branch=main --commit-dirt
 - Google: GA4 `G-ZM8FXXENGY`. generate_lead fires on /thanks/ and server-side via the GA4 Measurement Protocol (2026-05-03)
 
 ## Forms, mail, tracking
+- `/traffic` (traffic-kit, installed 2026-09-17): `functions/_middleware.js` logs every HTML page view at the edge into D1 `chumbleys-analytics` before any script runs; `assets/js/traffic-beacons.js` (loaded on every page) sends tap-to-call/email conversions, `/thanks` or `/thank-you` arrivals and time on page; dashboard is `traffic.html` at the root (served at `/traffic`), password = Pages secret `TRAFFIC_PASSWORD` = `CHUMBLEYS_TRAFFIC_PASSWORD` in `~/.env`. No geo-gate (`GEO_ALLOW=""`) — the site kept its worldwide audience. `_routes.json` keeps static folders out of the Function; `.assetsignore` keeps migrations and the manuals off the CDN.
 - Quote form is `mailto:` only — every backend was removed (2026-06-08). If real lead capture is wanted, add a D1 endpoint + Gmail transport like the site-kit sites.
 - GA4 `G-ZM8FXXENGY`; `generate_lead` also sent server-side through the Measurement Protocol (`GA4_API_SECRET`/`GA4_MEASUREMENT_ID` in `~/.env`).
 
@@ -35,4 +36,4 @@ npx wrangler pages deploy . --project-name=chumbleys --branch=main --commit-dirt
 - `styles.css` has no fingerprint — bump the `?v=` query on the stylesheet link when it changes or the intro overlay CSS never reaches returning visitors (bit us 2026-05-03).
 
 ## Open items
-- No `/traffic` dashboard; no real form backend.
+- (nothing recorded yet)

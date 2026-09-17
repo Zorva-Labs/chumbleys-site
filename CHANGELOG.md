@@ -3,6 +3,7 @@
 Newest first. One entry per session that changed this repo: what changed, why, what the client asked for, what is still owed. Infrastructure changes also go in `site.json` and `CLAUDE.md`. Entries dated before 2026-09-17 are reconstructed from git history; the reasoning behind them is in `CLAUDE.md` and in `~/fleet/docs/archive`.
 
 ## 2026-09-17
+- `/traffic` dashboard installed with traffic-kit: D1 `chumbleys-analytics`, all nine migrations, edge page-view logging, conversion beacons on every page, password `CHUMBLEYS_TRAFFIC_PASSWORD` in `~/.env`. Verified live at https://chumbleysdetailing.com/traffic (one test page view was logged during the install). traffic-kit itself was fixed the same day to ship every migration — earlier scaffolds got only two.
 - Operating manual added: `CLAUDE.md` (how it works), `site.json` (the manifest `fleet` reads) and this log. The old `CLAUDE.md`, where one existed, is replaced.
 - Footer credit: Web Design, SEO and Hosting by Nashville's Web Design, followed link; creator/provider on the WebSite schema
 

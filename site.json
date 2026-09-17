@@ -12,13 +12,24 @@
   "previewHost": "chumbleys.pages.dev",
   "cloudflare": {
     "zoneId": null,
-    "d1": {},
+    "d1": {
+      "DB": "chumbleys-analytics"
+    },
     "r2": {},
     "workers": [],
-    "secrets": [],
-    "vars": {}
+    "secrets": [
+      "TRAFFIC_PASSWORD"
+    ],
+    "vars": {
+      "GEO_ALLOW": "",
+      "CF_ZONE_ID": ""
+    }
   },
-  "traffic": null,
+  "traffic": {
+    "path": "/traffic",
+    "passwordEnv": "CHUMBLEYS_TRAFFIC_PASSWORD",
+    "kit": "traffic-kit"
+  },
   "crm": null,
   "forms": {
     "transport": "none",
@@ -74,6 +85,6 @@
   "deploy": {
     "command": "npx wrangler pages deploy . --project-name=chumbleys --branch=main --commit-dirty=true",
     "auth": "CLOUDFLARE_API_KEY + CLOUDFLARE_EMAIL (unset CLOUDFLARE_API_TOKEN)",
-    "notes": "deploys the repo root; nothing to build"
+    "notes": "deploys the repo root; nothing to build; wrangler.toml carries the D1 binding — deploy from the repo root so Functions ship; secrets bind at deploy time"
   }
 }
