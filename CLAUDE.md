@@ -12,6 +12,7 @@ Auto-detailing site with a comic-book design: hero above a four-panel comic stri
 set -a; . ~/.env; set +a; unset CLOUDFLARE_API_TOKEN   # credentials live in ~/.env, never in the repo
 git fetch origin && git rev-list --count HEAD..origin/main   # must print 0 before any build or deploy
 npx wrangler pages deploy . --project-name=chumbleys --branch=main --commit-dirty=true
+node ~/site-kit/bin/site-kit.mjs submit   # IndexNow + Search Console + Bing, once the real domain serves the deploy; commit .indexnow.json after
 ```
 - deploys the repo root; nothing to build
 - Or `node ~/fleet/bin/fleet.mjs deploy chumbleys`, which does the same from `site.json` and refuses a checkout that is behind origin.

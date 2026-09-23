@@ -1,0 +1,19 @@
+{
+  "host": "chumbleysdetailing.com",
+  "endpoint": "https://www.bing.com/indexnow",
+  "submitted": "2026-09-23T05:17:26.387Z",
+  "google": {
+    "property": "sc-domain:chumbleysdetailing.com",
+    "sitemaps": [
+      "https://chumbleysdetailing.com/sitemap.xml"
+    ],
+    "submitted": "2026-09-23T05:17:26.969Z"
+  },
+  "bing": null,
+  "urls": {
+    "https://chumbleysdetailing.com/": {
+      "hash": "fcec2233786a5292",
+      "changed": "2026-09-23"
+    }
+  }
+}

@@ -83,8 +83,8 @@
     "check": null
   },
   "deploy": {
-    "command": "npx wrangler pages deploy . --project-name=chumbleys --branch=main --commit-dirty=true",
+    "command": "npx wrangler pages deploy . --project-name=chumbleys --branch=main --commit-dirty=true && node ~/site-kit/bin/site-kit.mjs submit",
     "auth": "CLOUDFLARE_API_KEY + CLOUDFLARE_EMAIL (unset CLOUDFLARE_API_TOKEN)",
-    "notes": "deploys the repo root; nothing to build; wrangler.toml carries the D1 binding — deploy from the repo root so Functions ship; secrets bind at deploy time"
+    "notes": "deploys the repo root; nothing to build; wrangler.toml carries the D1 binding — deploy from the repo root so Functions ship; secrets bind at deploy time; the last step submits the changes to IndexNow, Search Console and Bing — commit .indexnow.json after"
   }
 }
