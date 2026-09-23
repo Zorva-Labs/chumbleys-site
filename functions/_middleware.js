@@ -129,6 +129,11 @@ export async function onRequest(context) {
   if (isRepoFile(path)) return notFound(context, url);
   const ua = request.headers.get('user-agent') || '';
   const bot = botName(ua);
+  // chumbleys.pages.dev serves the same HTML as chumbleysdetailing.com. It must never be
+  // indexed as a duplicate of the real domain: noindex it at the edge on every
+  // response, keep serving it (it is the preview copy). Until 2026-09-23 it went
+  // out indexable, held back only by the canonical tag.
+  const isFallbackHost = url.hostname.endsWith('.pages.dev');
 
   // Optional geo-gate. Empty GEO_ALLOW (the default) means everyone is served
   // and the dashboard does the separating instead — 403-ing a real visitor is
@@ -164,11 +169,16 @@ export async function onRequest(context) {
     if (res && res.status === 200 && ct.includes('text/html')) {
       logPageview(context, url, ua, bot);
       const cookie = sourceCookie(context, url, ua, bot);
-      if (cookie) {
+      if (cookie || isFallbackHost) {
         const out = new Response(res.body, res);
-        out.headers.append('set-cookie', cookie);
+        if (cookie) out.headers.append('set-cookie', cookie);
+        if (isFallbackHost) out.headers.set('x-robots-tag', 'noindex, nofollow');
         return out;
       }
+    } else if (res && isFallbackHost) {
+      const out = new Response(res.body, res);
+      out.headers.set('x-robots-tag', 'noindex, nofollow');
+      return out;
     }
   } catch {
     /* analytics must never affect the response */
