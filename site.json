@@ -78,13 +78,13 @@
     "notes": "Auto detailing, Nashville; comic-strip design with an intro video of the owner’s silver 350Z"
   },
   "build": {
-    "command": null,
-    "output": ".",
+    "command": "node build.mjs",
+    "output": "dist",
     "check": null
   },
   "deploy": {
-    "command": "node ~/site-kit/bin/site-kit.mjs lastmod && npx wrangler pages deploy . --project-name=chumbleys --branch=main --commit-dirty=true && node ~/site-kit/bin/site-kit.mjs submit",
+    "command": "npx wrangler pages deploy dist --project-name=chumbleys --branch=main --commit-dirty=true && node ~/site-kit/bin/site-kit.mjs submit",
     "auth": "CLOUDFLARE_API_KEY + CLOUDFLARE_EMAIL (unset CLOUDFLARE_API_TOKEN)",
-    "notes": "deploys the repo root; nothing to build; wrangler.toml carries the D1 binding — deploy from the repo root so Functions ship; secrets bind at deploy time; the last step submits the changes to IndexNow, Search Console and Bing — commit .indexnow.json after"
+    "notes": "build.mjs copies an allow-list of the public files into dist/ and dates the sitemap (site-kit lastmod); deploy dist/, never the root — a root deploy publishes CLAUDE.md, CHANGELOG.md, site.json, wrangler.toml and migrations/ (Pages ignores .assetsignore; ~/fleet/docs/gotchas.md); run from the repo root so Functions ship (wrangler reads ./functions and wrangler.toml there); secrets bind at deploy time; the last step submits the changes to IndexNow, Search Console and Bing — commit .indexnow.json after"
   }
 }

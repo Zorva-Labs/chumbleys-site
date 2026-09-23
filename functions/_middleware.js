@@ -100,12 +100,33 @@ const isStatic = (p) => STATIC_EXT.test(p) || p.startsWith('/assets/');
 // Owner and machine surfaces are never geo-gated and never counted as traffic.
 const isPrivate = (p) => p.startsWith('/traffic') || p.startsWith('/api/');
 
+// Repository files that are never served, whatever a deploy uploads. Until
+// 2026-09-23 this site was deployed from the repo root and served its manual,
+// changelog, manifest, wrangler.toml, .indexnow.json, migrations/ and .claude/;
+// build.mjs now deploys an allow-list (dist/), and this is the belt to that
+// brace — it also answers 404 over any copy an edge cache still holds.
+const isRepoFile = (p) =>
+  /^\/(scripts|migrations|functions|tools|\.claude|\.wrangler|node_modules)(\/|$)/i.test(p) ||
+  /^\/(CLAUDE\.md|CHANGELOG\.md|CHECKLIST\.md|README\.md|site\.json|wrangler\.toml|build\.mjs|package(-lock)?\.json|\.gitignore|\.assetsignore|\.indexnow\.json|\.dev\.vars)$/i.test(p) ||
+  /\.(mjs|sql|toml|py|log|mbtree)$/i.test(p);
+
+// The site's own 404 page with a 404 status (Pages serves 404.html as /404 with a 200).
+async function notFound(context, url) {
+  const headers = { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store', 'x-robots-tag': 'noindex' };
+  try {
+    const page = await context.env.ASSETS.fetch(new URL('/404', url).toString());
+    if (page && page.ok) return new Response(page.body, { status: 404, headers });
+  } catch { /* fall through */ }
+  return new Response('Not found', { status: 404, headers: { ...headers, 'content-type': 'text/plain' } });
+}
+
 /* -------------------------------- handler ------------------------------- */
 
 export async function onRequest(context) {
   const { request, env, next } = context;
   const url = new URL(request.url);
   const path = url.pathname;
+  if (isRepoFile(path)) return notFound(context, url);
   const ua = request.headers.get('user-agent') || '';
   const bot = botName(ua);
 
