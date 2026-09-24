@@ -10,7 +10,13 @@
     ],
     "submitted": "2026-09-23T13:53:31.782Z"
   },
-  "bing": null,
+  "bing": {
+    "site": "https://chumbleysdetailing.com/",
+    "sitemaps": [
+      "https://chumbleysdetailing.com/sitemap.xml"
+    ],
+    "checked": "2026-09-24T02:44:06.519Z"
+  },
   "urls": {
     "https://chumbleysdetailing.com/": {
       "hash": "be6343dc07b8ee28",
