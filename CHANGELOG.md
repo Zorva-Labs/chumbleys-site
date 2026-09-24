@@ -2,6 +2,9 @@
 
 Newest first. One entry per session that changed this repo: what changed, why, what the client asked for, what is still owed. Infrastructure changes also go in `site.json` and `CLAUDE.md`. Entries dated before 2026-09-17 are reconstructed from git history; the reasoning behind them is in `CLAUDE.md` and in `~/fleet/docs/archive`.
 
+## 2026-09-23 (the /traffic edge panel's token)
+- **The `/traffic` edge panel has credentials again.** It read Cloudflare's zone analytics with the global API key (`CF_ANALYTICS_EMAIL` + `CF_ANALYTICS_KEY`), which stopped authenticating when the account's email changed (22:09 UTC); those secrets were cleared, but the replacement was never put on this project, so the panel sat dark. `CF_ANALYTICS_TOKEN` — the read-only "Traffic-API" token (Zone Analytics: Read, `~/.env`), which the panel's code already reads first — is now a Pages secret on `chumbleys` (`wrangler pages secret put`), listed in `site.json → cloudflare.secrets`; redeployed the same night so it binds (0 pages changed). The token was checked against this estate's zone analytics before it went on.
+
 ## 2026-09-24
 - Code only: the /traffic edge panel (Cloudflare zone analytics over GraphQL) now authenticates with `CF_ANALYTICS_TOKEN` — the read-only account token "Traffic-API" (Zone Analytics: Read), `CF_ANALYTICS_TOKEN` in `~/.env` — and falls back to the old `CF_ANALYTICS_EMAIL` + `CF_ANALYTICS_KEY` pair, which held the global API key that stopped authenticating estate-wide on 2026-09-23 (traffic-kit, same change in every copy). This site has no zone id and no analytics credentials, so its panel stays off; the fix is here for when it is connected.
 

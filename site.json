@@ -18,7 +18,8 @@
     "r2": {},
     "workers": [],
     "secrets": [
-      "TRAFFIC_PASSWORD"
+      "TRAFFIC_PASSWORD",
+      "CF_ANALYTICS_TOKEN"
     ],
     "vars": {
       "GEO_ALLOW": "",
@@ -61,7 +62,7 @@
   "geo": null,
   "launched": "2026-04-30",
   "built": "2026-04-30",
-  "updated": "2026-09-17",
+  "updated": "2026-09-23",
   "notes": "",
   "name": "Chumbley's Detailing",
   "slug": "chumbleys",
