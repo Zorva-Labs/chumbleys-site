@@ -98,7 +98,15 @@ async function analytics(db) {
     'SELECT channel, SUM(sessions) AS sessions FROM ga4_channels GROUP BY channel ORDER BY sessions DESC'
   ).all().catch(() => ({}))).results || [];
 
-  return { measurementId: meta.value, asOf: asOf && asOf.d, days, channels };
+  /* The six Analytics cards (page, channel, event, new users, country,
+     device) read these, grouped by kind. Written nightly with ga4_days by
+     ~/nashvilles-network/scripts/ga4-ingest.mjs (since 2026-09-24). */
+  const dims = (await db.prepare(
+    'SELECT kind, label, value, prev FROM ga4_dims ORDER BY kind, value DESC'
+  ).all().catch(() => ({}))).results || [];
+  const byKind = {};
+  for (const d of dims) (byKind[d.kind] = byKind[d.kind] || []).push(d);
+  return { measurementId: meta.value, asOf: asOf && asOf.d, days, channels, dims: byKind };
 }
 
 async function rankings(db) {

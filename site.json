@@ -40,13 +40,13 @@
   },
   "mail": null,
   "google": {
-    "ga4Property": null,
-    "ga4Measurement": "G-ZM8FXXENGY",
+    "ga4Property": "555748888",
+    "ga4Measurement": "G-EQVL6SGTES",
     "gsc": null,
     "adsCustomerId": null,
     "adsConversionId": null,
     "businessProfile": null,
-    "notes": "generate_lead fires on /thanks/ and server-side via the GA4 Measurement Protocol (2026-05-03)"
+    "notes": "GA4 G-EQVL6SGTES / property 555748888 under the Nashville's Web Design account (406355338) since 2026-09-24, in place of G-ZM8FXXENGY, a property michael@nashvilleswebdesign.com cannot see (the old Zorva daily digest), so nothing could feed /traffic from it."
   },
   "meta": {
     "pixelId": null,
