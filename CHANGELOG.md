@@ -2,6 +2,12 @@
 
 Newest first. One entry per session that changed this repo: what changed, why, what the client asked for, what is still owed. Infrastructure changes also go in `site.json` and `CLAUDE.md`. Entries dated before 2026-09-17 are reconstructed from git history; the reasoning behind them is in `CLAUDE.md` and in `~/fleet/docs/archive`.
 
+## 2026-09-24 (/traffic section 4: what Bing holds now)
+- Michael: add four things from Bing to the traffic page on every dashboard: which of the site's pages Bing has found and when it last read each, the pages it couldn't read, pages in its index over time, and the sitemap's status. `add-bing.mjs --apply` (traffic-kit `cf8ef48`) refreshed section 4 and `functions/api/traffic/bing.js`. The figures come from gsc-ingest's nightly Bing pull (`66f863c`). "What Bing has read" and the two new panels show even while Bing has no search figures.
+- What Bing holds for chumbleysdetailing.com today: the sitemap `/sitemap.xml` read 24 Sept, 1 page, no errors; no problem pages; Bing has found 1 of the 1 pages asked about so far (1 in the sitemap).
+- Built, deployed (`01e2fe98`), submitted (nothing new to send).
+- **Owed:** nothing. The nightly pull keeps asking Bing about the site's pages: never asked first, then pages it hasn't found every three days, and the rest every ten.
+
 ## 2026-09-24 (GA4 moved to a Nashville's Web Design property; /traffic Analytics)
 - **GA4 is now `G-EQVL6SGTES` (property 555748888, the Nashville's Web Design account)**, in place of `G-ZM8FXXENGY`. That property sits in the old Zorva daily-digest account, which michael@nashvilleswebdesign.com cannot see, so nothing could feed this site's `/traffic` from it. Michael's call, after an audit of every dashboard. The ID is swapped in `index.html` and `thanks/index.html` (its `generate_lead` follows). The new property starts its history today; the old one is simply no longer fed.
 - The manual's server-side Measurement Protocol `generate_lead` had gone with the backend in `eea5f63` (the quote form went mailto-only); the manual now says so. `GA4_API_SECRET`/`GA4_MEASUREMENT_ID` in `~/.env` belonged to the old stream and nothing reads them.
