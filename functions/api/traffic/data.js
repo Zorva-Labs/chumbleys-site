@@ -41,12 +41,23 @@ function localOffset(std, when = new Date()) {
   return t >= start && t < end ? std - 1 : std;
 }
 
+/* Cloudflare GraphQL auth for the edge panel. CF_ANALYTICS_TOKEN (an API
+   token, Bearer) since 2026-09-24 — the global key behind CF_ANALYTICS_EMAIL
+   + CF_ANALYTICS_KEY stopped authenticating on 2026-09-23; the pair stays as
+   the fallback. */
+function cfAnalyticsAuth(env) {
+  return env.CF_ANALYTICS_TOKEN
+    ? { Authorization: `Bearer ${env.CF_ANALYTICS_TOKEN}` }
+    : { 'X-Auth-Email': env.CF_ANALYTICS_EMAIL, 'X-Auth-Key': env.CF_ANALYTICS_KEY };
+}
+const cfAnalyticsConfigured = (env) =>
+  !!((env.CF_ANALYTICS_TOKEN || (env.CF_ANALYTICS_EMAIL && env.CF_ANALYTICS_KEY)) && env.CF_ZONE_ID);
+
 async function cfGraphQL(env, query) {
   const r = await fetch('https://api.cloudflare.com/client/v4/graphql', {
     method: 'POST',
     headers: {
-      'X-Auth-Email': env.CF_ANALYTICS_EMAIL,
-      'X-Auth-Key': env.CF_ANALYTICS_KEY,
+      ...cfAnalyticsAuth(env),
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({ query }),
@@ -355,7 +366,7 @@ export async function onRequestGet({ request, env, data }) {
   /* ---- Cloudflare edge --------------------------------------------------- */
 
   let edge = { configured: false, days: [], totals: null };
-  if (env.CF_ANALYTICS_EMAIL && env.CF_ANALYTICS_KEY && env.CF_ZONE_ID) {
+  if (cfAnalyticsConfigured(env)) {
     const DAY = 86400000;
     const now = new Date();
     const iso = (d) => d.toISOString().slice(0, 10);
