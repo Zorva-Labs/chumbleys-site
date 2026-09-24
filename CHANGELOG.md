@@ -2,6 +2,10 @@
 
 Newest first. One entry per session that changed this repo: what changed, why, what the client asked for, what is still owed. Infrastructure changes also go in `site.json` and `CLAUDE.md`. Entries dated before 2026-09-17 are reconstructed from git history; the reasoning behind them is in `CLAUDE.md` and in `~/fleet/docs/archive`.
 
+## 2026-09-24 (ad-review visits)
+- **/traffic logs Google's own ad-review visits as bots.** Google loads ad landing pages from its own network with an ordinary browser user agent and a gclid, so the edge log counted each one as a person arriving from an ad. On Blair Custom Interiors, where it was found, that was 18 of the first 40 ad visits. `functions/_middleware.js` now carries traffic-kit's `adReviewBot()`, patched in by `~/traffic-kit/bin/add-ad-review.mjs`: a request from Google's networks (AS15169, AS396982) with a click id is the bot "Google ad review". It matches by network number, so Google Fiber customers still count as people. Committed, not deployed from here: another session's uncommitted work was in this working tree, so the change goes live with the next deploy.
+- Backfill: 0 earlier row(s) matched (`isp = 'Google LLC' AND gclid = 1`) and are now `is_bot = 1, bot_name = 'Google ad review'` (re-run after the deploy for anything logged in between).
+
 ## 2026-09-23 (the /traffic edge panel's token)
 - **The `/traffic` edge panel has credentials again.** It read Cloudflare's zone analytics with the global API key (`CF_ANALYTICS_EMAIL` + `CF_ANALYTICS_KEY`), which stopped authenticating when the account's email changed (22:09 UTC); those secrets were cleared, but the replacement was never put on this project, so the panel sat dark. `CF_ANALYTICS_TOKEN` — the read-only "Traffic-API" token (Zone Analytics: Read, `~/.env`), which the panel's code already reads first — is now a Pages secret on `chumbleys` (`wrangler pages secret put`), listed in `site.json → cloudflare.secrets`; redeployed the same night so it binds (0 pages changed). The token was checked against this estate's zone analytics before it went on.
 

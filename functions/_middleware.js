@@ -83,6 +83,34 @@ function botName(ua) {
   return null;
 }
 
+// ad-review: Google's own review visits to ad landing pages (bin/add-ad-review.mjs patches this block into a site)
+/* Google loads an ad's landing page from its own network with an ordinary
+   browser user agent and a click id on the URL, when the ad is reviewed and
+   from time to time after. No "AdsBot" in the user agent, so botName() cannot
+   see it: on Blair Custom Interiors that was 18 of the first 40 click-id page
+   views (2026-09-23/24, "Google LLC", New York) against 21 billed clicks, and
+   the dashboard was counting Google's reviewer as ad traffic.
+   Deliberately narrow: Google's own networks AND a click id.
+     - By network number, never by name. AS16591 is Google Fiber, an ordinary
+       ISP with customers in Nashville, and its name starts with "Google" too.
+     - AS15169 (Google LLC) and AS396982 (Google Cloud). People do not browse
+       from these; the likely exception, Google's own VPN on a Pixel, is caught
+       only when it also arrived from an ad, and then it shows in the bot table
+       as one visit rather than disappearing.
+     - Only with gclid / wbraid / gbraid. Google-network page views without one
+       (renderers, and possibly Chrome's private prefetch proxy, which fetches
+       for a person) are left alone.
+   A match is a bot everywhere the caller uses the name: logged under it, given
+   no attribution cookie, and, like AdsBot, never geo-blocked, because a 403 to
+   Google's reviewer can cost the ad its approval. */
+const GOOGLE_ASNS = new Set([15169, 396982]);
+function adReviewBot(request, url) {
+  if (!GOOGLE_ASNS.has(Number(request?.cf?.asn))) return null;
+  const q = url.searchParams;
+  return q.get('gclid') || q.get('wbraid') || q.get('gbraid') ? 'Google ad review' : null;
+}
+// /ad-review
+
 function deviceOf(ua) {
   const s = (ua || '').toLowerCase();
   if (/ipad|tablet|playbook|silk|(android(?!.*mobile))/.test(s)) return 'tablet';
@@ -128,7 +156,7 @@ export async function onRequest(context) {
   const path = url.pathname;
   if (isRepoFile(path)) return notFound(context, url);
   const ua = request.headers.get('user-agent') || '';
-  const bot = botName(ua);
+  const bot = botName(ua) || adReviewBot(context.request, url);
   // chumbleys.pages.dev serves the same HTML as chumbleysdetailing.com. It must never be
   // indexed as a duplicate of the real domain: noindex it at the edge on every
   // response, keep serving it (it is the preview copy). Until 2026-09-23 it went
