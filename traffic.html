@@ -2202,10 +2202,14 @@ function renderBing() {
   if (!b) {
     setRange('bing', '');
     heroArt('art-bing', []);
-    box.innerHTML = `<div class="kpis">${stateCard('bing', 'clock', 'Bing isn’t connected yet', 'Once the site is added to Bing Webmaster Tools, Bing’s figures appear here within a day or two: what people searched on Bing, which pages it has found, and what its crawler couldn’t read.')}</div>`;
+    box.innerHTML = `<div class="kpis">${stateCard('bing', 'clock', 'Bing isn’t connected yet', 'Once the site is added to Bing Webmaster Tools, which pages Bing has found and what its crawler couldn’t read show here after the next nightly check, and what people searched on Bing a few days later, once Bing has prepared the site’s figures.')}</div>`;
     return;
   }
-  const bStart = addDays(b.asOf, -(b.days - 1));
+  /* No search figures yet means no latest day to count back from: asOf is
+     null, and a date made from null throws. Until 2026-09-25 that throw took
+     the whole tab down, so every site connected to Bing but without figures
+     showed one error line instead of the sitemap and pages below. */
+  const bStart = b.empty ? null : addDays(b.asOf, -(b.days - 1));
   const days = b.empty ? [] : fillDays(b.daily, b.daily?.[0]?.day > bStart ? b.daily[0].day : bStart, b.asOf);
   const clicks = days.map((x) => Number(x.row?.clicks) || 0), impr = days.map((x) => Number(x.row?.impressions) || 0);
   const T = b.totals || {}, P = b.previous || {};
@@ -2215,7 +2219,7 @@ function renderBing() {
   heroArt('art-bing', impr);
   const ctr = ratio(T.clicks, T.impressions);
   let h = `<div class="kpis">${[
-    kpi({ label: 'Clicks from Bing', value: b.empty ? '—' : fmt.int(T.clicks), d: b.empty ? '' : delta(T.clicks, P.impressions || P.clicks ? P.clicks : null, { vs }), series: b.empty ? null : clicks, sub: b.empty ? 'arrive a day or two after a site is added' : 'people who came through from Bing' }),
+    kpi({ label: 'Clicks from Bing', value: b.empty ? '—' : fmt.int(T.clicks), d: b.empty ? '' : delta(T.clicks, P.impressions || P.clicks ? P.clicks : null, { vs }), series: b.empty ? null : clicks, sub: b.empty ? 'not reported by Bing yet' : 'people who came through from Bing' }),
     kpi({ label: 'Times shown', value: b.empty ? '—' : fmt.compact(T.impressions), d: b.empty ? '' : delta(T.impressions, P.impressions || null, { vs }), series: b.empty ? null : impr }),
     kpi({ label: 'Click rate', value: b.empty ? '—' : fmt.pct(ctr), sub: 'of appearances clicked' }),
     kpi({ label: 'Pages in Bing’s index', value: c ? fmt.int(c.inIndex) : '—', sub: c ? `as of ${esc(dShort(c.asOf))}` : 'not reported yet' }),
@@ -2225,7 +2229,7 @@ function renderBing() {
   const topQ = (b.queries || [])[0];
   const miss = cv && cv.checked ? cv.checked - cv.found : 0;
   h += `<div class="insights">${insightsHtml([
-    b.empty ? { icon: 'clock', html: `Connected as <b>${esc(b.siteUrl)}</b>. Bing has no search figures yet — they start a day or two after a site is added, and a new site can take weeks to appear in its results.` }
+    b.empty ? { icon: 'clock', html: `Connected as <b>${esc(b.siteUrl)}</b>. No search figures from Bing yet: it takes about two days to prepare a newly added site’s figures, then runs a few days behind, and a site new to its index can take weeks to show up.` }
       : { icon: 'chart', html: `Bing showed the site <b>${fmt.plural(T.impressions, 'time')}</b> in the ${b.days} days to ${esc(dShort(b.asOf))}; <b>${fmt.int(T.clicks)}</b> became a visit.` },
     topQ ? { icon: 'target', html: `Top search on Bing: <b>“${esc(topQ.query)}”</b>${fin(topQ.position) ? ` at position ${fmt.dec(topQ.position)}` : ''}.` } : null,
     cv && cv.checked ? { icon: miss ? 'alert' : 'check', html: miss ? `Bing hasn’t found <b>${fmt.plural(miss, 'page')}</b> of the site yet. We ask again every few days; a page it can’t find can’t be cited by Copilot either.` : `Bing has found <b>every page</b> it has been asked about.` } : null,

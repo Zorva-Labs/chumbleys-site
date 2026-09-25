@@ -2,6 +2,13 @@
 
 Newest first. One entry per session that changed this repo: what changed, why, what the client asked for, what is still owed. Infrastructure changes also go in `site.json` and `CLAUDE.md`. Entries dated before 2026-09-17 are reconstructed from git history; the reasoning behind them is in `CLAUDE.md` and in `~/fleet/docs/archive`.
 
+## 2026-09-25 (/traffic: the Bing tab draws again)
+- Michael: "bing is working on the traffic page for sbcnashville, but not on nittanytax or harmonytax, check all sites and fix bing."
+- **The cause:** since the tabbed page went on (24 Sept), its Bing tab threw whenever Bing had no search figures for the site. It counted the window back from Bing's latest day, which is null until Bing reports, and the date made from it threw, so the whole tab read "This part of the page couldn't be drawn". The sitemap, the pages Bing has found and the pages it couldn't read never showed, though the data was there.
+- **Fixed** in traffic-kit (`182c67b`), with truer copy on how long Bing takes. Refreshed here with `upgrade.mjs --apply`, which changed the page only. Built, checked, deployed (`6b871753`) and submitted through `fleet deploy`. The live page carries the fix. Its Bing tab was drawn in a local harness with this site's own live data: no error.
+- **What Bing shows today:** no search figures yet (Bing prepares a newly added site’s figures over about two days, then runs a few days behind); the sitemap read 23 Sept (1 page); 1 of 1 sitemap page found by Bing; no page Bing couldn’t read.
+- **Owed:** nothing.
+
 ## 2026-09-24 (/traffic: a Chrome prefetch is not Google's ad review)
 - Michael: roll out to every dashboard the fix first made on Blair Custom Interiors, where a lead from a Google ad came out "Unknown". Chrome fetches Google's results and ads before the click through Google's own proxy, so the fetch comes from Google's network with the ad's gclid on it. This morning's ad-review rule filed those fetches as "Google ad review", which gets no source cookie. An opened one was never counted as a visit, and its call or form lost where it came from.
 - `node ~/traffic-kit/bin/add-ad-review.mjs . --apply` (traffic-kit): a request with `Sec-Purpose: prefetch` is never ad review. It is logged as "Chrome prefetch", not as a visit, and keeps its source cookie. `functions/api/pv-view.js` was added, and the `prefetched-view` block went into `assets/js/traffic-beacons.js`: when someone opens a prefetched page, it posts the visit there, once per page. The crawler card on /traffic names prefetches on their own line. Built, checked, deployed (`5bb852d0`), submitted.
