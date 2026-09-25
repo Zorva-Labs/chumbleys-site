@@ -150,7 +150,7 @@ async function rankings(db) {
               SUM(CASE WHEN position > 10 AND position <= 20 THEN 1 ELSE 0 END) AS top20,
               SUM(CASE WHEN position > 20 THEN 1 ELSE 0 END)  AS rest,
               COUNT(*) AS total, SUM(impressions) AS impressions, SUM(clicks) AS clicks
-         FROM rank_snapshots GROUP BY week_start ORDER BY week_start DESC LIMIT 26`
+         FROM rank_snapshots GROUP BY week_start ORDER BY week_start DESC LIMIT 53`
     ).all(),
 
     /* Wins and losses in one list, sorted by movement. Showing only the
@@ -267,9 +267,12 @@ export async function onRequestGet({ request, env, data }) {
   // on it; the crawler panel deliberately does not.
   const HUMAN = 'is_bot = 0';
 
+  const localDow = `CAST(strftime('%w', created_at, '-${CT_OFFSET} hours') AS INTEGER)`;
+
   const [
     daily, topPages, channels, entryPages, countries,
     engagement, totals, hours, devices, bots, botTotals, referrers, prevTotals,
+    week, channelDaily,
   ] = await Promise.all([
     q(`SELECT ${localDay} AS day, COUNT(*) AS views,
               SUM(CASE WHEN is_entry = 1 THEN 1 ELSE 0 END) AS entries
@@ -319,6 +322,15 @@ export async function onRequestGet({ request, env, data }) {
          FROM pageviews
         WHERE created_at >= datetime('now', ?1) AND created_at < datetime('now', ?2)
           AND ${HUMAN}`, prevStart, since),
+    /* Day of week by hour, local — the heatmap of when people visit (0 is
+       Sunday). Added 2026-09-24 with the tabbed dashboard. */
+    q(`SELECT ${localDow} AS dow, ${localHour} AS hour, COUNT(*) AS n
+         FROM pageviews WHERE created_at >= datetime('now', ?1) AND ${HUMAN}
+        GROUP BY dow, hour`, since),
+    /* Visits by channel, day by day — where each day's visits came from. */
+    q(`SELECT ${localDay} AS day, channel, COUNT(*) AS n
+         FROM pageviews WHERE created_at >= datetime('now', ?1) AND ${HUMAN} AND is_entry = 1
+        GROUP BY day, channel ORDER BY day`, since),
   ]);
 
   /* ---- Conversions ------------------------------------------------------ */
@@ -326,7 +338,7 @@ export async function onRequestGet({ request, env, data }) {
      matter most: for most local businesses a lead starts with a phone call,
      not a form. */
 
-  const [eventTotals, eventDaily, eventPages, eventRecent, eventChannels, eventHours, prevConv] =
+  const [eventTotals, eventDaily, eventPages, eventRecent, eventChannels, eventHours, prevConv, eventWeek] =
     await Promise.all([
     q(`SELECT name, COUNT(*) AS n
          FROM events WHERE created_at >= datetime('now', ?1)
@@ -334,10 +346,10 @@ export async function onRequestGet({ request, env, data }) {
     q(`SELECT ${localDay} AS day, COUNT(*) AS n
          FROM events WHERE created_at >= datetime('now', ?1) AND name IN ('call','form_complete')
         GROUP BY day ORDER BY day ASC`, since),
-    q(`SELECT path, COUNT(*) AS n
+    q(`SELECT CASE WHEN name = 'form_complete' THEN COALESCE(landing, path) ELSE path END AS path, COUNT(*) AS n
          FROM events WHERE created_at >= datetime('now', ?1) AND name IN ('call','form_complete')
           AND path IS NOT NULL
-        GROUP BY path ORDER BY n DESC LIMIT 12`, since),
+        GROUP BY 1 ORDER BY n DESC LIMIT 12`, since),
     /* The conversions themselves, newest first — a log rather than a total, so
        you can see the ad click that turned into a phone call at 4:12pm. Times
        come back pre-shifted to Central; minutes_to_convert is how long the
@@ -366,6 +378,10 @@ export async function onRequestGet({ request, env, data }) {
     q(`SELECT COUNT(*) AS n FROM events
         WHERE created_at >= datetime('now', ?1) AND created_at < datetime('now', ?2)
           AND name IN ('call','form_complete')`, prevStart, since),
+    q(`SELECT ${localDow} AS dow, ${localHour} AS hour, COUNT(*) AS n
+         FROM events
+        WHERE created_at >= datetime('now', ?1) AND name IN ('call','form_complete')
+        GROUP BY dow, hour`, since),
   ]);
 
   const byName = Object.fromEntries(eventTotals.map((r) => [r.name, r.n]));
@@ -440,12 +456,12 @@ export async function onRequestGet({ request, env, data }) {
         totals: totals[0] || { views: 0, entries: 0, ad_clicks: 0 },
         previous: prevTotals[0] || { views: 0, entries: 0 },
         daily, topPages, channels, entryPages, countries,
-        engagement, hours, devices, referrers,
+        engagement, hours, devices, referrers, week, channelDaily,
       },
       crawlers: { total: botTotals[0]?.n || 0, list: bots },
       conversions: {
         total: conversions, byName, daily: eventDaily, pages: eventPages,
-        recent: eventRecent, channels: eventChannels, hours: eventHours,
+        recent: eventRecent, channels: eventChannels, hours: eventHours, week: eventWeek,
         previous: prevConv[0]?.n || 0,
         /* Whether this site has a thank-you step AT ALL, all-time. A form that
            confirms in place never navigates, so form_complete cannot fire and

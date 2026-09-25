@@ -2,6 +2,14 @@
 
 Newest first. One entry per session that changed this repo: what changed, why, what the client asked for, what is still owed. Infrastructure changes also go in `site.json` and `CLAUDE.md`. Entries dated before 2026-09-17 are reconstructed from git history; the reasoning behind them is in `CLAUDE.md` and in `~/fleet/docs/archive`.
 
+## 2026-09-24 (/traffic: the tabbed dashboard)
+- Michael: redesign the traffic page on every site — a tab for each source (Edge first, then Search Console, Analytics, Google Ads, Bing), colorful, with explanations, charts, and a Download PDF for each tab. We don't run this business's Google Ads, so its Google Ads tab is the offer: what ads would do for the business, built from its own numbers (visits from Google search, the searches ranking 4–20, visits from anyone else's ads), how we run them, and Book a call / Email Michael / the phone.
+- `node ~/traffic-kit/bin/upgrade.mjs . --apply` (traffic-kit `491ce36`): `traffic.html` replaced with the tabbed page, the bar and the name carried over; `functions/api/traffic/ads.js` added (the Google Ads tab); `migrations/0010_ads.sql` added (the Ads tables, only ever applied where we run the ads).
+- `functions/api/traffic/data.js` patched: day-of-week × hour and visits by source by day for the new charts, forms credited to the page their visit began on (a form is logged on the thank-you page), 53 weeks of Search Console (was 26).
+- `functions/api/traffic/watch.js` added: the Search Console tab's "Edit the list" (the searches we are working to win) had no endpoint here — traffic-kit's installer never shipped it — so saving answered "Could not reach the server". It now saves to this site's `rank_watch`, which the weekly Search Console ingest mirrors.
+- Built; `traffic-kit check` clean. Deployed (`6ff69810`), submitted. Live: `https://chumbleysdetailing.com/traffic` serves the tabbed page; `/api/traffic/ads` and `/api/traffic/watch` answer 401 signed out. Every column the new queries read was checked in the live D1 first.
+- **Owed:** nothing.
+
 ## 2026-09-24 (/traffic section 4: what Bing holds now)
 - Michael: add four things from Bing to the traffic page on every dashboard: which of the site's pages Bing has found and when it last read each, the pages it couldn't read, pages in its index over time, and the sitemap's status. `add-bing.mjs --apply` (traffic-kit `cf8ef48`) refreshed section 4 and `functions/api/traffic/bing.js`. The figures come from gsc-ingest's nightly Bing pull (`66f863c`). "What Bing has read" and the two new panels show even while Bing has no search figures.
 - What Bing holds for chumbleysdetailing.com today: the sitemap `/sitemap.xml` read 24 Sept, 1 page, no errors; no problem pages; Bing has found 1 of the 1 pages asked about so far (1 in the sitemap).
