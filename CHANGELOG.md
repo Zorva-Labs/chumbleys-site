@@ -3,7 +3,7 @@
 Newest first. One entry per session that changed this repo: what changed, why, what the client asked for, what is still owed. Infrastructure changes also go in `site.json` and `CLAUDE.md`. Entries dated before 2026-09-17 are reconstructed from git history; the reasoning behind them is in `CLAUDE.md` and in `~/fleet/docs/archive`.
 
 ## 2026-09-24 (/traffic: the sender's name on each form)
-- Michael: show the name of the person who filled out the form in the Edge tab. This site has no form, so there is no record of the submission on the site to read a name from; where forms appear the card says so (traffic-kit `76050de`). Names come for free if the site moves to the Cloudflare lead form.
+- Michael: show the name of the person who filled out the form in the Edge tab. This site's quote form opens the visitor's email app (a `mailto:`), so nothing is saved on the site and there is no record of the submission on the site to read a name from; where forms appear the card says so (traffic-kit `76050de`). Names come for free if the site moves to the Cloudflare lead form.
 - `upgrade.mjs --apply`: `data.js` patched (`leadNames()`), `ads.js` and the page refreshed. Built, checked, deployed (`4b521b8e`); `/traffic` live with the new page.
 
 ## 2026-09-24 (/traffic: the tabbed dashboard)
