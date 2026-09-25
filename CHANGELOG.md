@@ -2,6 +2,13 @@
 
 Newest first. One entry per session that changed this repo: what changed, why, what the client asked for, what is still owed. Infrastructure changes also go in `site.json` and `CLAUDE.md`. Entries dated before 2026-09-17 are reconstructed from git history; the reasoning behind them is in `CLAUDE.md` and in `~/fleet/docs/archive`.
 
+## 2026-09-24 (/traffic: a Chrome prefetch is not Google's ad review)
+- Michael: roll out to every dashboard the fix first made on Blair Custom Interiors, where a lead from a Google ad came out "Unknown". Chrome fetches Google's results and ads before the click through Google's own proxy, so the fetch comes from Google's network with the ad's gclid on it. This morning's ad-review rule filed those fetches as "Google ad review", which gets no source cookie. An opened one was never counted as a visit, and its call or form lost where it came from.
+- `node ~/traffic-kit/bin/add-ad-review.mjs . --apply` (traffic-kit): a request with `Sec-Purpose: prefetch` is never ad review. It is logged as "Chrome prefetch", not as a visit, and keeps its source cookie. `functions/api/pv-view.js` was added, and the `prefetched-view` block went into `assets/js/traffic-beacons.js`: when someone opens a prefetched page, it posts the visit there, once per page. The crawler card on /traffic names prefetches on their own line. Built, checked, deployed (`5bb852d0`), submitted.
+- Cloudflare's edge kept serving the old `/assets/js/traffic-beacons.js` after the deploy (a fixed name cached `immutable` for a year). It was purged by URL through the zone API, and the served file now carries the block.
+- No Google-network ad hits in this site's log, so there was nothing to correct.
+- **Owed:** nothing.
+
 ## 2026-09-24 (/traffic: the sender's name on each form)
 - Michael: show the name of the person who filled out the form in the Edge tab. This site's quote form opens the visitor's email app (a `mailto:`), so nothing is saved on the site and there is no record of the submission on the site to read a name from; where forms appear the card says so (traffic-kit `76050de`). Names come for free if the site moves to the Cloudflare lead form.
 - `upgrade.mjs --apply`: `data.js` patched (`leadNames()`), `ads.js` and the page refreshed. Built, checked, deployed (`4b521b8e`); `/traffic` live with the new page.

@@ -1453,6 +1453,9 @@ function botGroup(name) {
   if (BOT_AI[name]) return 'ai';
   if (BOT_SEARCH.includes(name)) return 'search';
   if (/^Google (Ads bot|ad review|AdSense)$/.test(name)) return 'ads';
+  /* A page Chrome fetched before a click (Google's results and ads): not a
+     visit unless the person opens it, and then /api/pv-view counts it. */
+  if (name === 'Chrome prefetch') return 'prefetch';
   if (/preview$/.test(name)) return 'preview';
   if (/^(SEMrush|Ahrefs|Majestic|Moz|Screaming Frog|Lighthouse|PageSpeed|Zorva scanner|Internet Archive)$/.test(name)) return 'tools';
   return 'other';
@@ -1686,7 +1689,7 @@ function renderEdgeBots(cr) {
   const box = $('edge-bots');
   const list = (cr.list || []).filter((b) => b.name !== 'Test (ours)');
   if (!list.length) { box.innerHTML = empty('No crawler visits recorded yet.'); return; }
-  const groups = { ai: [], search: [], ads: [], preview: [], tools: [], other: [] };
+  const groups = { ai: [], search: [], ads: [], prefetch: [], preview: [], tools: [], other: [] };
   for (const b of list) groups[botGroup(b.name)].push(b);
   /* One chip per assistant, not per crawler: ChatGPT's three agents are one name to a reader. */
   const aiBy = new Map();
@@ -1699,7 +1702,7 @@ function renderEdgeBots(cr) {
   for (const o of aiBy.values()) o.what = [...o.roles].map((r) => AI_ROLE[r]).join(', ');
   const chip = (name, n, sub, ai) => `<div class="bot${ai ? ' bot--ai' : ''}"><span class="bot__n">${fmt.int(n)}</span><span class="bot__t"><b>${esc(name)}</b><small>${esc(sub)}</small></span></div>`;
   const ais = [...aiBy.values()].sort((x, y) => y.n - x.n);
-  const rest = [['ads', 'Google checking the ads'], ['preview', 'link previews'], ['tools', 'SEO tools'], ['other', 'other bots and scripts']]
+  const rest = [['ads', 'Google checking the ads'], ['prefetch', 'pages Chrome fetched before a click (each counts as a visit once opened)'], ['preview', 'link previews'], ['tools', 'SEO tools'], ['other', 'other bots and scripts']]
     .map(([k, w]) => (groups[k].length ? `${fmt.int(sum(groups[k], 'n'))} ${w}` : '')).filter(Boolean);
   box.innerHTML = `<div class="bots">`
     + `<div class="bots__grp"><h4>AI assistants</h4>${ais.length ? `<div class="bots__list">${ais.map((b) => chip(b.name, b.n, `${b.what} · last ${whenUtc(b.last)}`, true)).join('')}</div>` : '<p class="empty">No AI assistant has read the site in this window yet.</p>'}</div>`

@@ -65,6 +65,32 @@
   window.addEventListener('pagehide', send);
 })();
 
+// prefetched-view: a page Chrome fetched before the click (bin/add-ad-review.mjs patches this block into a site's beacons)
+/* Chrome fetches some pages before the click: Google's results and ads, and
+   the address bar's top guess. The server logs that fetch as "Chrome
+   prefetch", not as a visit, because most are never opened. When one is
+   opened, Chrome serves its own copy and doesn't ask the server again, so
+   the page reports itself, once: when its navigation was served from a
+   prefetch, or when a prerendered copy becomes the page. /api/pv-view logs
+   the visit. */
+;(function prefetchedView() {
+  if (!navigator.sendBeacon) return;
+  var path = location.pathname;
+  if (path.indexOf('/traffic') === 0 || path.indexOf('/api') === 0) return;
+  function send() {
+    try {
+      navigator.sendBeacon('/api/pv-view', new Blob(
+        [JSON.stringify({ p: path, q: location.search, r: document.referrer })],
+        { type: 'application/json' }
+      ));
+    } catch (e) { /* beacons never throw upward */ }
+  }
+  if (document.prerendering) { document.addEventListener('prerenderingchange', send, { once: true }); return; }
+  var nav = window.performance && performance.getEntriesByType ? performance.getEntriesByType('navigation')[0] : null;
+  if (nav && nav.deliveryType === 'navigational-prefetch') send();
+})();
+// /prefetched-view
+
 /* ---------------------------- conversion beacon ------------------------
    For most local businesses a lead is a phone call, not a form, so tap-to-call is
    tracked as a first-class conversion. Without this the traffic dashboard

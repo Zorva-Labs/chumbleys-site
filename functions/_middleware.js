@@ -90,7 +90,7 @@ function botName(ua) {
    see it: on Blair Custom Interiors that was 18 of the first 40 click-id page
    views (2026-09-23/24, "Google LLC", New York) against 21 billed clicks, and
    the dashboard was counting Google's reviewer as ad traffic.
-   Deliberately narrow: Google's own networks AND a click id.
+   Deliberately narrow: Google's own networks AND a click id AND no prefetch.
      - By network number, never by name. AS16591 is Google Fiber, an ordinary
        ISP with customers in Nashville, and its name starts with "Google" too.
      - AS15169 (Google LLC) and AS396982 (Google Cloud). People do not browse
@@ -98,13 +98,31 @@ function botName(ua) {
        only when it also arrived from an ad, and then it shows in the bot table
        as one visit rather than disappearing.
      - Only with gclid / wbraid / gbraid. Google-network page views without one
-       (renderers, and possibly Chrome's private prefetch proxy, which fetches
-       for a person) are left alone.
+       (renderers) are left alone.
+     - Never a prefetch. Chrome fetches Google's results and ads before the
+       click through Google's own proxy (Private Prefetch Proxy), so that fetch
+       also comes from Google's network with the click id on it. But it is
+       fetched for a person, and it says so: `Sec-Purpose: prefetch`. Filed as
+       ad review, it got no attribution cookie. When the person opened the
+       page, Chrome served its own copy, which never reached the server, and
+       their form came out "Unknown" and was not counted as an ad lead
+       (Blair Custom Interiors, 2026-09-24: two of the 53 Google-network
+       fetches since 9/22 were opened by a person, one of them a lead).
    A match is a bot everywhere the caller uses the name: logged under it, given
    no attribution cookie, and, like AdsBot, never geo-blocked, because a 403 to
-   Google's reviewer can cost the ad its approval. */
+   Google's reviewer can cost the ad its approval.
+
+   A prefetch is logged under prefetchBot() as "Chrome prefetch", not as a
+   visit, because most are never opened. It still gets its attribution
+   cookie, which Chrome stores only if the person opens the page. An opened
+   one is counted by the page itself: the beacons script's `prefetched-view`
+   block posts it to /api/pv-view. */
 const GOOGLE_ASNS = new Set([15169, 396982]);
+const isPrefetch = (request) =>
+  /prefetch/i.test(request?.headers?.get('sec-purpose') || request?.headers?.get('purpose') || '');
+const prefetchBot = (request) => (isPrefetch(request) ? 'Chrome prefetch' : null);
 function adReviewBot(request, url) {
+  if (isPrefetch(request)) return null;
   if (!GOOGLE_ASNS.has(Number(request?.cf?.asn))) return null;
   const q = url.searchParams;
   return q.get('gclid') || q.get('wbraid') || q.get('gbraid') ? 'Google ad review' : null;
@@ -195,7 +213,7 @@ export async function onRequest(context) {
   try {
     const ct = res?.headers.get('content-type') || '';
     if (res && res.status === 200 && ct.includes('text/html')) {
-      logPageview(context, url, ua, bot);
+      logPageview(context, url, ua, bot || prefetchBot(context.request));
       const cookie = sourceCookie(context, url, ua, bot);
       if (cookie || isFallbackHost) {
         const out = new Response(res.body, res);
