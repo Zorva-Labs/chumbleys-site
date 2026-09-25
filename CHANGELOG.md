@@ -2,6 +2,17 @@
 
 Newest first. One entry per session that changed this repo: what changed, why, what the client asked for, what is still owed. Infrastructure changes also go in `site.json` and `CLAUDE.md`. Entries dated before 2026-09-17 are reconstructed from git history; the reasoning behind them is in `CLAUDE.md` and in `~/fleet/docs/archive`.
 
+## 2026-09-25 (/traffic: scripts and hosting networks are labeled, never counted)
+- Michael, on the traffic audit's options: "go with your recommendation for the hosting networks" (traffic-kit CHANGELOG, 2026-09-25).
+- `functions/_middleware.js` (traffic-kit `bin/add-not-people.mjs`, `82b6a28`) now logs two kinds of request as bots, never as visits:
+  - "Script": a user agent with no browser engine.
+  - "Hosting network": a request from a data-center network (741 of them), less the ones people browse through (iCloud Private Relay, WARP, office security proxies, Google's own network, Meta's).
+- It's a label on the logged row only. The geo gate and the source cookie treat these requests as people, so a VPN user's call or form keeps its source.
+- Every page view now also keeps the network's number and the user agent (`pageviews.asn`, `pageviews.ua`). The columns were added to the live D1 first, then `migrations/0011_pageviews_asn_ua.sql` and the code.
+- Built, checked (`traffic-kit check` Classification ✓), deployed (`8f23756b`, production confirmed through the Pages API), submitted. A request with no browser engine to the new deployment: HTTP 200, logged as "Script" with its network (AS13335) and user agent (pageviews 714).
+- Past rows are left as they are.
+- **Owed:** nothing.
+
 ## 2026-09-25 (/traffic: our own tools and Google's quiet fetchers are no longer visitors)
 - Michael asked for an audit of what `/traffic` counts as people (the full audit is in traffic-kit's CHANGELOG, 2026-09-25). Here, 27 page views were ours, all from `fleet audit`'s preview-host fetch (Node's own user agent, a Direct visit per run since 19 Sept).
 - `functions/_middleware.js` (traffic-kit `bin/add-our-checks.mjs`, `467fe81`) now logs these by name, never as visits:
