@@ -16,6 +16,46 @@
 // crawlers read the site is the only direct evidence the AEO/GEO work is
 // landing, and no off-the-shelf analytics tool shows it.
 const BOTS = [
+  // our-checks: our own tools and checks, logged by name and never as a visit (bin/add-our-checks.mjs patches this block into a site)
+  /* Every tool of ours that loads a client's pages carries NashvillesWebDesignCheck in its user agent: migrate's
+     check and status (every old URL with ?gclid=MIGRATECHECK), fleet audit, site-kit deploy's verify step,
+     seo-report, the weekly watch. Without it they were people: on Three Stone, 936 of the 1,898 visits in the
+     week to 25 Sept were ours, 674 of them "from Google Ads". First, so no generic rule below can name them first. */
+  ['nashvilleswebdesigncheck', "Nashville's Web Design check"],
+  ['nashvilleswebdesignscanner', "Nashville's Web Design scanner"],   // nashvilleswebdesign.com/seo-check/
+  ['zorvalabsscanner', 'Zorva scanner'],                               // zorvalabs.com's scanner
+  ['zorvalabs', 'Zorva tools'],                                        // ZorvaLabsTools: zorvalabs.com's free tools
+  ['zorva-labs', 'Zorva tools'],                                       // Zorva-Labs-Footer-Audit
+  ['claude/', "Nashville's Web Design check"],                         // the preview browser in our desktop app ("… Claude/<version> Chrome/…")
+  // /our-checks
+  // google-fetchers: Google's fetchers that name themselves, but not as a bot (bin/add-our-checks.mjs patches this block into a site)
+  /* Each of these was a person on the Edge tab: no "bot" in the user agent. From Google's own lists of its
+     fetchers and special-case crawlers, and from every zone's page requests (2026-09-22 to 25): AdWords-Express,
+     BusinessLinkVerification, Read-Aloud, NotebookLM, Apps-Script and a bare "Google-Safety" were counted as
+     visitors; AdWords-Instant and CloudVertexBot only reached "Other bot" through a URL. Never a bare "google"
+     needle: the Google app's own browser ("… GoogleApp/<version>") is a person. A user agent of just "Google"
+     is caught in botName(). */
+  ['google-adwords', 'Google Ads bot'],                                // Google-AdWords-Express, Google-Adwords-Instant(-Mobile)
+  ['google-ads-creatives', 'Google Ads bot'],                          // Google-Ads-Creatives-Assistant
+  ['google-businesslinkverification', 'Google Business Profile'],
+  ['google-read-aloud', 'Google Read Aloud'],
+  ['google-safety', 'Google Safety'],
+  ['google-agent', 'Google Agent (user)'],                             // an agent browsing for someone, like ChatGPT-User
+  ['google-notebooklm', 'Google NotebookLM'],
+  ['google-gemininotebook', 'Google Gemini Notebook'],
+  ['google-site-verification', 'Google Site Verifier'],
+  ['google-cloudvertexbot', 'Google Vertex AI'],
+  ['google-cws', 'Chrome Web Store'],
+  ['google-pinpoint', 'Google Pinpoint'],
+  ['googleproducer', 'Google Publisher Center'],
+  ['googlemessages', 'Google Messages preview'],
+  ['google-apps-script', 'Google Apps Script'],
+  ['apps-spreadsheets', 'Google Sheets'],                              // IMPORTXML: "(compatible; GoogleDocs; apps-spreadsheets; …)"
+  ['appengine-google', 'Google App Engine'],
+  ['google favicon', 'Google Favicon'],
+  ['google web preview', 'Google Web Preview'],
+  ['google wap proxy', 'Google WAP Proxy'],
+  // /google-fetchers
   ['googlebot', 'Googlebot'],
   ['google-inspectiontool', 'Google Inspection'],
   ['storebot-google', 'Googlebot'],
@@ -79,6 +119,7 @@ const BOTS = [
 function botName(ua) {
   const s = (ua || '').toLowerCase();
   if (!s) return 'Unknown agent';
+  if (s === 'google') return 'Google fetcher';   // google-exact: a Google fetcher that sends only "Google" (188 on Blair in 3 days, 2026-09-25)
   for (const [needle, name] of BOTS) if (s.includes(needle)) return name;
   return null;
 }
