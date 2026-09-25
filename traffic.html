@@ -444,7 +444,7 @@ html.printing .top,html.printing .tabs,html.printing .mast,html.printing .foot,h
 html.printing .more,html.printing .seg,html.printing .linkbtn,html.printing #watch-edit,html.printing .tip{display:none !important}
 html.printing .tab{animation:none}
 html.printing .print-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;padding:0 0 10px;margin:0 0 12px;border-bottom:2px solid #101828}
-html.printing .print-head b{font-size:16px;font-weight:780;color:#101828}
+html.printing .print-head b{font-size:16px;font-weight:780;color:#101828;white-space:nowrap}
 html.printing .print-head span{font-size:11px;color:#475467;text-align:right}
 html.printing .hero{padding:18px 20px 72px;border-radius:14px;box-shadow:none}
 html.printing .hero__title{font-size:22px;margin:.6rem 0 .4rem}
@@ -459,9 +459,13 @@ html.printing .insights{grid-template-columns:repeat(2,minmax(0,1fr))}
 html.printing .grid{gap:12px}
 /* On paper: a card a row, except the pairs built as halves, and the stacked
    columns, whose two cards sit side by side. */
-html.printing .card{grid-column:span 12 !important;border:1px solid var(--line);padding:14px}
-html.printing .card.span-6{grid-column:span 6 !important}
-html.printing .col{grid-column:span 12 !important;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+html.printing .grid > .card{grid-column:span 12 !important}
+html.printing .grid > .card.span-6{grid-column:span 6 !important}
+html.printing .card{display:block;border:1px solid var(--line);padding:14px}
+/* A stacked column prints as a pair, side by side and kept together. Its
+   cards take the column's own two tracks, never the page grid's span. */
+html.printing .col{grid-column:span 12 !important;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;break-inside:avoid}
+html.printing .col > .card{grid-column:auto !important}
 html.printing .tbl{overflow:visible}
 @media print{
   @page{size:letter;margin:.45in .45in .55in}
@@ -469,7 +473,13 @@ html.printing .tbl{overflow:visible}
   html,body{background:#fff !important}
   .login{display:none !important}
   .tab:not(.is-active){display:none !important}
-  .insight,.card,.kpi,.cta,.feat,.lead,.opp,tr{break-inside:avoid}
+  /* Cards may run onto the next page between their rows (a card kept whole
+     leaves half a page empty); a chart, a row or a small block never splits,
+     and a card's heading stays with what follows it. */
+  .card{break-inside:auto}
+  .card__head,.legend,.minis,.card__body > .note:first-child{break-after:avoid}
+  .insight,.kpi,.cta,.feat,.lead,.opp,tr,.bar,.chart,.funnel,.donut,.heat,.stack,.ghost{break-inside:avoid}
+  .kpis,.hero{break-inside:avoid}
   .hero{break-after:avoid}
 }
 </style>
@@ -617,7 +627,7 @@ html.printing .tbl{overflow:visible}
       <div class="grid">
         <article class="card span-8" id="card-gsc-weeks">
           <div class="card__head">
-            <div><h3>Week by week</h3><p class="card__help">Pick what to plot. <b>Times shown</b> counts every time the site appeared in a Google result; <b>clicks</b> are the people who came through.</p></div>
+            <div><h3>Week by week</h3><p class="card__help"><b>Times shown</b> counts every time the site appeared in a Google result; <b>clicks</b> are the people who came through; the <b>click rate</b> is one over the other.</p></div>
             <div class="tools"><div class="seg" data-seg="gsc-metric"><button type="button" data-v="clicks" aria-pressed="true">Clicks</button><button type="button" data-v="impressions" aria-pressed="false">Times shown</button><button type="button" data-v="ctr" aria-pressed="false">Click rate</button></div><div class="seg" data-seg="gsc-view"><button type="button" data-v="chart" aria-pressed="true">Chart</button><button type="button" data-v="table" aria-pressed="false">Table</button></div></div>
           </div>
           <div class="card__body" id="gsc-weeks"></div>
@@ -1759,7 +1769,7 @@ function renderGsc() {
     const vals = t.map((w) => (m === 'ctr' ? ratio(w.clicks, w.impressions) || 0 : Number(w[m]) || 0));
     const inWin = (i) => i >= t.length - k;
     const legend = m === 'clicks' && k < t.length ? `<div class="legend"><span><i style="background:var(--c)"></i>Weeks counted above</span><span><i style="background:var(--c-2)"></i>Earlier weeks</span></div>` : '';
-    box.innerHTML = `${legend}<div class="chart"></div><div class="tview">${table([...t].reverse(), [
+    box.innerHTML = `<p class="note" style="margin-bottom:6px">Showing <b>${{ clicks: 'clicks', impressions: 'times shown', ctr: 'the click rate' }[m]}</b> per week.</p>${legend}<div class="chart"></div><div class="tview">${table([...t].reverse(), [
       { h: 'Week of', f: (w) => esc(dLong(w.week_start)) }, { h: 'Clicks', n: 1, f: (w) => fmt.int(w.clicks) },
       { h: 'Times shown', n: 1, f: (w) => fmt.int(w.impressions) }, { h: 'Click rate', n: 1, f: (w) => fmt.pct(ratio(w.clicks, w.impressions)) },
       { h: 'Searches', n: 1, f: (w) => fmt.int(w.total) }], { cap: 10 })}</div>`;
@@ -1864,7 +1874,7 @@ function renderGa() {
     box.classList.toggle('show-table', S.ui['ga-view'] === 'table');
     const name = { sessions: 'sessions', users: 'users', views: 'page views' }[m];
     const vals = win.map((r) => Number(r[m]) || 0);
-    box.innerHTML = `<div class="chart"></div><div class="tview">${table(days.map((x, i) => ({ day: x.day, r: win[i] })).reverse(), [
+    box.innerHTML = `<p class="note" style="margin-bottom:6px">Showing <b>${name}</b> per day.</p><div class="chart"></div><div class="tview">${table(days.map((x, i) => ({ day: x.day, r: win[i] })).reverse(), [
       { h: 'Day', f: (x) => esc(dLong(x.day, true)) }, { h: 'Sessions', n: 1, f: (x) => fmt.int(x.r.sessions) },
       { h: 'Users', n: 1, f: (x) => fmt.int(x.r.users) }, { h: 'Page views', n: 1, f: (x) => fmt.int(x.r.views) }], { cap: 10 })}</div>`;
     timeChart(box.querySelector('.chart'), { id: 'ga-days', labels: days.map((x) => dShort(x.day)), yFmt: fmt.compact, aria: `Google Analytics ${name}, day by day`,
@@ -1951,7 +1961,7 @@ function renderAds() {
 
   $('ads-title').textContent = 'What the ads cost, and what they brought in.';
   $('ads-lede').innerHTML = 'Spend, clicks and the searches behind them come straight from the Google Ads account. The calls and forms come from the site’s own log, tied to the ad click that brought each person &mdash; so every dollar can be followed to a lead.';
-  setRange('ads', `${dRange(g.start, g.end)} · Google’s figures to yesterday${g.updatedAt ? `, updated ${ago(g.updatedAt)}` : ''}`);
+  setRange('ads', `${dRange(g.firstDay && g.firstDay > g.start ? g.firstDay : g.start, g.end)} · Google’s figures to yesterday${g.updatedAt ? `, updated ${ago(g.updatedAt)}` : ''}${g.firstDay && g.firstDay > g.start ? ` · the ads started ${dShort(g.firstDay)}` : ''}`);
 
   const leadWord = fin(T.conversions) && T.conversions % 1 ? fmt.dec(T.conversions) : fmt.int(T.conversions);
   let h = `<div class="kpis">${[
@@ -1976,7 +1986,7 @@ function renderAds() {
   ])}</div>`;
 
   h += '<div class="grid">';
-  h += `<article class="card span-8"><div class="card__head"><div><h3>Day by day</h3><p class="card__help">Pick what to plot. Each is its own chart, on its own scale.</p></div>`
+  h += `<article class="card span-8"><div class="card__head"><div><h3>Day by day</h3><p class="card__help">Spend, clicks, times shown and leads, a day at a time — each on its own scale.</p></div>`
     + `<div class="tools"><div class="seg" data-seg="ads-metric">${[['cost', 'Spent'], ['clicks', 'Clicks'], ['impressions', 'Times shown'], ['conversions', 'Leads']].map(([k, l]) => `<button type="button" data-v="${k}" aria-pressed="${S.ui['ads-metric'] === k}">${l}</button>`).join('')}</div>`
     + `<div class="seg" data-seg="ads-view"><button type="button" data-v="chart" aria-pressed="${S.ui['ads-view'] === 'chart'}">Chart</button><button type="button" data-v="table" aria-pressed="${S.ui['ads-view'] === 'table'}">Table</button></div></div></div><div class="card__body" id="ads-days"></div></article>`;
   h += `<article class="card span-4 card--accent"><div class="card__head"><div><h3>${icon('filter')}From the ad to a lead</h3><p class="card__help">Each step counts the people who made it from the one above. Visits and site leads are the site’s own log; the rest is Google’s.</p></div></div><div class="card__body" id="ads-funnel"></div></article>`;
@@ -2005,7 +2015,7 @@ function renderAds() {
     const series = { cost, clicks, impressions: impr, conversions: conv }[m];
     const name = { cost: 'spent', clicks: 'clicks', impressions: 'times shown', conversions: 'leads (Google)' }[m];
     const f = m === 'cost' ? (v) => fmt.money(v) : m === 'conversions' ? (v) => fmt.dec(v) : fmt.int;
-    box.innerHTML = `<div class="chart"></div><div class="tview">${table(days.map((x, i) => ({ day: x.day, i })).reverse(), [
+    box.innerHTML = `<p class="note" style="margin-bottom:6px">Showing <b>${esc({ cost: 'money spent', clicks: 'clicks', impressions: 'times shown', conversions: 'leads, by Google’s count' }[m])}</b> per day.</p><div class="chart"></div><div class="tview">${table(days.map((x, i) => ({ day: x.day, i })).reverse(), [
       { h: 'Day', f: (x) => esc(dLong(x.day, true)) }, { h: 'Spent', n: 1, f: (x) => fmt.money(cost[x.i]) }, { h: 'Clicks', n: 1, f: (x) => fmt.int(clicks[x.i]) },
       { h: 'Shown', n: 1, f: (x) => fmt.int(impr[x.i]) }, { h: 'Leads', n: 1, f: (x) => (conv[x.i] ? `<b>${fmt.dec(conv[x.i])}</b>` : '—') }], { cap: 10 })}</div>`;
     timeChart(box.querySelector('.chart'), { id: 'ads-days', labels: days.map((x) => dShort(x.day)), aria: `Google Ads ${name}, day by day`,
@@ -2209,7 +2219,7 @@ function renderBing() {
 
   h += '<div class="grid">';
   if (!b.empty) {
-    h += `<article class="card span-8"><div class="card__head"><div><h3>Day by day</h3><p class="card__help">Pick what to plot. <b>Times shown</b> counts every appearance in Bing’s results; <b>clicks</b> are the people who came through.</p></div>`
+    h += `<article class="card span-8"><div class="card__head"><div><h3>Day by day</h3><p class="card__help"><b>Times shown</b> counts every appearance in Bing’s results; <b>clicks</b> are the people who came through.</p></div>`
       + `<div class="tools"><div class="seg" data-seg="bing-metric"><button type="button" data-v="clicks" aria-pressed="${S.ui['bing-metric'] === 'clicks'}">Clicks</button><button type="button" data-v="impressions" aria-pressed="${S.ui['bing-metric'] === 'impressions'}">Times shown</button></div>`
       + `<div class="seg" data-seg="bing-view"><button type="button" data-v="chart" aria-pressed="${S.ui['bing-view'] === 'chart'}">Chart</button><button type="button" data-v="table" aria-pressed="${S.ui['bing-view'] === 'table'}">Table</button></div></div></div><div class="card__body" id="bing-days"></div></article>`;
   }
@@ -2231,7 +2241,7 @@ function renderBing() {
     const el = $('bing-days'), m = S.ui['bing-metric'];
     el.classList.toggle('show-table', S.ui['bing-view'] === 'table');
     const vals = m === 'clicks' ? clicks : impr;
-    el.innerHTML = `<div class="chart"></div><div class="tview">${table(days.map((x, i) => ({ day: x.day, i })).reverse(), [
+    el.innerHTML = `<p class="note" style="margin-bottom:6px">Showing <b>${m === 'clicks' ? 'clicks' : 'times shown'}</b> per day.</p><div class="chart"></div><div class="tview">${table(days.map((x, i) => ({ day: x.day, i })).reverse(), [
       { h: 'Day', f: (x) => esc(dLong(x.day, true)) }, { h: 'Clicks', n: 1, f: (x) => fmt.int(clicks[x.i]) }, { h: 'Times shown', n: 1, f: (x) => fmt.int(impr[x.i]) }], { cap: 10 })}</div>`;
     timeChart(el.querySelector('.chart'), { id: 'bing-days', labels: days.map((x) => dShort(x.day)), yFmt: fmt.compact, aria: `Bing ${m}, day by day`,
       series: [m === 'clicks' ? { kind: 'bar', values: vals, color: 'var(--c)' } : { kind: 'area', values: vals, color: 'var(--c)' }],
@@ -2328,7 +2338,8 @@ function printMeta() {
   const t = TABS.find((x) => x.id === S.tab);
   const range = document.querySelector(`#panel-${S.tab} [data-range]`)?.textContent || '';
   $('print-title').textContent = `${SITE} · ${t.name}`;
-  $('print-meta').textContent = `${range || `Last ${rangeLabel()}`} · printed ${dLong(S.today || isoOf(Date.now()))}`;
+  /* The period only — the banner below carries the rest of its line. */
+  $('print-meta').textContent = `${(range.split(' · ')[0]) || `Last ${rangeLabel()}`} · printed ${dLong(S.today || isoOf(Date.now()))}`;
 }
 
 function selectTab(id, { focus = false, push = true } = {}) {

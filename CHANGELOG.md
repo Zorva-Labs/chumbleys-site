@@ -8,6 +8,7 @@ Newest first. One entry per session that changed this repo: what changed, why, w
 - `functions/api/traffic/data.js` patched: day-of-week × hour and visits by source by day for the new charts, forms credited to the page their visit began on (a form is logged on the thank-you page), 53 weeks of Search Console (was 26).
 - `functions/api/traffic/watch.js` added: the Search Console tab's "Edit the list" (the searches we are working to win) had no endpoint here — traffic-kit's installer never shipped it — so saving answered "Could not reach the server". It now saves to this site's `rank_watch`, which the weekly Search Console ingest mirrors.
 - Built; `traffic-kit check` clean. Deployed (`6ff69810`), submitted. Live: `https://chumbleysdetailing.com/traffic` serves the tabbed page; `/api/traffic/ads` and `/api/traffic/watch` answer 401 signed out. Every column the new queries read was checked in the live D1 first.
+- Refreshed the same evening with the kit's second print pass (traffic-kit `6dde5a5`: reports break between rows instead of leaving half-empty pages, the stacked cards print side by side, each switchable chart says what it shows); redeployed (`544266f1`).
 - **Owed:** nothing.
 
 ## 2026-09-24 (/traffic section 4: what Bing holds now)
