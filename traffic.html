@@ -365,6 +365,7 @@ td b{color:var(--ink)}
 .lead--minor{opacity:.8}
 .lead__top{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:baseline}
 .lead__what{font-weight:720;color:var(--ink)}
+.lead__what small{font-weight:500;font-size:.86rem;color:var(--ink-3)}
 .lead__when{font-size:.8rem;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
 .lead__chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
 .lead__path{font-size:.82rem;color:var(--ink-3);margin-top:6px;overflow-wrap:anywhere;line-height:1.5}
@@ -560,7 +561,7 @@ html.printing .tbl{overflow:visible}
           <div class="card__body" id="edge-channels"></div>
         </article>
         <article class="card span-7" id="card-leads">
-          <div class="card__head"><div><h3>Calls and forms</h3><p class="card__help">Every tap on the phone number and every form that reached the thank-you page, newest first &mdash; with where the person came from and what they did first.</p></div></div>
+          <div class="card__head"><div><h3>Calls and forms</h3><p class="card__help">Every tap on the phone number and every form that reached the thank-you page, newest first &mdash; who sent each form, where the person came from, and what they did first.</p></div></div>
           <div class="card__body" id="edge-leads"></div>
         </article>
         <div class="col span-5">
@@ -1626,6 +1627,14 @@ function leadWhere(r, after = 'after arriving') {
   return [r.path && !onThanks ? `On <b>${esc(r.path)}</b>` : '', r.landing && (onThanks || r.landing !== r.path) ? `${onThanks ? 'Started on' : 'started on'} <b>${esc(r.landing)}</b>` : '', dwell].filter(Boolean).join(' · ');
 }
 
+/* The first line of a lead card: who sent the form, where the site kept it
+   (the name comes from the site's own record of the submission), else what
+   the person did. */
+function leadTitle(r, e) {
+  if (!r.lead_name) return esc(e.what);
+  return `${esc(r.lead_name)}<small> ${esc(e.what.charAt(0).toLowerCase() + e.what.slice(1))}${r.lead_what ? ` · ${esc(r.lead_what)}` : ''}</small>`;
+}
+
 /* The form event that counts as a lead: form_complete (the thank-you page)
    unless the site's form confirms in place and never reaches one. */
 const formEvent = (conv) => (conv.hasThankYou === false && !(conv.byName || {}).form_complete ? 'form_submit' : 'form_complete');
@@ -1648,13 +1657,16 @@ function renderEdgeLeads(conv) {
     const g = GROUP[groupOf(r.channel)];
     const where = leadWhere(r);
     return `<div class="lead lead--${e.cls}${i >= cap ? ' row-x' : ''}"><span class="lead__ico">${icon(e.icon)}</span><div style="min-width:0">`
-      + `<div class="lead__top"><span class="lead__what">${esc(e.what)}</span><span class="lead__when">${esc(stamp(r.local_time))}</span></div>`
+      + `<div class="lead__top"><span class="lead__what">${leadTitle(r, e)}</span><span class="lead__when">${esc(stamp(r.local_time))}</span></div>`
       + `<div class="lead__chips"><span class="chip${r.gclid ? ' chip--ads' : ''}"><i style="background:${g.color}"></i>${esc(chName(r.channel || 'Unknown'))}</span>`
-      + `${r.device ? `<span class="chip">${esc(cap1(r.device))}</span>` : ''}${r.detail ? `<span class="chip">${esc(r.detail)}</span>` : ''}</div>`
+      + `${r.device ? `<span class="chip">${esc(cap1(r.device))}</span>` : ''}${r.detail && r.detail !== r.lead_what ? `<span class="chip">${esc(r.detail)}</span>` : ''}</div>`
       + `${where ? `<p class="lead__path">${where}</p>` : ''}</div></div>`;
   }).join('');
+  const ln = conv.leadNames;
+  const noNames = ln && !ln.table && rows.some((r) => r.name === form)
+    ? `<p class="note" style="margin-top:10px">${icon('info')} No names beside the forms: this site’s form emails each submission without keeping a copy on the site, so there is no record to read the name from.</p>` : '';
   box.innerHTML = minis + `<div class="leads cap">${items}</div>${rows.length > cap ? moreBtn(Math.min(rows.length, 100), cap) : ''}`
-    + (rows.length > 100 ? `<p class="note" style="margin-top:8px">The 100 most recent of ${fmt.int(rows.length)} in this window.</p>` : '');
+    + (rows.length > 100 ? `<p class="note" style="margin-top:8px">The 100 most recent of ${fmt.int(rows.length)} in this window.</p>` : '') + noNames;
 }
 
 /* Pressed send against reached the thank-you page. When they differ, a lead
@@ -2078,7 +2090,7 @@ function renderAds() {
     const rows = e.recent || [];
     $('ads-leads').innerHTML = rows.length ? `<div class="leads cap">${rows.map((r, i) => {
       const ev = r.name === 'form_submit' ? EVENT.form_complete : EVENT[r.name] || { what: r.name, icon: 'info', cls: 'minor' };
-      return `<div class="lead lead--${ev.cls}${i >= 5 ? ' row-x' : ''}"><span class="lead__ico">${icon(ev.icon)}</span><div style="min-width:0"><div class="lead__top"><span class="lead__what">${esc(ev.what)}</span><span class="lead__when">${esc(stamp(r.local_time))}</span></div>`
+      return `<div class="lead lead--${ev.cls}${i >= 5 ? ' row-x' : ''}"><span class="lead__ico">${icon(ev.icon)}</span><div style="min-width:0"><div class="lead__top"><span class="lead__what">${leadTitle(r, ev)}</span><span class="lead__when">${esc(stamp(r.local_time))}</span></div>`
         + `${r.device ? `<div class="lead__chips"><span class="chip">${esc(cap1(r.device))}</span></div>` : ''}`
         + `<p class="lead__path">${leadWhere(r, 'after the click')}</p></div></div>`;
     }).join('')}</div>${rows.length > 5 ? moreBtn(rows.length, 5) : ''}` : empty(`No call or form on the site from an ad visitor in this window yet.${T.conversions ? ' Google’s leads may have come by phone from the ad itself, or through the form inside the ad.' : ''}`);

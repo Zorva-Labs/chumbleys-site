@@ -2,6 +2,10 @@
 
 Newest first. One entry per session that changed this repo: what changed, why, what the client asked for, what is still owed. Infrastructure changes also go in `site.json` and `CLAUDE.md`. Entries dated before 2026-09-17 are reconstructed from git history; the reasoning behind them is in `CLAUDE.md` and in `~/fleet/docs/archive`.
 
+## 2026-09-24 (/traffic: the sender's name on each form)
+- Michael: show the name of the person who filled out the form in the Edge tab. This site has no form, so there is no record of the submission on the site to read a name from; where forms appear the card says so (traffic-kit `76050de`). Names come for free if the site moves to the Cloudflare lead form.
+- `upgrade.mjs --apply`: `data.js` patched (`leadNames()`), `ads.js` and the page refreshed. Built, checked, deployed (`4b521b8e`); `/traffic` live with the new page.
+
 ## 2026-09-24 (/traffic: the tabbed dashboard)
 - Michael: redesign the traffic page on every site — a tab for each source (Edge first, then Search Console, Analytics, Google Ads, Bing), colorful, with explanations, charts, and a Download PDF for each tab. We don't run this business's Google Ads, so its Google Ads tab is the offer: what ads would do for the business, built from its own numbers (visits from Google search, the searches ranking 4–20, visits from anyone else's ads), how we run them, and Book a call / Email Michael / the phone.
 - `node ~/traffic-kit/bin/upgrade.mjs . --apply` (traffic-kit `491ce36`): `traffic.html` replaced with the tabbed page, the bar and the name carried over; `functions/api/traffic/ads.js` added (the Google Ads tab); `migrations/0010_ads.sql` added (the Ads tables, only ever applied where we run the ads).

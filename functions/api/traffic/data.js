@@ -238,6 +238,55 @@ async function rankings(db) {
   };
 }
 
+// lead-names: who sent each form (bin/upgrade.mjs patches this block into a site's data.js)
+/* A site on the Cloudflare lead form keeps every submission in this same
+   database (`leads`), and the form's events land beside it: form_submit the
+   moment the button is pressed, form_complete a second or two later on the
+   thank-you page. Nothing links the rows, but they are seconds apart — on
+   every live site checked (2026-09-24) the lead and its events fell within two
+   seconds — so each form event takes the name of the lead saved closest to it
+   in time, within two minutes, each lead given to one event of each kind. A
+   site whose form only emails (FormSubmit) has no `leads` table: no names,
+   and the page says why. The name is looked up when the page asks, never
+   copied into the traffic log. */
+async function leadNames(db, rows) {
+  const forms = (rows || []).filter((r) => (r.name === 'form_complete' || r.name === 'form_submit') && r.created_at);
+  const cols = new Set((((await db.prepare("SELECT name FROM pragma_table_info('leads')").all().catch(() => null)) || {}).results || []).map((c) => c.name));
+  const who = cols.has('name') ? 'name'
+    : cols.has('first_name') ? "TRIM(COALESCE(first_name, '') || ' ' || COALESCE(last_name, ''))"
+    : cols.has('full_name') ? 'full_name' : null;
+  const out = { table: !!who && cols.has('created_at'), matched: 0 };
+  if (!out.table || !forms.length) return out;
+  const what = ['service', 'project_type', 'format'].find((c) => cols.has(c));
+  const t = (v) => Date.parse(`${String(v).trim().replace(' ', 'T')}${/Z$|[+-]\d\d:?\d\d$/.test(String(v)) ? '' : 'Z'}`);
+  const at = forms.map((r) => t(r.created_at)).filter(Number.isFinite);
+  if (!at.length) return out;
+  const iso = (ms) => new Date(ms).toISOString().slice(0, 19).replace('T', ' ');
+  const leads = (((await db.prepare(
+    `SELECT id, created_at, ${who} AS who${what ? `, ${what} AS what` : ''} FROM leads
+      WHERE julianday(created_at) BETWEEN julianday(?1) AND julianday(?2)`
+  ).bind(iso(Math.min(...at) - 180e3), iso(Math.max(...at) + 180e3)).all().catch(() => null)) || {}).results || [])
+    .filter((l) => String(l.who || '').trim());
+  for (const kind of ['form_submit', 'form_complete']) {
+    const pairs = [];
+    forms.forEach((e, i) => {
+      if (e.name !== kind) return;
+      leads.forEach((l, j) => { const d = Math.abs(t(e.created_at) - t(l.created_at)); if (d <= 120e3) pairs.push([d, i, j]); });
+    });
+    pairs.sort((x, y) => x[0] - y[0]);
+    const usedE = new Set(), usedL = new Set();
+    for (const [, i, j] of pairs) {
+      if (usedE.has(i) || usedL.has(j)) continue;
+      usedE.add(i); usedL.add(j);
+      forms[i].lead_name = String(leads[j].who).trim().slice(0, 80);
+      if (leads[j].what) forms[i].lead_what = String(leads[j].what).slice(0, 80);
+      if (kind === 'form_complete' || !forms.some((f) => f.name === 'form_complete')) out.matched++;
+    }
+  }
+  return out;
+}
+// /lead-names
+
 export async function onRequestGet({ request, env, data }) {
   /* Per request. At module scope the Workers clock is frozen at the epoch,
      so the DST test runs against 1970 and always returns standard time. */
@@ -354,7 +403,7 @@ export async function onRequestGet({ request, env, data }) {
        you can see the ad click that turned into a phone call at 4:12pm. Times
        come back pre-shifted to Central; minutes_to_convert is how long the
        visit ran before they acted. */
-    q(`SELECT id, name, path, detail, country, channel, referrer_host, gclid,
+    q(`SELECT id, name, path, detail, country, channel, referrer_host, gclid, created_at,
               landing, device,
               postal, metro, timezone, browser, os, language,
               utm_source, utm_medium,
@@ -384,6 +433,7 @@ export async function onRequestGet({ request, env, data }) {
         GROUP BY dow, hour`, since),
   ]);
 
+  const leadNamesSeen = await leadNames(db, eventRecent);
   const byName = Object.fromEntries(eventTotals.map((r) => [r.name, r.n]));
   const conversions = (byName.call || 0) + (byName.form_complete || 0);
 
@@ -460,7 +510,7 @@ export async function onRequestGet({ request, env, data }) {
       },
       crawlers: { total: botTotals[0]?.n || 0, list: bots },
       conversions: {
-        total: conversions, byName, daily: eventDaily, pages: eventPages,
+        total: conversions, byName, daily: eventDaily, pages: eventPages, leadNames: leadNamesSeen,
         recent: eventRecent, channels: eventChannels, hours: eventHours, week: eventWeek,
         previous: prevConv[0]?.n || 0,
         /* Whether this site has a thank-you step AT ALL, all-time. A form that

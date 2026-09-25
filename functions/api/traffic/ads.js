@@ -53,6 +53,55 @@ const addDays = (isoDay, n) => {
   return d.toISOString().slice(0, 10);
 };
 
+// lead-names: who sent each form — the same block as data.js's
+/* A site on the Cloudflare lead form keeps every submission in this same
+   database (`leads`), and the form's events land beside it: form_submit the
+   moment the button is pressed, form_complete a second or two later on the
+   thank-you page. Nothing links the rows, but they are seconds apart — on
+   every live site checked (2026-09-24) the lead and its events fell within two
+   seconds — so each form event takes the name of the lead saved closest to it
+   in time, within two minutes, each lead given to one event of each kind. A
+   site whose form only emails (FormSubmit) has no `leads` table: no names,
+   and the page says why. The name is looked up when the page asks, never
+   copied into the traffic log. */
+async function leadNames(db, rows) {
+  const forms = (rows || []).filter((r) => (r.name === 'form_complete' || r.name === 'form_submit') && r.created_at);
+  const cols = new Set((((await db.prepare("SELECT name FROM pragma_table_info('leads')").all().catch(() => null)) || {}).results || []).map((c) => c.name));
+  const who = cols.has('name') ? 'name'
+    : cols.has('first_name') ? "TRIM(COALESCE(first_name, '') || ' ' || COALESCE(last_name, ''))"
+    : cols.has('full_name') ? 'full_name' : null;
+  const out = { table: !!who && cols.has('created_at'), matched: 0 };
+  if (!out.table || !forms.length) return out;
+  const what = ['service', 'project_type', 'format'].find((c) => cols.has(c));
+  const t = (v) => Date.parse(`${String(v).trim().replace(' ', 'T')}${/Z$|[+-]\d\d:?\d\d$/.test(String(v)) ? '' : 'Z'}`);
+  const at = forms.map((r) => t(r.created_at)).filter(Number.isFinite);
+  if (!at.length) return out;
+  const iso = (ms) => new Date(ms).toISOString().slice(0, 19).replace('T', ' ');
+  const leads = (((await db.prepare(
+    `SELECT id, created_at, ${who} AS who${what ? `, ${what} AS what` : ''} FROM leads
+      WHERE julianday(created_at) BETWEEN julianday(?1) AND julianday(?2)`
+  ).bind(iso(Math.min(...at) - 180e3), iso(Math.max(...at) + 180e3)).all().catch(() => null)) || {}).results || [])
+    .filter((l) => String(l.who || '').trim());
+  for (const kind of ['form_submit', 'form_complete']) {
+    const pairs = [];
+    forms.forEach((e, i) => {
+      if (e.name !== kind) return;
+      leads.forEach((l, j) => { const d = Math.abs(t(e.created_at) - t(l.created_at)); if (d <= 120e3) pairs.push([d, i, j]); });
+    });
+    pairs.sort((x, y) => x[0] - y[0]);
+    const usedE = new Set(), usedL = new Set();
+    for (const [, i, j] of pairs) {
+      if (usedE.has(i) || usedL.has(j)) continue;
+      usedE.add(i); usedL.add(j);
+      forms[i].lead_name = String(leads[j].who).trim().slice(0, 80);
+      if (leads[j].what) forms[i].lead_what = String(leads[j].what).slice(0, 80);
+      if (kind === 'form_complete' || !forms.some((f) => f.name === 'form_complete')) out.matched++;
+    }
+  }
+  return out;
+}
+// /lead-names
+
 export async function onRequestGet({ request, data }) {
   const db = data.db;
   const url = new URL(request.url);
@@ -90,7 +139,7 @@ export async function onRequestGet({ request, data }) {
     q(`SELECT path, COUNT(*) AS n FROM pageviews WHERE is_bot = 0 AND is_entry = 1 AND gclid = 1 AND ${inWin(start, end)} GROUP BY path ORDER BY n DESC LIMIT 12`),
     q(`SELECT COALESCE(landing, path) AS path, COUNT(*) AS n FROM events WHERE gclid = 1 AND ${LEAD} AND ${inWin(start, end)} GROUP BY 1`),
     q(`SELECT device, COUNT(*) AS n FROM pageviews WHERE is_bot = 0 AND is_entry = 1 AND gclid = 1 AND device IS NOT NULL AND ${inWin(start, end)} GROUP BY device ORDER BY n DESC`),
-    q(`SELECT name, path, landing, device, city, metro, browser, os,
+    q(`SELECT name, path, landing, device, city, metro, browser, os, created_at,
               datetime(created_at, '-${OFF} hours') AS local_time,
               CASE WHEN first_seen IS NULL THEN NULL
                    ELSE CAST((julianday(created_at) - julianday(first_seen)) * 1440 AS INTEGER) END AS minutes_to_convert
@@ -100,6 +149,7 @@ export async function onRequestGet({ request, data }) {
        explained rather than suspicious. */
     one(`SELECT COUNT(*) AS n FROM pageviews WHERE bot_name = 'Google ad review' AND ${inWin(start, end)}`),
   ]);
+  await leadNames(db, recent);
   const byName = Object.fromEntries(leads.map((r) => [r.name, r.n]));
   const leadsAt = Object.fromEntries(landLeads.map((r) => [String(r.path || '').split('?')[0], r.n]));
   const edge = {
