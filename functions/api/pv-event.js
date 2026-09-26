@@ -59,6 +59,34 @@ function osOf(ua) {
   return null;
 }
 
+// lead-proof: a thank-you page load is a sent form only when a saved lead is waiting for it
+/* The thank-you page reports form_complete every time it loads, and a load is
+   not always a form: a reload, a tab restored days later, someone typing the
+   address, another site's form sending people on. On Three Stone (2026-09-25)
+   a browser that had loaded nothing else on the site opened /thank-you/, most
+   likely from the old WordPress site that stale DNS still reached, and the
+   dashboard listed a sent form with no name and no source. Where the site's
+   own form saves every submission to `leads` before it sends the visitor on,
+   that row is the proof: form_complete stands while a lead saved in the last
+   two minutes has no form_complete yet (the dashboard's name match uses the
+   same two minutes, one lead to one event), and anything else is logged as
+   `thankyou_view`, which no count reads. A site with no `leads` table can't
+   tell, and a failed lookup proves nothing, so both keep form_complete.
+   julianday() reads the lead's time whichever way the form wrote it. */
+async function formProof(db, name) {
+  if (name !== 'form_complete') return name;
+  try {
+    const r = await db.prepare(
+      `SELECT (SELECT COUNT(*) FROM leads WHERE julianday(created_at) >= julianday('now', '-120 seconds'))
+            - (SELECT COUNT(*) FROM events WHERE name = 'form_complete' AND created_at >= datetime('now', '-120 seconds')) AS open`
+    ).first();
+    return !r || Number(r.open) > 0 ? name : 'thankyou_view';
+  } catch {
+    return name;
+  }
+}
+// /lead-proof
+
 export async function onRequestPost(context) {
   try {
     const cf = context.request.cf || {};
@@ -86,7 +114,7 @@ export async function onRequestPost(context) {
     const db = context.env?.DB;
     if (db) {
       context.waitUntil(
-        db
+        formProof(db, name).then((kind) => db
           .prepare(
             `INSERT INTO events
                (name, path, detail, country, channel, referrer_host, gclid, landing, device, first_seen,
@@ -95,7 +123,7 @@ export async function onRequestPost(context) {
              VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22)`
           )
           .bind(
-            name,
+            kind,
             path,
             detail,
             country.slice(0, 4) || null,
@@ -122,7 +150,7 @@ export async function onRequestPost(context) {
             src.utmSource || null,
             src.utmMedium || null
           )
-          .run()
+          .run())
           .catch(() => {})
       );
     }

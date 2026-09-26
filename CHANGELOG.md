@@ -2,6 +2,14 @@
 
 Newest first. One entry per session that changed this repo: what changed, why, what the client asked for, what is still owed. Infrastructure changes also go in `site.json` and `CLAUDE.md`. Entries dated before 2026-09-17 are reconstructed from git history; the reasoning behind them is in `CLAUDE.md` and in `~/fleet/docs/archive`.
 
+## 2026-09-25 (/traffic: a thank-you page load counts as a sent form only with a saved lead behind it)
+- Michael: "roll it out to all the sites", after Three Stone's `/traffic` listed a sent form that was only a load of its thank-you page (traffic-kit CHANGELOG, 2026-09-25).
+- `functions/api/pv-event.js` (traffic-kit `bin/add-lead-proof.mjs`, the `// lead-proof:` block) keeps a thank-you page's `form_complete` only while a lead saved in the last two minutes has no `form_complete` yet. Any other load, such as a reload, a restored tab, the address typed or a crawler that runs scripts, is logged as `thankyou_view`, which no count reads.
+- This site's D1 has no `leads` table, so nothing changes here yet: every `form_complete` stands, as before. The rule starts to count the day the site's form saves each submission to `leads`.
+- Built, deployed (`d4d496b4`, production confirmed through the Pages API), submitted. A test beacon to `/api/pv-event` with no lead behind it was logged `form_complete`, as it should be without a `leads` table (events 8), and relabeled `test_form_complete`.
+- Past rows are left as they are.
+- **Owed:** nothing.
+
 ## 2026-09-25 (/traffic: scripts and hosting networks are labeled, never counted)
 - Michael, on the traffic audit's options: "go with your recommendation for the hosting networks" (traffic-kit CHANGELOG, 2026-09-25).
 - `functions/_middleware.js` (traffic-kit `bin/add-not-people.mjs`, `82b6a28`) now logs two kinds of request as bots, never as visits:
