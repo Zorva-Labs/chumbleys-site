@@ -2,6 +2,33 @@
 
 Newest first. One entry per session that changed this repo: what changed, why, what the client asked for, what is still owed. Infrastructure changes also go in `site.json` and `CLAUDE.md`. Entries dated before 2026-09-17 are reconstructed from git history; the reasoning behind them is in `CLAUDE.md` and in `~/fleet/docs/archive`.
 
+## 2026-09-26 (page speed: 13.3 MB → 1.7 MB; LCP 10.4 s → 2.9 s)
+- **The finding (Michael, from PageSpeed Insights, mobile):** performance 69–70, LCP 9.2–10.4 s, 13.3 MB on a phone, five images over 300 KB (the largest ~2.6 MB), 11 of 12 images without width/height. The stricter scanner caps a site at 79 when lab LCP is over 8 s. My runs before: 67 twice (one was PageSpeed's cache); LCP 10.4 s, FCP 2.9 s, TBT 31 ms, 13,296 KiB.
+- **Why:**
+  - The four comic-strip panels were 1024 px PNGs of 2.3–2.7 MB each, 9.9 MB together. They're lazy, but they sit inside Chrome's lazy-load distance, so a phone fetched them at once. The before/afters and the origin shot were 1.5–2.6 MB PNGs too.
+  - A second preload fetched the hero as a 1.7 MB PNG (`type="image/png"`, which every browser takes) beside its AVIF.
+  - The intro video (960 KB, `preload="auto"`), gtag.js, the 224 KB logo PNG and Google Fonts' render-blocking stylesheet all loaded before the first paint.
+  - PageSpeed's LCP is simulated and counts everything that finished before the paint it saw. Its own first paint lands 1–2 s after load, a headless-Chrome quirk (Three Stone's entry of 2026-09-26), so all of that counted.
+- **The fix (`index.html`, `styles.css`, `thanks/index.html`; `CLAUDE.md` → Page speed):**
+  - Every picture is a `<picture>` of AVIF and WebP copies at the widths it's shown, with `sizes`, width and height, and the PNG as the fallback. `scripts/perf-images.py` cuts them: AVIF quality 50 (comic line work smears sooner than a photo), WebP 80. At a phone's size:
+    - each panel 2.3–2.7 MB → 76–86 KB;
+    - the hero 1.7 MB → 70 KB;
+    - the origin shot 2.4 MB → 73–138 KB;
+    - the before/afters 1.5–2.6 MB → 48–53 KB.
+  - The PNG preload is gone. The hero's preload carries the AVIF `<source>`'s own srcset and sizes.
+  - The logo mark is a 96/160 px WebP (4–7 KB) for a 38–76 px circle. The 600 px PNG stays for the favicon links and the schema.
+  - The four faces (Bangers, Bowlby One, Fredoka, Permanent Marker; latin, SIL OFL) are self-hosted in `assets/fonts`, and the title's and the ticker's are preloaded. `styles.css?v=` is bumped.
+  - gtag.js is requested once the page has loaded and painted (the first LCP entry; 3 s after load at the latest), or at the first tap. `/thanks/` still loads it at once for `generate_lead`.
+  - The intro video: `preload="none"`, a 72 KB WebP poster, and playback starts after the first paint. The 8-second safety now counts from that start.
+- **PageSpeed after (production, mobile, 22:53 CT): 92, 95. LCP 2.9 s both; TBT 53 and 8 ms; CLS 0–0.001; 1,729 KiB.**
+- **Checked:**
+  - `node build.mjs`: FAQPage written, 101 files. The two favicons `traffic.html` names are still missing, as before.
+  - Browser pane at 375, on the preview: overlay, poster, hero, header, the comic strip (339 px panels on 768 AVIFs), the origin shot and the before/afters (forced to load, since a hidden pane never triggers lazy loading). No sideways scroll, no PNG and no Google request. Next to the live site at 375 the page looked the same, fonts included.
+  - In a visible headless Chrome the intro still plays by itself: 1.0 s in at 1.5 s, 3.2 s in at 3.5 s, and it closes itself at the end.
+- Deployed `94aa8e95` (production); submitted, nothing changed. The preview `perf-lcp` is left on the Pages project.
+- **Found, not changed:** at 375 px the header's red button is cut off at the right edge, on the live site too.
+- **Owed:** nothing for this.
+
 ## 2026-09-26 (the FAQ schema is the visible FAQ: one list, written by the build)
 - **The finding** (Michael, confirmed on the live site): two of the home page's seven FAQPage answers were not the ones the page shows. Google's FAQ rules want the markup to describe what the page shows, and ours say the visible FAQ and the schema come from one source.
   - "Do you come to me, or do I bring my car to you?": the markup had lost the visible "anywhere in Gallatin or Hendersonville".

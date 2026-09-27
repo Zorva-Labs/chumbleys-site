@@ -37,26 +37,42 @@
   <meta name="twitter:description" content="Mobile auto detailing in Gallatin &amp; Hendersonville, TN. Call or text (615) 670-3379 for a free quote." />
   <meta name="twitter:image" content="https://chumbleysdetailing.com/assets/og-image.png" />
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Bowlby+One&family=Fredoka:wght@500;700&family=Permanent+Marker&display=swap" rel="stylesheet" />
+  <!-- The four faces are self-hosted (assets/fonts, @font-face in styles.css);
+       the title's and the ticker's are preloaded. -->
+  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/bowlby-one.woff2" crossorigin />
+  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/bangers.woff2" crossorigin />
 
-  <link rel="stylesheet" href="styles.css?v=b921d99b27" />
+  <link rel="stylesheet" href="styles.css?v=20260926a" />
 
-  <!-- LCP hero image preload — AVIF for fastest paint -->
-  <link rel="preload" as="image" href="assets/hero-portrait.avif" type="image/avif" fetchpriority="high" />
-  <link rel="preload" as="image" href="assets/hero-portrait.png" type="image/png" />
+  <!-- LCP hero image preload: the same srcset and sizes as the hero's AVIF
+       <source>, so the browser fetches the one file it paints. -->
+  <link rel="preload" as="image" type="image/avif" imagesrcset="assets/hero-portrait-640.avif 640w, assets/hero-portrait-832.avif 832w, assets/hero-portrait-1024.avif 1024w" imagesizes="(max-width: 540px) 460px, (max-width: 980px) 100vw, 660px" fetchpriority="high" />
 
   <link rel="icon" type="image/png" href="assets/logo-emblem.png" />
   <link rel="apple-touch-icon" href="assets/logo-emblem.png" />
 
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-EQVL6SGTES"></script>
+  <!-- Google tag (gtag.js). The queue goes in at once; the library is
+       requested once the page has loaded and painted (the first LCP entry;
+       3 s after load at the latest), or at the first tap or key press. -->
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
     gtag('config', 'G-EQVL6SGTES');
+    (function (w, d) {
+      var done = 0, E = ['pointerdown', 'keydown', 'touchstart'];
+      function go() { if (done) return; done = 1; E.forEach(function (x) { w.removeEventListener(x, go, true); });
+        var s = d.createElement('script'); s.async = true; s.src = 'https://www.googletagmanager.com/gtag/js?id=G-EQVL6SGTES'; d.head.appendChild(s); }
+      E.forEach(function (x) { w.addEventListener(x, go, { capture: true, passive: true }); });
+      w.chumbleysAfterPaint = function (f) {
+        var P = w.PerformanceObserver, T = (P && P.supportedEntryTypes) || [], k = T.indexOf('largest-contentful-paint') > -1 ? 'largest-contentful-paint' : T.indexOf('paint') > -1 ? 'paint' : '', ran = 0;
+        function run() { if (!ran) { ran = 1; f(); } }
+        if (k) { try { new P(function (l, o) { o.disconnect(); run(); }).observe({ type: k, buffered: true }); } catch (e) { run(); } } else run();
+        setTimeout(run, 3000);
+      };
+      function later() { w.chumbleysAfterPaint(function () { if (w.requestIdleCallback) w.requestIdleCallback(go, { timeout: 1500 }); else setTimeout(go, 1); }); }
+      if (d.readyState === 'complete') later(); else w.addEventListener('load', later);
+    })(window, document);
   </script>
 
   <!-- ============================================================
@@ -207,8 +223,9 @@
   <video id="intro-video"
          class="intro-video"
          playsinline muted
-         preload="auto"
-         poster="assets/intro-poster.jpg">
+         preload="none"
+         width="640" height="640"
+         poster="assets/intro-poster.webp">
     <source src="assets/intro-video.mp4" type="video/mp4" />
   </video>
   <div class="intro-burst"><span>VROOM!</span></div>
@@ -253,15 +270,28 @@
       overlay.appendChild(hint);
     }
 
-    // Try to autoplay (muted + playsinline almost always works)
-    var playPromise = video.play();
-    if (playPromise && typeof playPromise.then === "function") {
-      playPromise.catch(showTapToPlay);
+    // Try to autoplay (muted + playsinline almost always works) once the page
+    // has painted: the poster holds the overlay until then, and the video's
+    // ~1 MB no longer races the page's own first paint (2026-09-26).
+    var started = false;
+    function start() {
+      if (started || !overlay.parentNode) return;
+      started = true;
+      var playPromise = video.play();
+      if (playPromise && typeof playPromise.then === "function") {
+        playPromise.catch(showTapToPlay);
+      }
+      // Safety: if the video can't load or play within 8s, don't trap the user
+      setTimeout(function () {
+        if (video.paused && video.currentTime === 0) dismiss();
+      }, 8000);
     }
+    if (window.chumbleysAfterPaint) window.chumbleysAfterPaint(start); else start();
 
     // Click anywhere on the overlay (except Skip) to retry play
     overlay.addEventListener("click", function (e) {
       if (e.target.closest(".intro-skip")) return;
+      if (!started) { start(); return; }
       if (video.paused) {
         video.play().catch(function () { /* still no luck — let the safety timeout handle it */ });
       } else {
@@ -272,11 +302,6 @@
 
     video.addEventListener("ended", dismiss);
     skip.addEventListener("click", dismiss);
-
-    // Safety: if the video can't load or play within 8s, don't trap the user
-    setTimeout(function () {
-      if (video.paused && video.currentTime === 0) dismiss();
-    }, 8000);
   })();
 </script>
 
@@ -297,7 +322,7 @@
 <!-- =================== NAV =================== -->
 <header class="nav">
   <a class="logo" href="#top">
-    <span class="logo-mark"><img src="assets/logo-emblem.png" alt="Chumbley's logo"/></span>
+    <span class="logo-mark"><img src="assets/logo-emblem-96.webp" srcset="assets/logo-emblem-96.webp 96w, assets/logo-emblem-160.webp 160w" sizes="48px" alt="Chumbley's logo" width="48" height="48"/></span>
     <span class="logo-text">
       <em>Chumbley's</em>
       <strong>AUTO DETAILING</strong>
@@ -375,8 +400,9 @@
 
       <div class="hero-photo ai">
         <picture>
-          <source srcset="assets/hero-portrait.avif" type="image/avif" />
-          <img src="assets/hero-portrait.png" alt="Maddox, the auto detailing superhero" width="800" height="1000" fetchpriority="high" />
+          <source type="image/avif" srcset="assets/hero-portrait-640.avif 640w, assets/hero-portrait-832.avif 832w, assets/hero-portrait-1024.avif 1024w" sizes="(max-width: 540px) 460px, (max-width: 980px) 100vw, 660px" />
+          <source type="image/webp" srcset="assets/hero-portrait-640.webp 640w, assets/hero-portrait-832.webp 832w, assets/hero-portrait-1024.webp 1024w" sizes="(max-width: 540px) 460px, (max-width: 980px) 100vw, 660px" />
+          <img src="assets/hero-portrait.png" alt="Maddox, the auto detailing superhero" width="1024" height="1024" fetchpriority="high" />
         </picture>
       </div>
 
@@ -432,22 +458,22 @@
 
   <div class="strip-grid">
     <figure class="strip-panel">
-      <img loading="lazy" decoding="async" src="assets/strip-1.png" alt="A clean silver 350Z driving through a sunny suburb" />
+      <picture><source type="image/avif" srcset="assets/strip-1-480.avif 480w, assets/strip-1-768.avif 768w, assets/strip-1-1024.avif 1024w" sizes="(max-width: 480px) calc(100vw - 36px), (max-width: 1280px) calc(50vw - 45px), 590px" /><source type="image/webp" srcset="assets/strip-1-480.webp 480w, assets/strip-1-768.webp 768w, assets/strip-1-1024.webp 1024w" sizes="(max-width: 480px) calc(100vw - 36px), (max-width: 1280px) calc(50vw - 45px), 590px" /><img loading="lazy" decoding="async" src="assets/strip-1.png" alt="A clean silver 350Z driving through a sunny suburb" width="1024" height="1024" /></picture>
       <figcaption><span>JUST ANOTHER DAY ON THE ROAD…</span></figcaption>
     </figure>
 
     <figure class="strip-panel">
-      <img loading="lazy" decoding="async" src="assets/strip-2.png" alt="The Z covered in mud after an off-road adventure" />
+      <picture><source type="image/avif" srcset="assets/strip-2-480.avif 480w, assets/strip-2-768.avif 768w, assets/strip-2-1024.avif 1024w" sizes="(max-width: 480px) calc(100vw - 36px), (max-width: 1280px) calc(50vw - 45px), 590px" /><source type="image/webp" srcset="assets/strip-2-480.webp 480w, assets/strip-2-768.webp 768w, assets/strip-2-1024.webp 1024w" sizes="(max-width: 480px) calc(100vw - 36px), (max-width: 1280px) calc(50vw - 45px), 590px" /><img loading="lazy" decoding="async" src="assets/strip-2.png" alt="The Z covered in mud after an off-road adventure" width="1024" height="1024" /></picture>
       <figcaption><span>UNTIL DISASTER STRUCK!</span></figcaption>
     </figure>
 
     <figure class="strip-panel">
-      <img loading="lazy" decoding="async" src="assets/strip-3.png" alt="Maddox arrives in his cyan super-suit, cloth in hand, behind the muddy Z" />
+      <picture><source type="image/avif" srcset="assets/strip-3-480.avif 480w, assets/strip-3-768.avif 768w, assets/strip-3-1024.avif 1024w" sizes="(max-width: 480px) calc(100vw - 36px), (max-width: 1280px) calc(50vw - 45px), 590px" /><source type="image/webp" srcset="assets/strip-3-480.webp 480w, assets/strip-3-768.webp 768w, assets/strip-3-1024.webp 1024w" sizes="(max-width: 480px) calc(100vw - 36px), (max-width: 1280px) calc(50vw - 45px), 590px" /><img loading="lazy" decoding="async" src="assets/strip-3.png" alt="Maddox arrives in his cyan super-suit, cloth in hand, behind the muddy Z" width="1024" height="1024" /></picture>
       <figcaption><span>NEVER FEAR — MADDOX IS HERE!</span></figcaption>
     </figure>
 
     <figure class="strip-panel">
-      <img loading="lazy" decoding="async" src="assets/strip-4.png" alt="Maddox stands triumphantly next to the gleaming clean Z" />
+      <picture><source type="image/avif" srcset="assets/strip-4-480.avif 480w, assets/strip-4-768.avif 768w, assets/strip-4-1024.avif 1024w" sizes="(max-width: 480px) calc(100vw - 36px), (max-width: 1280px) calc(50vw - 45px), 590px" /><source type="image/webp" srcset="assets/strip-4-480.webp 480w, assets/strip-4-768.webp 768w, assets/strip-4-1024.webp 1024w" sizes="(max-width: 480px) calc(100vw - 36px), (max-width: 1280px) calc(50vw - 45px), 590px" /><img loading="lazy" decoding="async" src="assets/strip-4.png" alt="Maddox stands triumphantly next to the gleaming clean Z" width="1024" height="1024" /></picture>
       <figcaption><span>SHAZAM! GOOD AS NEW.</span></figcaption>
     </figure>
   </div>
@@ -590,7 +616,7 @@
   <div class="origin-grid">
     <div class="panel origin-img">
       <div class="halftone-bg yellow"></div>
-      <img loading="lazy" decoding="async" src="assets/hero-action.png" alt="Maddox detailing a sports car" class="comic-treat ai" />
+      <picture><source type="image/avif" srcset="assets/hero-action-640.avif 640w, assets/hero-action-832.avif 832w, assets/hero-action-1024.avif 1024w" sizes="(max-width: 540px) 460px, (max-width: 980px) 100vw, 620px" /><source type="image/webp" srcset="assets/hero-action-640.webp 640w, assets/hero-action-832.webp 832w, assets/hero-action-1024.webp 1024w" sizes="(max-width: 540px) 460px, (max-width: 980px) 100vw, 620px" /><img loading="lazy" decoding="async" src="assets/hero-action.png" alt="Maddox detailing a sports car" width="1024" height="1024" class="comic-treat ai" /></picture>
       <div class="bubble bubble-bl">
         <span>BORN WITH</span>
         <strong>THE GIFT OF SHINE</strong>
@@ -647,24 +673,24 @@
     <div class="ba-card">
       <div class="ba-panel before">
         <span class="ba-tag">BEFORE</span>
-        <img loading="lazy" decoding="async" src="assets/z-before.png" alt="Silver 350Z covered in mud — before detailing" class="ba-img" />
+        <picture><source type="image/avif" srcset="assets/z-before-480.avif 480w, assets/z-before-768.avif 768w, assets/z-before-1024.avif 1024w" sizes="(max-width: 800px) calc(100vw - 28px), 480px" /><source type="image/webp" srcset="assets/z-before-480.webp 480w, assets/z-before-768.webp 768w, assets/z-before-1024.webp 1024w" sizes="(max-width: 800px) calc(100vw - 28px), 480px" /><img loading="lazy" decoding="async" src="assets/z-before.png" alt="Silver 350Z covered in mud — before detailing" width="1376" height="768" class="ba-img" /></picture>
       </div>
       <div class="ba-arrow"><span>POW!</span></div>
       <div class="ba-panel after">
         <span class="ba-tag">AFTER</span>
-        <img loading="lazy" decoding="async" src="assets/z-after.png" alt="Silver 350Z gleaming clean — after Maddox is done" class="ba-img" />
+        <picture><source type="image/avif" srcset="assets/z-after-480.avif 480w, assets/z-after-768.avif 768w, assets/z-after-1024.avif 1024w" sizes="(max-width: 800px) calc(100vw - 28px), 480px" /><source type="image/webp" srcset="assets/z-after-480.webp 480w, assets/z-after-768.webp 768w, assets/z-after-1024.webp 1024w" sizes="(max-width: 800px) calc(100vw - 28px), 480px" /><img loading="lazy" decoding="async" src="assets/z-after.png" alt="Silver 350Z gleaming clean — after Maddox is done" width="1376" height="768" class="ba-img" /></picture>
       </div>
     </div>
 
     <div class="ba-card">
       <div class="ba-panel before">
         <span class="ba-tag">BEFORE</span>
-        <img loading="lazy" decoding="async" src="assets/truck-before.png" alt="Same pickup truck, mud-caked — before" class="ba-img" />
+        <picture><source type="image/avif" srcset="assets/truck-before-480.avif 480w, assets/truck-before-768.avif 768w, assets/truck-before-1024.avif 1024w" sizes="(max-width: 800px) calc(100vw - 28px), 480px" /><source type="image/webp" srcset="assets/truck-before-480.webp 480w, assets/truck-before-768.webp 768w, assets/truck-before-1024.webp 1024w" sizes="(max-width: 800px) calc(100vw - 28px), 480px" /><img loading="lazy" decoding="async" src="assets/truck-before.png" alt="Same pickup truck, mud-caked — before" width="1200" height="896" class="ba-img" /></picture>
       </div>
       <div class="ba-arrow"><span>ZAP!</span></div>
       <div class="ba-panel after">
         <span class="ba-tag">AFTER</span>
-        <img loading="lazy" decoding="async" src="assets/truck-after.png" alt="Same pickup truck, gleaming — after" class="ba-img" />
+        <picture><source type="image/avif" srcset="assets/truck-after-480.avif 480w, assets/truck-after-768.avif 768w, assets/truck-after-1024.avif 1024w" sizes="(max-width: 800px) calc(100vw - 28px), 480px" /><source type="image/webp" srcset="assets/truck-after-480.webp 480w, assets/truck-after-768.webp 768w, assets/truck-after-1024.webp 1024w" sizes="(max-width: 800px) calc(100vw - 28px), 480px" /><img loading="lazy" decoding="async" src="assets/truck-after.png" alt="Same pickup truck, gleaming — after" width="1024" height="768" class="ba-img" /></picture>
       </div>
     </div>
 
@@ -1014,7 +1040,7 @@
 <footer class="foot">
   <div class="foot-grid">
     <div class="foot-brand">
-      <span class="logo-mark sm"><img src="assets/logo-emblem.png" alt="Chumbley's logo"/></span>
+      <span class="logo-mark sm"><img src="assets/logo-emblem-96.webp" srcset="assets/logo-emblem-96.webp 96w, assets/logo-emblem-160.webp 160w" sizes="38px" alt="Chumbley's logo" width="38" height="38" loading="lazy" decoding="async"/></span>
       <div>
         <strong>CHUMBLEY'S AUTO DETAILING</strong>
         <span>Gallatin &amp; Hendersonville, TN</span>

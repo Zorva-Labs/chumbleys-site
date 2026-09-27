@@ -24,6 +24,12 @@ node ~/site-kit/bin/site-kit.mjs submit   # IndexNow + Search Console + Bing, on
 - Hand-written static HTML/CSS/JS, no framework. Edit the files at the root; `build.mjs` assembles `dist/`, which is what deploys (above).
 - Every page carries title/description within the SEO windows, canonical, OG + Twitter card, JSON-LD graph, `llms.txt`, `robots.txt`, `sitemap.xml`; `_headers` sets the CSP and security headers (2026-05-15 SEO sweep, scanner 96–100).
 - **The FAQ is the one on the page.** `index.html` carries no FAQPage: `build.mjs` writes it into `dist/` from the page's `details.faq-item` list, word for word, and stops the build on a page that carries its own. To change a question or an answer, edit the FAQ section (since 2026-09-26, when the hand-kept copy had drifted on two answers).
+- **Page speed (2026-09-26; PageSpeed mobile 67 → 92–95, LCP 10.4 → 2.9 s, 13.3 MB → 1.7 MB):**
+  - Every picture on the home page is a `<picture>` of AVIF and WebP copies at the widths it's shown, with `sizes` and width/height. The PNGs stay as the fallback and for the schema. `scripts/perf-images.py` cuts the copies; a new or changed picture gets its copies there and a new name, since `/assets/*` is cached for a year.
+  - The hero's preload carries the same srcset and sizes as its AVIF `<source>`. Never preload the PNG again: `type="image/png"` fetched 1.7 MB beside the AVIF.
+  - The four faces are self-hosted in `assets/fonts` (`@font-face` at the top of `styles.css`), and the title's and the ticker's are preloaded. No Google Fonts link.
+  - gtag.js loads after the page has painted, or at the first tap (`/thanks/` loads it at once).
+  - The intro video is `preload="none"` and starts after that first paint; its poster covers the overlay until then.
 - Footer credit: `Web Design, SEO and Hosting by Nashville's Web Design`, a `rel="nofollow noopener"` link (every credit in the estate is nofollow since 2026-09-19), with creator/provider on the WebSite schema node (switched from the Zorva Labs credit 2026-09-17).
 
 ## Infrastructure & accounts
