@@ -24,6 +24,7 @@ const BOTS = [
   ['nashvilleswebdesigncheck', "Nashville's Web Design check"],
   ['nashvilleswebdesignscanner', "Nashville's Web Design scanner"],   // nashvilleswebdesign.com/seo-check/
   ['zorvalabsscanner', 'Zorva scanner'],                               // zorvalabs.com's scanner
+  ['leadgendigitalscanner', "Nashville's Web Design scanner"],         // leadgendigitalmarketing.com's free scan
   ['zorvalabs', 'Zorva tools'],                                        // ZorvaLabsTools: zorvalabs.com's free tools
   ['zorva-labs', 'Zorva tools'],                                       // Zorva-Labs-Footer-Audit
   ['claude/', "Nashville's Web Design check"],                         // the preview browser in our desktop app ("… Claude/<version> Chrome/…")

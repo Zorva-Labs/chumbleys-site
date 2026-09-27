@@ -2,6 +2,12 @@
 
 Newest first. One entry per session that changed this repo: what changed, why, what the client asked for, what is still owed. Infrastructure changes also go in `site.json` and `CLAUDE.md`. Entries dated before 2026-09-17 are reconstructed from git history; the reasoning behind them is in `CLAUDE.md` and in `~/fleet/docs/archive`.
 
+## 2026-09-26 (/traffic: Lead Gen Digital Marketing's scanner is logged as ours, never as a visit)
+- leadgendigitalmarketing.com now runs a free scan. Its fetches carry `LeadGenDigitalScanner` in a Chrome user agent, and no rule here named it, so the middleware took the scanner for a person and a scan's first page for a visit. Michael asked for it on every site's own-checks list, beside our other two scanners.
+- `functions/_middleware.js`: one line in the `// our-checks:` block (traffic-kit `bin/add-our-checks.mjs`, `ccf9c82`). The scanner is now logged as "Nashville's Web Design scanner", the label the agency's own scanner has here, and like any named bot it passes the geo gate.
+- Built, checked (`traffic-kit check` Classification ✓), deployed (`945ce669`, production confirmed through the Pages API), submitted (nothing had changed). Live: a request with the scanner's user agent to the new deployment was logged as "Nashville's Web Design scanner" (`pageviews` 856).
+- **Owed:** nothing.
+
 ## 2026-09-25 (/traffic: a thank-you page load counts as a sent form only with a saved lead behind it)
 - Michael: "roll it out to all the sites", after Three Stone's `/traffic` listed a sent form that was only a load of its thank-you page (traffic-kit CHANGELOG, 2026-09-25).
 - `functions/api/pv-event.js` (traffic-kit `bin/add-lead-proof.mjs`, the `// lead-proof:` block) keeps a thank-you page's `form_complete` only while a lead saved in the last two minutes has no `form_complete` yet. Any other load, such as a reload, a restored tab, the address typed or a crawler that runs scripts, is logged as `thankyou_view`, which no count reads.
