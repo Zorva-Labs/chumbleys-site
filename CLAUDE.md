@@ -21,8 +21,9 @@ node ~/site-kit/bin/site-kit.mjs submit   # IndexNow + Search Console + Bing, on
 
 ## How it works
 - `index.html`, `styles.css`, `assets/`, `thanks/`, `_redirects`.
-- Hand-written static HTML/CSS/JS — no build step, no framework. Edit the files, deploy the repo root.
+- Hand-written static HTML/CSS/JS, no framework. Edit the files at the root; `build.mjs` assembles `dist/`, which is what deploys (above).
 - Every page carries title/description within the SEO windows, canonical, OG + Twitter card, JSON-LD graph, `llms.txt`, `robots.txt`, `sitemap.xml`; `_headers` sets the CSP and security headers (2026-05-15 SEO sweep, scanner 96–100).
+- **The FAQ is the one on the page.** `index.html` carries no FAQPage: `build.mjs` writes it into `dist/` from the page's `details.faq-item` list, word for word, and stops the build on a page that carries its own. To change a question or an answer, edit the FAQ section (since 2026-09-26, when the hand-kept copy had drifted on two answers).
 - Footer credit: `Web Design, SEO and Hosting by Nashville's Web Design`, a `rel="nofollow noopener"` link (every credit in the estate is nofollow since 2026-09-19), with creator/provider on the WebSite schema node (switched from the Zorva Labs credit 2026-09-17).
 
 ## Infrastructure & accounts

@@ -2,6 +2,28 @@
 
 Newest first. One entry per session that changed this repo: what changed, why, what the client asked for, what is still owed. Infrastructure changes also go in `site.json` and `CLAUDE.md`. Entries dated before 2026-09-17 are reconstructed from git history; the reasoning behind them is in `CLAUDE.md` and in `~/fleet/docs/archive`.
 
+## 2026-09-26 (the FAQ schema is the visible FAQ: one list, written by the build)
+- **The finding** (Michael, confirmed on the live site): two of the home page's seven FAQPage answers were not the ones the page shows. Google's FAQ rules want the markup to describe what the page shows, and ours say the visible FAQ and the schema come from one source.
+  - "Do you come to me, or do I bring my car to you?": the markup had lost the visible "anywhere in Gallatin or Hendersonville".
+  - "How often should I get my car detailed?": the page shows a three-line list (the Sidekick once or twice a month, the Hero every 2–3 months, the Legend twice a year). The markup carried a paragraph of its own, with words the FAQ doesn't show (engine bay, headlight restoration, pet-hair removal, odor neutralization).
+- **Where it came from.** `index.html` is hand-written, and its JSON-LD kept its own copy of the seven questions. The visible FAQ had since been edited, and the copy had not followed. The other five answers still matched word for word.
+- **The fix: the FAQ on the page is the list** (the model is Harmony Tax's and Nittany Tax's fix of the same day).
+  - `index.html` no longer carries a FAQPage. The node was cut by its text span; the other five nodes parse back unchanged.
+  - `build.mjs` writes it into `dist/` from the page's `details.faq-item` list, word for word: the `<summary>` is the question, the rest of the item the answer. The `@id` is the one it had, canonical + `#faq`.
+  - A page that carries its own FAQPage stops the build, and so does an item it cannot read.
+  - No visible copy changed.
+- **Checked:**
+  - `node build.mjs`: FAQPage written on 1 page. Five of the seven answers are byte for byte the old ones; the other two are now the page's.
+  - `site.json` names no `build.check`.
+  - `site-kit check`: "every FAQPage question and answer is on its page (7 question(s) on 1 page(s))", down from 2 answers not the page's. Its other 8 problems were there before this change: a robots.txt group, the `/traffic` detection, the two favicons `traffic.html` names, and four contrast pairs.
+  - In a throwaway copy, each of these stopped the build (exit 1, no dated sitemap): a FAQPage put back on the home page, an item without its `<summary>`, and a `<details>` nested inside an answer.
+  - In the browser pane, on `dist/` served locally: all seven schema questions and answers equal the FAQ's rendered text. The two corrected answers open to the words the schema now carries.
+- **Deployed** `b53eb50c` (production, confirmed through the Pages API).
+- **Submitted:** IndexNow took the changed URL (202), the sitemap was resubmitted to Search Console, and Bing has it. The sitemap now dates `/` 2026-09-26, since its structured data changed.
+- **Verified live:** 7 of 7 FAQPage questions and answers are in the page's visible text (head, scripts and tags stripped, case and punctuation ignored). The other five schema nodes and the page's body are unchanged from before the deploy.
+- `CLAUDE.md` gains the rule, and loses the stale "no build step … deploy the repo root" line.
+- **Owed:** nothing for this. To add or change a question, edit the FAQ section of `index.html`.
+
 ## 2026-09-26 (/traffic: Lead Gen Digital Marketing's scanner is logged as ours, never as a visit)
 - leadgendigitalmarketing.com now runs a free scan. Its fetches carry `LeadGenDigitalScanner` in a Chrome user agent, and no rule here named it, so the middleware took the scanner for a person and a scan's first page for a visit. Michael asked for it on every site's own-checks list, beside our other two scanners.
 - `functions/_middleware.js`: one line in the `// our-checks:` block (traffic-kit `bin/add-our-checks.mjs`, `ccf9c82`). The scanner is now logged as "Nashville's Web Design scanner", the label the agency's own scanner has here, and like any named bot it passes the geo gate.
