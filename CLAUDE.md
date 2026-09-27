@@ -32,6 +32,8 @@ node ~/site-kit/bin/site-kit.mjs submit   # IndexNow + Search Console + Bing, on
   - The intro video is `preload="none"` and starts after that first paint; its poster covers the overlay until then.
 - Footer credit: `Web Design, SEO and Hosting by Nashville's Web Design`, a `rel="nofollow noopener"` link (every credit in the estate is nofollow since 2026-09-19), with creator/provider on the WebSite schema node (switched from the Zorva Labs credit 2026-09-17).
 
+- **`/about` and `/privacy` (2026-09-27).** `/about` is the origin story, moved off the home page. The home page keeps "MEET MADDOX!" and a button to it. `/privacy` says what the mailto form, GA4 and the log do: change it when the form changes. `src/facts.md` is the source for any new copy, and nothing goes on a page that isn't in it.
+
 ## Infrastructure & accounts
 - Cloudflare Pages project `chumbleys` → chumbleys.pages.dev; domain chumbleysdetailing.com.
 - Google: GA4 `G-EQVL6SGTES` (property 555748888, the Nashville's Web Design account). generate_lead fires on /thanks/ in the page; the server-side Measurement Protocol send ended when the quote form went mailto-only (`eea5f63`). Since 2026-09-24, in place of `G-ZM8FXXENGY`, a property michael@nashvilleswebdesign.com cannot see (the old Zorva daily digest), so nothing could feed `/traffic` from it.
@@ -45,4 +47,5 @@ node ~/site-kit/bin/site-kit.mjs submit   # IndexNow + Search Console + Bing, on
 - `styles.css` has no fingerprint — bump the `?v=` query on the stylesheet link when it changes or the intro overlay CSS never reaches returning visitors (bit us 2026-05-03).
 
 ## Open items
-- (nothing recorded yet)
+- `src/facts.md`: 13 required facts `[NEED]`: Maddox's photo, his words, the stats' source (500+, 5★, 100%), the Business Profile's count and rating.
+- The schema's `paymentAccepted` has no source and shows on no page (`site-kit check` fails it): Maddox to confirm it, or it comes out.

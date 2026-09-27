@@ -12,12 +12,22 @@
       <image:caption>Maddox Chumbley, Gallatin TN auto detailing superhero</image:caption>
     </image:image>
     <image:image>
-      <image:loc>https://chumbleysdetailing.com/assets/hero-action.png</image:loc>
-      <image:title>Maddox detailing a sports car</image:title>
-    </image:image>
-    <image:image>
       <image:loc>https://chumbleysdetailing.com/assets/og-image.png</image:loc>
       <image:title>Chumbley's Auto Detailing share image</image:title>
     </image:image>
+  </url>
+  <url>
+    <loc>https://chumbleysdetailing.com/about</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://chumbleysdetailing.com/assets/hero-action.png</image:loc>
+      <image:title>Maddox detailing a sports car</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://chumbleysdetailing.com/privacy</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
   </url>
 </urlset>

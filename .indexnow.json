@@ -2,13 +2,13 @@
   "host": "chumbleysdetailing.com",
   "endpoint": "https://www.bing.com/indexnow",
   "version": 2,
-  "submitted": "2026-09-27T03:25:10.578Z",
+  "submitted": "2026-09-27T21:59:49.078Z",
   "google": {
     "property": "sc-domain:chumbleysdetailing.com",
     "sitemaps": [
       "https://chumbleysdetailing.com/sitemap.xml"
     ],
-    "submitted": "2026-09-27T03:25:11.246Z"
+    "submitted": "2026-09-27T21:59:49.713Z"
   },
   "bing": {
     "site": "https://chumbleysdetailing.com/",
@@ -19,8 +19,16 @@
   },
   "urls": {
     "https://chumbleysdetailing.com/": {
-      "hash": "ba19cf63c393161c",
-      "changed": "2026-09-26"
+      "hash": "98dd3d3130dc0634",
+      "changed": "2026-09-27"
+    },
+    "https://chumbleysdetailing.com/about": {
+      "hash": "a654c0ec2bb670f6",
+      "changed": "2026-09-27"
+    },
+    "https://chumbleysdetailing.com/privacy": {
+      "hash": "bb8c7672fb350cf1",
+      "changed": "2026-09-27"
     }
   }
 }
