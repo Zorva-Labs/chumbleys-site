@@ -2,6 +2,23 @@
 
 Newest first. One entry per session that changed this repo: what changed, why, what the client asked for, what is still owed. Infrastructure changes also go in `site.json` and `CLAUDE.md`. Entries dated before 2026-09-17 are reconstructed from git history; the reasoning behind them is in `CLAUDE.md` and in `~/fleet/docs/archive`.
 
+## 2026-09-28 (the preview hosts noindex every file: the `/migrate www` rule in `_headers`)
+- **Why:** a live check on 2026-09-28 found `chumbleys.pages.dev` serving the site's files with no noindex: `chumbleys.pages.dev/assets/og-image.png` answered 200 with no `X-Robots-Tag`. The middleware noindexes everything on the preview host that reaches it, but `_routes.json` keeps `/assets/*` out of Functions, and the root `_headers` had no rule for the host. The estate standard is that `*.pages.dev` is never indexed, and `/migrate www` puts the rule in `_headers` so images are covered too. The check found the same on seven other sites, and Michael asked for that rule alone on all eight; the client asked for nothing here.
+- **Changed:** the rule `/migrate www` writes, appended word for word to the root `_headers`, the one the build copies into `dist/`:
+  - `https://:project.pages.dev/*` → `X-Robots-Tag: noindex, nofollow`, for `chumbleys.pages.dev`;
+  - `https://:version.:project.pages.dev/*` → the same, for each deployment's own `<hash>.chumbleys.pages.dev`;
+  - nothing else: the rest of `/migrate www` (its www → apex block and the domains) wasn't run.
+- **Checked:**
+  - `node build.mjs`: `dist/_headers` is the root `_headers` byte for byte, both rules in it. lastmod kept all 3 dates, since no page changed.
+  - `site-kit check`: the same output as before the change, word for word (the 8 problems it already had).
+- **Deployed** `6509383b`. **Submitted:** no page changed, so nothing was sent.
+- **Verified live** (user agent `NashvillesWebDesignCheck`):
+  - `chumbleys.pages.dev/assets/og-image.png` and `/styles.css`: 200 with `X-Robots-Tag: noindex, nofollow`. Before, the image carried none; `/styles.css` already had it, since it isn't under `/assets/` and so reaches the middleware.
+  - `6509383b.chumbleys.pages.dev/assets/og-image.png`: the same.
+  - `chumbleys.pages.dev/`: one `X-Robots-Tag: noindex, nofollow`, as before, not two. The middleware sets it with `headers.set`, which replaces a value already on the response.
+  - `chumbleysdetailing.com/assets/og-image.png` and `/styles.css`: 200 with no `X-Robots-Tag`, as before.
+- **Owed:** nothing for this.
+
 ## 2026-09-27 (Meet Maddox gets its own page; a privacy page; the facts file)
 - **Why:** the estate's scanner (core 4.0, check `about-privacy`, rulebook rule 8) found neither an About page nor a privacy policy linked from the home page. The home page's "Meet Maddox" was an in-page anchor the scan doesn't count, and `/privacy` answered 404. Michael asked for both on every site that lacked them. The About page comes from the facts file and the owner's words, and when there are none, it waits for his word. **Michael (2026-09-27): "Build it from the site":** `/about` from what the home page, the schema and the reviews already say, the origin story moving there with the home page linking to it, nothing new added. Chumbley's form has a task of its own; it hadn't added these pages, so they were done here.
 - **`/about` (`about.html`): the origin story, moved.** The `#hero-story` section went over word for word: the art, "BORN WITH THE GIFT OF SHINE", the five paragraphs, the stats. Its "MEET MADDOX!" is the page's h1, the picture loads first (`fetchpriority`, no lazy), and a GET A QUOTE ★ button to `/#quote` follows "Hand him your keys". The page carries the same header (its anchors now `/#…`, "Meet Maddox" current), footer, stylesheet and GA4 loader as the home page. Title "Meet Maddox Chumbley | Chumbley's Auto Detailing" (48), description 154, `AboutPage` with `mainEntity` → `#maddox`, and the `#maddox` Person with his town and the page's URL. In the sitemap the origin picture moved with it.

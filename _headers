@@ -20,3 +20,11 @@
 /robots.txt
   Content-Type: text/plain
   Cache-Control: public, max-age=86400
+
+# The preview hosts serve the same pages as the domain and must never be
+# indexed next to it — every file, images included (/migrate www).
+https://:project.pages.dev/*
+  X-Robots-Tag: noindex, nofollow
+
+https://:version.:project.pages.dev/*
+  X-Robots-Tag: noindex, nofollow

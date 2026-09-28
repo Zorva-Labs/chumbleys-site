@@ -36,6 +36,7 @@ node ~/site-kit/bin/site-kit.mjs submit   # IndexNow + Search Console + Bing, on
 
 ## Infrastructure & accounts
 - Cloudflare Pages project `chumbleys` → chumbleys.pages.dev; domain chumbleysdetailing.com.
+- The preview hosts, `chumbleys.pages.dev` and each deployment's `<hash>.chumbleys.pages.dev`, answer every file with `X-Robots-Tag: noindex, nofollow` from the root `_headers` (the `/migrate www` rule, since 2026-09-28). The middleware sets the same header on whatever reaches it, but `_routes.json` keeps `/assets/*` away from it.
 - Google: GA4 `G-EQVL6SGTES` (property 555748888, the Nashville's Web Design account). generate_lead fires on /thanks/ in the page; the server-side Measurement Protocol send ended when the quote form went mailto-only (`eea5f63`). Since 2026-09-24, in place of `G-ZM8FXXENGY`, a property michael@nashvilleswebdesign.com cannot see (the old Zorva daily digest), so nothing could feed `/traffic` from it.
 
 ## Forms, mail, tracking
