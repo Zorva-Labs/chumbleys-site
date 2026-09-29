@@ -45,12 +45,25 @@ async function safeEqual(a, b) {
   return diff === 0;
 }
 
+// agency-passwords: fn
+// Our own passwords open every site's dashboard beside the site's own:
+// TRAFFIC_AGENCY_PASSWORDS, one per line, a Pages secret set on every project
+// from ~/.env (TRAFFIC_AGENCY_PASSWORD_<n>). They only sign in; the session is
+// still signed with TRAFFIC_PASSWORD, so rotating that one logs everyone out.
+function agencyPasswords(env) {
+  return String(env?.TRAFFIC_AGENCY_PASSWORDS || '').split(/\r?\n/).filter(Boolean);
+}
+// agency-passwords: end
+
 export async function checkPassword(env, supplied) {
   const expected = env?.TRAFFIC_PASSWORD;
   // No password configured means the dashboard is closed, not open. Failing
   // shut is the only safe default for an admin surface.
   if (!expected) return false;
   if (!supplied) return false;
+  // agency-passwords: call
+  for (const p of agencyPasswords(env)) if (await safeEqual(supplied, p)) return true;
+  // agency-passwords: end
   return safeEqual(supplied, expected);
 }
 

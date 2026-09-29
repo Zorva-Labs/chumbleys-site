@@ -41,6 +41,7 @@ node ~/site-kit/bin/site-kit.mjs submit   # IndexNow + Search Console + Bing, on
 
 ## Forms, mail, tracking
 - `/traffic` (traffic-kit, installed 2026-09-17): `functions/_middleware.js` logs every HTML page view at the edge into D1 `chumbleys-analytics` before any script runs; `assets/js/traffic-beacons.js` (loaded on every page) sends tap-to-call/email conversions, `/thanks` or `/thank-you` arrivals and time on page; dashboard is `traffic.html` at the root (served at `/traffic`), password = Pages secret `TRAFFIC_PASSWORD` = `CHUMBLEYS_TRAFFIC_PASSWORD` in `~/.env`. No geo-gate (`GEO_ALLOW=""`) — the site kept its worldwide audience. `_routes.json` keeps static folders out of the Function; `.assetsignore` keeps migrations and the manuals off the CDN.
+- `/traffic` also opens with our agency passwords: the Pages secret `TRAFFIC_AGENCY_PASSWORDS` (one per line, from `TRAFFIC_AGENCY_PASSWORD_<n>` in `~/.env`), stored by `node ~/traffic-kit/bin/add-agency-passwords.mjs . --apply`. The site's own password is unchanged and still signs the session.
 - Quote form is `mailto:` only — every backend was removed (2026-06-08). If real lead capture is wanted, add a D1 endpoint + Gmail transport like the site-kit sites.
 - GA4 `G-EQVL6SGTES` (property 555748888, the Nashville's Web Design account); `generate_lead` from the page only. `GA4_API_SECRET`/`GA4_MEASUREMENT_ID` in `~/.env` belonged to the old stream's server-side send and nothing reads them now.
 

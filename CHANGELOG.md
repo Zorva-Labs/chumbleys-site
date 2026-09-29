@@ -2,6 +2,11 @@
 
 Newest first. One entry per session that changed this repo: what changed, why, what the client asked for, what is still owed. Infrastructure changes also go in `site.json` and `CLAUDE.md`. Entries dated before 2026-09-17 are reconstructed from git history; the reasoning behind them is in `CLAUDE.md` and in `~/fleet/docs/archive`.
 
+## 2026-09-29 (/traffic takes the agency passwords)
+- **What:** `functions/_lib/auth.js` accepts our agency passwords beside this site's own `TRAFFIC_PASSWORD`, which is unchanged and still signs the session (`traffic-kit bin/add-agency-passwords.mjs`). The Pages secret `TRAFFIC_AGENCY_PASSWORDS` is stored on `chumbleys` and named in `site.json → cloudflare.secrets` (where the list exists) and `CLAUDE.md`.
+- **Why:** Michael, 2026-09-29: keep every site's traffic password, and make the two agency passwords (`TRAFFIC_AGENCY_PASSWORD_1` and `_2` in `~/.env`) open every `/traffic`, this one and every future one.
+- **Deployed** `d33d7bac`. The deployment binds `TRAFFIC_AGENCY_PASSWORDS` (secret_text) beside `TRAFFIC_PASSWORD`, `/api/traffic/auth` reports `configured: true` and a wrong password still gets a 401.
+
 ## 2026-09-28 (the preview hosts noindex every file: the `/migrate www` rule in `_headers`)
 - **Why:** a live check on 2026-09-28 found `chumbleys.pages.dev` serving the site's files with no noindex: `chumbleys.pages.dev/assets/og-image.png` answered 200 with no `X-Robots-Tag`. The middleware noindexes everything on the preview host that reaches it, but `_routes.json` keeps `/assets/*` out of Functions, and the root `_headers` had no rule for the host. The estate standard is that `*.pages.dev` is never indexed, and `/migrate www` puts the rule in `_headers` so images are covered too. The check found the same on seven other sites, and Michael asked for that rule alone on all eight; the client asked for nothing here.
 - **Changed:** the rule `/migrate www` writes, appended word for word to the root `_headers`, the one the build copies into `dist/`:
