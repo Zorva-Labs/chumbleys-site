@@ -2,6 +2,13 @@
 
 Newest first. One entry per session that changed this repo: what changed, why, what the client asked for, what is still owed. Infrastructure changes also go in `site.json` and `CLAUDE.md`. Entries dated before 2026-09-17 are reconstructed from git history; the reasoning behind them is in `CLAUDE.md` and in `~/fleet/docs/archive`.
 
+## 2026-10-01 (the quote form's honeypot is display:none; an autofilled one is not a bot)
+- **Why:** on 2026-10-01 cabinetmakerpro.com lost a real contact-form submission: Chrome autofilled its honeypot, which was only positioned off-screen, and the form treated the visitor as a bot. This form had the same shape: `_gotcha` sat at `left:-9999px`, and the page's script sends anyone with a filled `_gotcha` straight to `/thanks/` without opening the email. An autofilled real visitor would have seen the thank-you page and nothing would have reached the shop. Michael asked for the fix on every site with this pattern; the client asked for nothing here.
+- **Changed (`index.html`):** `_gotcha` is `style="display:none"` (a browser doesn't autofill a field it can't focus; a bot reading the HTML still fills it). The submit handler now lets through a `_gotcha` value that copies the visitor's own name, email or phone (autofill), and still sends anything else to `/thanks/` unsent. The form stays a `mailto:`, so there is no server and nothing to log a drop to.
+- **Checked:** `node build.mjs`; `site-kit check` the same 8 problems as before; the form script parses.
+- **Deployed** `536bb4f5`. **Verified live:** on chumbleysdetailing.com the field computes to `display: none`, the new guard is served, and the console has no errors. **Submitted:** no sitemap URL changed, so nothing was sent.
+- **Lost leads:** can't be measured. A dropped visitor reached `/thanks/` like a real one and fired no `generate_lead`, so no record tells them apart.
+
 ## 2026-09-29 (/traffic takes the agency passwords)
 - **What:** `functions/_lib/auth.js` accepts our agency passwords beside this site's own `TRAFFIC_PASSWORD`, which is unchanged and still signs the session (`traffic-kit bin/add-agency-passwords.mjs`). The Pages secret `TRAFFIC_AGENCY_PASSWORDS` is stored on `chumbleys` and named in `site.json → cloudflare.secrets` (where the list exists) and `CLAUDE.md`.
 - **Why:** Michael, 2026-09-29: keep every site's traffic password, and make the two agency passwords (`TRAFFIC_AGENCY_PASSWORD_1` and `_2` in `~/.env`) open every `/traffic`, this one and every future one.

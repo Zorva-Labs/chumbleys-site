@@ -825,9 +825,11 @@
         enctype="text/plain">
     <div class="halftone-bg"></div>
 
-    <!-- spam honey-pot — bots fill this, humans never see it -->
+    <!-- spam honey-pot — bots fill this, humans never see it. display:none, not
+         off-screen: browsers autofill a field they can focus (Chrome did on
+         another of our sites, 2026-10-01, and a real request was lost) -->
     <input type="text" name="_gotcha" tabindex="-1" autocomplete="off"
-           style="position:absolute;left:-9999px" aria-hidden="true" />
+           style="display:none" aria-hidden="true" />
 
     <div class="form-grid">
       <label class="form-field">
@@ -891,9 +893,16 @@
       if (!form) return;
 
       form.addEventListener("submit", function (e) {
-        // Honey-pot — bot filled the hidden field, silently succeed without sending
+        // Honey-pot — bot filled the hidden field, silently succeed without sending.
+        // A value that copies the visitor's own name, email or phone is the
+        // browser's autofill, not a bot, so it goes through.
         var gotcha = form.querySelector('input[name="_gotcha"]');
-        if (gotcha && gotcha.value) {
+        var hp = gotcha && gotcha.value ? gotcha.value.trim().toLowerCase() : "";
+        var own = ["name", "email", "phone"].map(function (k) {
+          var el = form.elements[k];
+          return el && el.value ? el.value.trim().toLowerCase() : "";
+        }).filter(function (x) { return x.length >= 2; });
+        if (hp && !own.some(function (x) { return x.indexOf(hp) !== -1 || hp.indexOf(x) !== -1; })) {
           e.preventDefault();
           window.location.href = "/thanks/";
           return;
