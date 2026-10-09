@@ -23,7 +23,7 @@
       "TRAFFIC_AGENCY_PASSWORDS"
     ],
     "vars": {
-      "GEO_ALLOW": "",
+      "GEO_ALLOW": "US",
       "CF_ZONE_ID": ""
     }
   },
@@ -43,7 +43,7 @@
   "google": {
     "ga4Property": "555748888",
     "ga4Measurement": "G-EQVL6SGTES",
-    "gsc": null,
+    "gsc": "sc-domain:chumbleysdetailing.com",
     "adsCustomerId": null,
     "adsConversionId": null,
     "businessProfile": null,
@@ -60,10 +60,10 @@
     "plan": null,
     "notes": ""
   },
-  "geo": null,
+  "geo": "US",
   "launched": "2026-04-30",
   "built": "2026-04-30",
-  "updated": "2026-09-23",
+  "updated": "2026-10-09",
   "notes": "",
   "name": "Chumbley's Detailing",
   "slug": "chumbleys",

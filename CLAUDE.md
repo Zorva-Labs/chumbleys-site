@@ -37,10 +37,11 @@ node ~/site-kit/bin/site-kit.mjs submit   # IndexNow + Search Console + Bing, on
 ## Infrastructure & accounts
 - Cloudflare Pages project `chumbleys` → chumbleys.pages.dev; domain chumbleysdetailing.com.
 - The preview hosts, `chumbleys.pages.dev` and each deployment's `<hash>.chumbleys.pages.dev`, answer every file with `X-Robots-Tag: noindex, nofollow` from the root `_headers` (the `/migrate www` rule, since 2026-09-28). The middleware sets the same header on whatever reaches it, but `_routes.json` keeps `/assets/*` away from it.
+- Search Console: `sc-domain:chumbleysdetailing.com` (`site.json → google.gsc`, recorded 2026-10-09).
 - Google: GA4 `G-EQVL6SGTES` (property 555748888, the Nashville's Web Design account). generate_lead fires on /thanks/ in the page; the server-side Measurement Protocol send ended when the quote form went mailto-only (`eea5f63`). Since 2026-09-24, in place of `G-ZM8FXXENGY`, a property michael@nashvilleswebdesign.com cannot see (the old Zorva daily digest), so nothing could feed `/traffic` from it.
 
 ## Forms, mail, tracking
-- `/traffic` (traffic-kit, installed 2026-09-17): `functions/_middleware.js` logs every HTML page view at the edge into D1 `chumbleys-analytics` before any script runs; `assets/js/traffic-beacons.js` (loaded on every page) sends tap-to-call/email conversions, `/thanks` or `/thank-you` arrivals and time on page; dashboard is `traffic.html` at the root (served at `/traffic`), password = Pages secret `TRAFFIC_PASSWORD` = `CHUMBLEYS_TRAFFIC_PASSWORD` in `~/.env`. No geo-gate (`GEO_ALLOW=""`) — the site kept its worldwide audience. `_routes.json` keeps static folders out of the Function; `.assetsignore` keeps migrations and the manuals off the CDN.
+- `/traffic` (traffic-kit, installed 2026-09-17): `functions/_middleware.js` logs every HTML page view at the edge into D1 `chumbleys-analytics` before any script runs; `assets/js/traffic-beacons.js` (loaded on every page) sends tap-to-call/email conversions, `/thanks` or `/thank-you` arrivals and time on page; dashboard is `traffic.html` at the root (served at `/traffic`), password = Pages secret `TRAFFIC_PASSWORD` = `CHUMBLEYS_TRAFFIC_PASSWORD` in `~/.env`. Geo-gated to the US (`GEO_ALLOW="US"` in `wrangler.toml`, `site.json → geo`) since 2026-10-09, the estate rule; crawlers are exempt by user agent. Until then it had none. `_routes.json` keeps static folders out of the Function; `.assetsignore` keeps migrations and the manuals off the CDN.
 - `/traffic` also opens with our agency passwords: the Pages secret `TRAFFIC_AGENCY_PASSWORDS` (one per line, from `TRAFFIC_AGENCY_PASSWORD_<n>` in `~/.env`), stored by `node ~/traffic-kit/bin/add-agency-passwords.mjs . --apply`. The site's own password is unchanged and still signs the session.
 - Quote form is `mailto:` only — every backend was removed (2026-06-08). If real lead capture is wanted, add a D1 endpoint + Gmail transport like the site-kit sites.
 - GA4 `G-EQVL6SGTES` (property 555748888, the Nashville's Web Design account); `generate_lead` from the page only. `GA4_API_SECRET`/`GA4_MEASUREMENT_ID` in `~/.env` belonged to the old stream's server-side send and nothing reads them now.
@@ -50,4 +51,6 @@ node ~/site-kit/bin/site-kit.mjs submit   # IndexNow + Search Console + Bing, on
 
 ## Open items
 - `src/facts.md`: 13 required facts `[NEED]`: Maddox's photo, his words, the stats' source (500+, 5★, 100%), the Business Profile's count and rating.
+- `/about` carries its own four-question FAQ (FAQPage written by the build, like the home page's). `build.mjs` leaves the unreferenced originals in `UNSHIPPED` out of `dist/` and ships `favicon.ico`.
+- On phones (≤540px) the header shows the logo and the phone link only; the four social links are in the footer. They had pushed the phone link off the right edge.
 - The schema's `paymentAccepted` has no source and shows on no page (`site-kit check` fails it): Maddox to confirm it, or it comes out.

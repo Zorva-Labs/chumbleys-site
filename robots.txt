@@ -1,6 +1,48 @@
+# Every group repeats the private-path rules: a crawler named in its own group
+# ignores the * group entirely, so anything left out of its group is open to it.
+
 User-agent: *
-Allow: /
+Disallow: /traffic
+Disallow: /api/
 Disallow: /assets/maddox-*.png
 Disallow: /assets/inspiration.jpg
+Allow: /
+
+# AI crawlers, allowed on purpose: being readable by them is the point of the
+# AI-search work.
+User-agent: GPTBot
+Disallow: /traffic
+Disallow: /api/
+Disallow: /assets/maddox-*.png
+Disallow: /assets/inspiration.jpg
+Allow: /
+
+User-agent: OAI-SearchBot
+Disallow: /traffic
+Disallow: /api/
+Disallow: /assets/maddox-*.png
+Disallow: /assets/inspiration.jpg
+Allow: /
+
+User-agent: ClaudeBot
+Disallow: /traffic
+Disallow: /api/
+Disallow: /assets/maddox-*.png
+Disallow: /assets/inspiration.jpg
+Allow: /
+
+User-agent: PerplexityBot
+Disallow: /traffic
+Disallow: /api/
+Disallow: /assets/maddox-*.png
+Disallow: /assets/inspiration.jpg
+Allow: /
+
+User-agent: Google-Extended
+Disallow: /traffic
+Disallow: /api/
+Disallow: /assets/maddox-*.png
+Disallow: /assets/inspiration.jpg
+Allow: /
 
 Sitemap: https://chumbleysdetailing.com/sitemap.xml

@@ -3,7 +3,7 @@ compatibility_date = "2026-09-17"
 pages_build_output_dir = "dist"
 
 [vars]
-GEO_ALLOW = ""
+GEO_ALLOW = "US"
 CF_ZONE_ID = ""
 
 [[d1_databases]]

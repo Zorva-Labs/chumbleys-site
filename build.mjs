@@ -25,12 +25,18 @@ const OUT = path.join(ROOT, 'dist');
 
 const FILES = [
   ...fs.readdirSync(ROOT).filter((f) => f.endsWith('.html')),
-  'robots.txt', 'sitemap.xml', 'llms.txt', 'styles.css', '_headers', '_redirects', '_routes.json',
+  'robots.txt', 'sitemap.xml', 'llms.txt', 'styles.css', '_headers', '_redirects', '_routes.json', 'favicon.ico',
   /* The IndexNow key — a 32-hex .txt whose content is its name — served from the root. */
   ...fs.readdirSync(ROOT).filter((f) => /^[0-9a-f]{32}\.txt$/.test(f)),
 ];
 const DIRS = ['assets', 'thanks'];
-const PRIVATE = (rel) => /(^|\/)\.|(^|\/)migrations\/|\.(md|sql|py|sh|log|toml|bak|orig)$/i.test(rel);
+/* Originals and spare copies no page, stylesheet or script names (site-kit
+   check img-orphans, 2026-10-09: 4.2 MB): they stay in the repo as sources for
+   scripts/perf-images.py and are not shipped. A picture that starts being used
+   comes off this list. */
+const UNSHIPPED = new Set(['assets/logo-full.png', 'assets/logo-full.avif', 'assets/logo-car.png', 'assets/service-burst.png',
+  'assets/hero-portrait.avif', 'assets/hero-action.avif', 'assets/intro-poster.avif', 'assets/intro-poster.jpg']);
+const PRIVATE = (rel) => UNSHIPPED.has(rel) || /(^|\/)\.|(^|\/)migrations\/|\.(md|sql|py|sh|log|toml|bak|orig)$/i.test(rel);
 
 fs.rmSync(OUT, { recursive: true, force: true });
 fs.mkdirSync(OUT, { recursive: true });
