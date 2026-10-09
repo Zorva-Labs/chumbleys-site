@@ -2,6 +2,13 @@
 
 Newest first. One entry per session that changed this repo: what changed, why, what the client asked for, what is still owed. Infrastructure changes also go in `site.json` and `CLAUDE.md`. Entries dated before 2026-09-17 are reconstructed from git history; the reasoning behind them is in `CLAUDE.md` and in `~/fleet/docs/archive`.
 
+## 2026-10-09 (www -> apex 301)
+- **Why:** the 2026-10-09 estate scan: `www.chumbleysdetailing.com` served a full duplicate of the site.
+- **Changed:** `/migrate www chumbleys --dns`: a www -> apex 301 at the top of `functions/_middleware.js` (path and query kept, `/.well-known/` left alone) and a zone redirect rule www -> apex. The `*.pages.dev` noindex was already in `_headers` and the middleware. The home page canonical was already the apex.
+- **Checked:** deployed; `curl -sI "https://www.chumbleysdetailing.com/x?y=1"` -> 301 to the apex with the query kept.
+- **Left per Michael's instruction:** the quote form (still `mailto:`) and the aggregateRating were not touched.
+- **Still owed:** nothing from this item.
+
 ## 2026-10-01 (the quote form's honeypot is display:none; an autofilled one is not a bot)
 - **Why:** on 2026-10-01 cabinetmakerpro.com lost a real contact-form submission: Chrome autofilled its honeypot, which was only positioned off-screen, and the form treated the visitor as a bot. This form had the same shape: `_gotcha` sat at `left:-9999px`, and the page's script sends anyone with a filled `_gotcha` straight to `/thanks/` without opening the email. An autofilled real visitor would have seen the thank-you page and nothing would have reached the shop. Michael asked for the fix on every site with this pattern; the client asked for nothing here.
 - **Changed (`index.html`):** `_gotcha` is `style="display:none"` (a browser doesn't autofill a field it can't focus; a bot reading the HTML still fills it). The submit handler now lets through a `_gotcha` value that copies the visitor's own name, email or phone (autofill), and still sends anything else to `/thanks/` unsent. The form stays a `mailto:`, so there is no server and nothing to log a drop to.

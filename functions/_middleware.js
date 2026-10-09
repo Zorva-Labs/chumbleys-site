@@ -298,6 +298,18 @@ async function notFound(context, url) {
 export async function onRequest(context) {
   const { request, env, next } = context;
   const url = new URL(request.url);
+
+  // One hostname. www answers only with a 301 to the apex, path and query
+  // kept (gclid, fbclid, utm survive). /.well-known/ is left alone: the
+  // certificate for www is validated over it. Here, not in _redirects: Pages
+  // ignores host-based rules. (/migrate www)
+  if (url.hostname.startsWith('www.') && !url.pathname.startsWith('/.well-known/')) {
+    const to = new URL(url);
+    to.protocol = 'https:';
+    to.hostname = url.hostname.slice(4);
+    to.port = '';
+    return new Response(null, { status: 301, headers: { location: to.toString(), 'cache-control': 'public, max-age=3600' } });
+  }
   const path = url.pathname;
   if (isRepoFile(path)) return notFound(context, url);
   const ua = request.headers.get('user-agent') || '';
