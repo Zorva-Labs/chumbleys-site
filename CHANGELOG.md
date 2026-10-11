@@ -2,6 +2,10 @@
 
 Newest first. One entry per session that changed this repo: what changed, why, what the client asked for, what is still owed. Infrastructure changes also go in `site.json` and `CLAUDE.md`. Entries dated before 2026-09-17 are reconstructed from git history; the reasoning behind them is in `CLAUDE.md` and in `~/fleet/docs/archive`.
 
+## 2026-10-11 — billing recorded in site.json
+- **What Michael asked:** "fix the stripe subscription issues that you keep reporting" — the estate monitor's "No Stripe subscription recorded" notice on this site.
+- **What changed:** `site.json → billing` now records the existing $57/mo Stripe subscription sub_1TSlVtDmvNoGaAxPROuxbOWg (customer cus_URepvtB85w7Cw0, Maddox Chumbley, billed on the 2). Nothing on the site changed; no deploy. The monitor's billing check reads the subscription from here (`fleet index` pushes it) and watches it for past-due, canceled or cancel-at-period-end from now on.
+
 ## 2026-10-09 (estate scan Phase 4: titles, FAQs, taps, contrast, robots, US geo-gate)
 - **Why:** the 2026-10-09 estate scan (plan row 4.17, review B.md section 1): 52 impressions and 0 clicks a week, all on `/`, with a brand-first home title; the header phone link under 44px and "VROOM!" under 4.5:1; robots without `/traffic`; `GEO_ALLOW` empty against the US-only rule; `google.gsc` null; site-kit's new checks. The client asked for nothing here.
 - **Home (`index.html`):** title "Chumbley's Auto Detailing — Mobile Detailing Gallatin TN" → "Car Detailing in Gallatin & Hendersonville, TN | Chumbley's" (59); description → "Mobile car detailing at your driveway in Gallatin and Hendersonville, TN: hand wash from $109, wax and interior shampoo from $189. Call or text (615) 670-3379." (159). The review's suggested wording ran 66 and 178 and put wax in the $109 package, which has none. A line under the H1: "Mobile car detailing in Gallatin and Hendersonville, TN. Call or text (615) 670-3379." The interior panel opens with what is done and the $189 Hero price, linked to the pricing. Two FAQs (9 now): the cost of mobile detailing in Gallatin, and whether he needs your water or power, both from facts already on the page.

@@ -55,10 +55,10 @@
     "notes": ""
   },
   "billing": {
-    "stripeCustomer": null,
-    "stripeSubscription": null,
-    "plan": null,
-    "notes": ""
+    "stripeCustomer": "cus_URepvtB85w7Cw0",
+    "stripeSubscription": "sub_1TSlVtDmvNoGaAxPROuxbOWg",
+    "plan": "All-In-One Domain — $57/mo $57/mo (price_1TU9mJDmvNoGaAxPqIv8DSxb), billed on the 2",
+    "notes": "Stripe customer is Maddox Chumbley (Maddox Mitchell Chumbley, chumbleysdetailing@gmail.com); subscription active, anchored to the 2 (its own self-serve date, not the estate's 28th). Recorded 2026-10-11 from Michael's list; existed before the monitor."
   },
   "geo": "US",
   "launched": "2026-04-30",
