@@ -2,6 +2,13 @@
 
 Newest first. One entry per session that changed this repo: what changed, why, what the client asked for, what is still owed. Infrastructure changes also go in `site.json` and `CLAUDE.md`. Entries dated before 2026-09-17 are reconstructed from git history; the reasoning behind them is in `CLAUDE.md` and in `~/fleet/docs/archive`.
 
+## 2026-10-23 — Direct is called Direct/ChatGPT on /traffic
+
+- **Why:** Michael, across the estate ("every site present and in the future"). A visit with no referrer is most often an AI assistant now — ChatGPT and the rest send none when a link is opened inside their app or pasted — so that traffic has always landed in Direct, while `/traffic` explained Direct as "someone who typed the address or used a bookmark". Wrong, and read as "they already knew us".
+- **What (`traffic.html`), the four edits `~/traffic-kit/bin/add-direct-chatgpt.mjs` makes:** the legend and `chName` say **Direct/ChatGPT** wherever a channel is printed — the rows, the chips, the summary line; the channels card now says no referrer was sent at all, that most of that is an AI assistant, and that the **AI assistants** channel is therefore the floor and not the total; the leads card says what **Unknown** means — no visit cookie came back, so the edge never saw that visit begin (a page left open since the browser last closed, or a browser that keeps none).
+- **Display only.** The classifier and the stored channel stay `Direct`, so the edge log, the rows and every figure already recorded still line up; nothing was backfilled (Michael's standing rule: leave the data alone, fix it for future).
+- The wording and the patcher are the kit's (`~/traffic-kit/CHANGELOG.md`, 2026-10-23), so a new site gets it from the template.
+
 ## 2026-10-11 — billing recorded in site.json
 - **What Michael asked:** "fix the stripe subscription issues that you keep reporting" — the estate monitor's "No Stripe subscription recorded" notice on this site.
 - **What changed:** `site.json → billing` now records the existing $57/mo Stripe subscription sub_1TSlVtDmvNoGaAxPROuxbOWg (customer cus_URepvtB85w7Cw0, Maddox Chumbley, billed on the 2). Nothing on the site changed; no deploy. The monitor's billing check reads the subscription from here (`fleet index` pushes it) and watches it for past-due, canceled or cancel-at-period-end from now on.
