@@ -964,8 +964,11 @@
         }
         lines.push("");
         lines.push("— Submitted via chumbleysdetailing.com");
+        // where the visit came from (assets/js/lead-source.js, from /api/visit)
+        var src = window.leadSource ? window.leadSource.text({ brief: true }) : "";
+        if (src) { lines.push(""); lines.push(src); }
 
-        var subject = "Quote request from " + name;
+        var subject = "Quote request from " + name + (window.leadSource ? window.leadSource.tag() : "");
         var body    = lines.join("\r\n");
         var href    = "mailto:chumbleysdetailing@gmail.com"
                     + "?subject=" + encodeURIComponent(subject)
@@ -1098,5 +1101,6 @@
 </script>
 
 <script src="/assets/js/traffic-beacons.js" defer></script>
+<script src="/assets/js/lead-source.js" defer></script>
 </body>
 </html>

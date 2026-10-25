@@ -54,3 +54,5 @@ node ~/site-kit/bin/site-kit.mjs submit   # IndexNow + Search Console + Bing, on
 - `/about` carries its own four-question FAQ (FAQPage written by the build, like the home page's). `build.mjs` leaves the unreferenced originals in `UNSHIPPED` out of `dist/` and ships `favicon.ico`.
 - On phones (≤540px) the header shows the logo and the phone link only; the four social links are in the footer. They had pushed the phone link off the right edge.
 - The schema's `paymentAccepted` has no source and shows on no page (`site-kit check` fails it): Maddox to confirm it, or it comes out.
+
+- Lead source: the quote form's mailto handler carries "Where this lead came from" from `/api/visit` (`functions/api/visit.js` + `assets/js/lead-source.js`, site-kit's copies — `ts_src` is HttpOnly, so the page asks the edge for it); a new form on this site loads `lead-source.js` too (`~/fleet/docs/reference/email.md` → Forms).
