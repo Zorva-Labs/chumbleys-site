@@ -90,6 +90,14 @@ svg{display:block}
   border:1px solid var(--line-2);border-radius:12px;text-align:center;letter-spacing:.04em}
 .login input:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 4px rgba(42,120,214,.18);background:#fff}
 .login .btn{width:100%}
+/* show-password: start */
+.pw-field{position:relative}
+.login .pw-field input{padding-right:5rem}
+.pw-show{position:absolute;right:3px;top:50%;transform:translateY(-50%);min-width:64px;min-height:44px;padding:0 .8rem;border:0;border-radius:11px;
+  background:transparent;color:var(--ink-2);font-size:.88rem;font-weight:650;cursor:pointer}
+.pw-show:hover{background:rgba(16,24,40,.06)}
+.pw-show:focus-visible{outline:2px solid var(--brand);outline-offset:1px}
+/* show-password: end */
 .err{color:var(--bad);font-size:.86rem;min-height:1.2em;font-weight:600}
 .login__dots{display:flex;gap:6px;justify-content:center;margin-top:18px}
 .login__dots i{width:28px;height:4px;border-radius:4px;display:block}
@@ -495,7 +503,12 @@ html.printing .tbl{overflow:visible}
       <h1>Traffic</h1>
       <p id="login-sub">Enter the dashboard password.</p>
       <form id="login-form" autocomplete="off">
-        <input type="password" id="pw" name="password" placeholder="Password" autocomplete="current-password" required>
+        <!-- show-password: start -->
+        <div class="pw-field">
+          <input type="password" id="pw" name="password" placeholder="Password" autocomplete="current-password" required>
+          <button class="pw-show" type="button" id="pw-show" aria-controls="pw" aria-pressed="false" aria-label="Show password">Show</button>
+        </div>
+        <!-- show-password: end -->
         <button class="btn" type="submit" id="login-btn">Sign in</button>
         <p class="err" id="login-err" role="alert"></p>
       </form>
@@ -2477,6 +2490,17 @@ function showLogin(configured) {
   }
   $('pw')?.focus();
 }
+// show-password: start
+// Shows what was typed, so a long password typed on a phone can be read back
+// before it is sent. The label stays "Show password"; aria-pressed carries the state.
+$('pw-show').addEventListener('click', () => {
+  const pw = $('pw'), show = pw.type === 'password';
+  pw.type = show ? 'text' : 'password';
+  $('pw-show').textContent = show ? 'Hide' : 'Show';
+  $('pw-show').setAttribute('aria-pressed', String(show));
+  pw.focus();
+});
+// show-password: end
 $('login-form').addEventListener('submit', async (e) => {
   e.preventDefault();
   const btn = $('login-btn'), err = $('login-err');

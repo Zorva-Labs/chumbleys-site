@@ -2,6 +2,12 @@
 
 Newest first. One entry per session that changed this repo: what changed, why, what the client asked for, what is still owed. Infrastructure changes also go in `site.json` and `CLAUDE.md`. Entries dated before 2026-09-17 are reconstructed from git history; the reasoning behind them is in `CLAUDE.md` and in `~/fleet/docs/archive`.
 
+## 2026-10-26 — /traffic sign-in: a Show button in the password box
+
+- **What:** the password box on `/traffic` has a Show / Hide button inside its right edge, so a password typed on a phone can be read back before it is sent (traffic-kit `bin/add-show-password.mjs`, 7b52481).
+- **Why:** Michael, 2026-10-26: "Show the password on all login screens". One agency password has `$` and `!` in it and is easy to mistype.
+- **Owed:** nothing.
+
 ## 2026-10-26 — /traffic sign-in: stray spaces ignored, a blocked sign-in says so
 
 - **Why:** Michael, 2026-10-26: Terry's password was not opening Noctis Aurora's `/traffic`, yet that live sign-in accepted both agency passwords and the site's own. Two ways a right password reads as wrong were closed on every site: a space or line break pasted in with it, and a request refused before the password was checked (the US-only gate, a Cloudflare block), which the form reported as "That password is not right."
