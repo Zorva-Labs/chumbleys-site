@@ -60,6 +60,12 @@ export async function checkPassword(env, supplied) {
   // No password configured means the dashboard is closed, not open. Failing
   // shut is the only safe default for an admin surface.
   if (!expected) return false;
+  // login-trim: start
+  // A password pasted from a text or an email often brings a space or a line
+  // break with it, and so can a phone keyboard. None of ours starts or ends
+  // with whitespace, so the edges are dropped before comparing.
+  supplied = typeof supplied === 'string' ? supplied.trim() : supplied;
+  // login-trim: end
   if (!supplied) return false;
   // agency-passwords: call
   for (const p of agencyPasswords(env)) if (await safeEqual(supplied, p)) return true;

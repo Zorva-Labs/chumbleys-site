@@ -2,6 +2,12 @@
 
 Newest first. One entry per session that changed this repo: what changed, why, what the client asked for, what is still owed. Infrastructure changes also go in `site.json` and `CLAUDE.md`. Entries dated before 2026-09-17 are reconstructed from git history; the reasoning behind them is in `CLAUDE.md` and in `~/fleet/docs/archive`.
 
+## 2026-10-26 — /traffic sign-in: stray spaces ignored, a blocked sign-in says so
+
+- **Why:** Michael, 2026-10-26: Terry's password was not opening Noctis Aurora's `/traffic`, yet that live sign-in accepted both agency passwords and the site's own. Two ways a right password reads as wrong were closed on every site: a space or line break pasted in with it, and a request refused before the password was checked (the US-only gate, a Cloudflare block), which the form reported as "That password is not right."
+- **What:** `functions/_lib/auth.js` → `checkPassword` trims the typed password before comparing (`login-trim` block); the sign-in form in `traffic.html` shows our endpoint's own error as a wrong password and, for anything else, names the HTTP status and says the password was not checked (`login-error` block). Both lifted from traffic-kit's template by `bin/add-login-hardening.mjs`. Sessions are still signed with the stored `TRAFFIC_PASSWORD`, so nobody was signed out.
+- **Owed:** nothing.
+
 ## 2026-10-26 — site.json records the Cloudflare zone id
 
 - **Why:** the estate zone sweep of 2026-10-26 (`~/fleet/reports/zones/2026-10-26.md`), run after a zone was found purged while its manifest went on naming it. This site's zone is healthy and active, but `site.json` never recorded its id — so `fleet monitor` was handed `zone_id: null` and could not check the zone's SSL, DNS or country rules at all.
