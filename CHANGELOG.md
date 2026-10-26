@@ -2,6 +2,12 @@
 
 Newest first. One entry per session that changed this repo: what changed, why, what the client asked for, what is still owed. Infrastructure changes also go in `site.json` and `CLAUDE.md`. Entries dated before 2026-09-17 are reconstructed from git history; the reasoning behind them is in `CLAUDE.md` and in `~/fleet/docs/archive`.
 
+## 2026-10-26 — site.json records the Cloudflare zone id
+
+- **Why:** the estate zone sweep of 2026-10-26 (`~/fleet/reports/zones/2026-10-26.md`), run after a zone was found purged while its manifest went on naming it. This site's zone is healthy and active, but `site.json` never recorded its id — so `fleet monitor` was handed `zone_id: null` and could not check the zone's SSL, DNS or country rules at all.
+- **What:** `site.json → cloudflare.zoneId` set to `b53ba70a35bd8a34bce106121a5497aa`, read from the Cloudflare account and verified against chumbleysdetailing.com the same day.
+- **Owed:** nothing.
+
 ## 2026-10-24 — every inquiry says where it came from
 - **What Michael asked:** "all forms are supposed to send the traffic info with the lead form info." Here the quote form opens a pre-filled email in the visitor's mail app (mailto:), so nothing about the visit reached the inbox.
 - **What:** the edge already keeps the visit's entry in the HttpOnly `ts_src` cookie; a page cannot read it, so `functions/api/visit.js` (new, site-kit's copy, with `functions/_lib/visit.js`) reads it from a same-origin GET and answers with the rows, in the words `/traffic` uses (Direct reads Direct/ChatGPT). `assets/js/lead-source.js` (site-kit's copy, loaded by `index.html`) asks for it the first time someone starts on a form, and the quote form's mailto handler carries it at the end of the email body in its short form (Source, Campaign, Referred by, Landed on, Form on, Device — not the area or the network, since the visitor sees the body before they send it), with the channel at the end of the subject. Nothing waits on it: a form sent before the answer arrives goes as it was. Nothing is stored and `/api/visit` logs nothing.

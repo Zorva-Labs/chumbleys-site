@@ -11,7 +11,7 @@
   "canonicalHost": "chumbleysdetailing.com",
   "previewHost": "chumbleys.pages.dev",
   "cloudflare": {
-    "zoneId": null,
+    "zoneId": "b53ba70a35bd8a34bce106121a5497aa",
     "d1": {
       "DB": "chumbleys-analytics"
     },
