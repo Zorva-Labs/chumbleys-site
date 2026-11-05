@@ -2,6 +2,12 @@
 
 Newest first. One entry per session that changed this repo: what changed, why, what the client asked for, what is still owed. Infrastructure changes also go in `site.json` and `CLAUDE.md`. Entries dated before 2026-09-17 are reconstructed from git history; the reasoning behind them is in `CLAUDE.md` and in `~/fleet/docs/archive`.
 
+## 2026-11-05 — Geo gate opened to Canada and the UK
+
+- **What:** `GEO_ALLOW` went from `US` to `US,CA,GB` (GB is Cloudflare's code for the UK). The middleware and the lead endpoint read it, so both opened together. The privacy page's gate sentence and the /traffic country help follow it, and the block page's title now says "Not available in your region".
+- **Why:** Michael, 2026-11-05: "open up all sites to USA, Canada and UK." It is the estate default now (rulebook rule 44).
+- **Owed:** nothing.
+
 ## 2026-10-26 — /traffic sign-in: a Show button in the password box
 
 - **What:** the password box on `/traffic` has a Show / Hide button inside its right edge, so a password typed on a phone can be read back before it is sent (traffic-kit `bin/add-show-password.mjs`, 7b52481).

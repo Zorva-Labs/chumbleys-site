@@ -561,7 +561,7 @@ function blockedPage(country) {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex">
-<title>Available in the United States</title>
+<title>Not available in your region</title>
 <style>
   *{box-sizing:border-box;margin:0}
   body{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;

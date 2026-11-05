@@ -23,7 +23,7 @@
       "TRAFFIC_AGENCY_PASSWORDS"
     ],
     "vars": {
-      "GEO_ALLOW": "US",
+      "GEO_ALLOW": "US,CA,GB",
       "CF_ZONE_ID": ""
     }
   },
@@ -60,7 +60,7 @@
     "plan": "All-In-One Domain — $57/mo $57/mo (price_1TU9mJDmvNoGaAxPqIv8DSxb), billed on the 2",
     "notes": "Stripe customer is Maddox Chumbley (Maddox Mitchell Chumbley, chumbleysdetailing@gmail.com); subscription active, anchored to the 2 (its own self-serve date, not the estate's 28th). Recorded 2026-10-11 from Michael's list; existed before the monitor."
   },
-  "geo": "US",
+  "geo": "US,CA,GB",
   "launched": "2026-04-30",
   "built": "2026-04-30",
   "updated": "2026-10-09",
