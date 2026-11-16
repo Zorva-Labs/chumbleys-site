@@ -7,7 +7,8 @@ Newest first. One entry per session that changed this repo: what changed, why, w
 - **Michael:** "for every site with a traffic page that is for a client and live. generate a traffic page password and email it to them. Do not remove any existing passwords."
 - **What:** `functions/_lib/auth.js` takes a fourth password, the Pages secret `TRAFFIC_CLIENT_PASSWORD` (the `// client-password:` blocks, from traffic-kit `bin/client-password.mjs`). Its value was generated today into `~/.env` as `CHUMBLEYS_TRAFFIC_CLIENT_PASSWORD`, named in `site.json → traffic.clientPasswordEnv`, and never goes in this repo. The site's own password (`CHUMBLEYS_TRAFFIC_PASSWORD`) and our two agency passwords are unchanged.
 - **Deployed** with `fleet deploy` so the secret binds, and checked live on https://chumbleysdetailing.com/api/traffic/auth: the client password, the site's own and both agency passwords each sign in (200); a wrong one is refused (401).
-- **Still owed:** the letter to the owner with the password (`node ~/fleet/bin/traffic-password-letter.mjs chumbleys --send`), held until Michael approves the list.
+- **Emailed** to chumbleysdetailing@gmail.com the same day, From michael@nashvilleswebdesign.com, on Michael's "send all except threestone" (`traffic-password-letter.mjs`, Gmail message 1a1e522c13f38e63): the link, the password and one line on what the page shows.
+- **Still owed:** nothing.
 
 ## 2026-11-05 — Geo gate opened to Canada and the UK
 
