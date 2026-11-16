@@ -2,6 +2,13 @@
 
 Newest first. One entry per session that changed this repo: what changed, why, what the client asked for, what is still owed. Infrastructure changes also go in `site.json` and `CLAUDE.md`. Entries dated before 2026-09-17 are reconstructed from git history; the reasoning behind them is in `CLAUDE.md` and in `~/fleet/docs/archive`.
 
+## 2026-11-16 — The client's own /traffic password
+
+- **Michael:** "for every site with a traffic page that is for a client and live. generate a traffic page password and email it to them. Do not remove any existing passwords."
+- **What:** `functions/_lib/auth.js` takes a fourth password, the Pages secret `TRAFFIC_CLIENT_PASSWORD` (the `// client-password:` blocks, from traffic-kit `bin/client-password.mjs`). Its value was generated today into `~/.env` as `CHUMBLEYS_TRAFFIC_CLIENT_PASSWORD`, named in `site.json → traffic.clientPasswordEnv`, and never goes in this repo. The site's own password (`CHUMBLEYS_TRAFFIC_PASSWORD`) and our two agency passwords are unchanged.
+- **Deployed** with `fleet deploy` so the secret binds, and checked live on https://chumbleysdetailing.com/api/traffic/auth: the client password, the site's own and both agency passwords each sign in (200); a wrong one is refused (401).
+- **Still owed:** the letter to the owner with the password (`node ~/fleet/bin/traffic-password-letter.mjs chumbleys --send`), held until Michael approves the list.
+
 ## 2026-11-05 — Geo gate opened to Canada and the UK
 
 - **What:** `GEO_ALLOW` went from `US` to `US,CA,GB` (GB is Cloudflare's code for the UK). The middleware and the lead endpoint read it, so both opened together. The privacy page's gate sentence and the /traffic country help follow it, and the block page's title now says "Not available in your region".

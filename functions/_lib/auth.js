@@ -55,6 +55,17 @@ function agencyPasswords(env) {
 }
 // agency-passwords: end
 
+// client-password: fn
+// The client's own password (Michael, 2026-11-16): TRAFFIC_CLIENT_PASSWORD, a
+// Pages secret generated for each site (<SLUG>_TRAFFIC_CLIENT_PASSWORD in
+// ~/.env) and emailed to the owner after the cutover. One per line if a site
+// ever needs two. It signs in beside the site's own and ours; the session is
+// still signed with TRAFFIC_PASSWORD.
+function clientPasswords(env) {
+  return String(env?.TRAFFIC_CLIENT_PASSWORD || '').split(/\r?\n/).map((p) => p.trim()).filter(Boolean);
+}
+// client-password: end
+
 export async function checkPassword(env, supplied) {
   const expected = env?.TRAFFIC_PASSWORD;
   // No password configured means the dashboard is closed, not open. Failing
@@ -70,6 +81,9 @@ export async function checkPassword(env, supplied) {
   // agency-passwords: call
   for (const p of agencyPasswords(env)) if (await safeEqual(supplied, p)) return true;
   // agency-passwords: end
+  // client-password: call
+  for (const p of clientPasswords(env)) if (await safeEqual(supplied, p)) return true;
+  // client-password: end
   return safeEqual(supplied, expected);
 }
 
