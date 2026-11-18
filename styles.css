@@ -30,10 +30,13 @@
   --shadow:    0 6px 0 #111;
 }
 
+/* The blue is the canvas (html); the ink is for the paper panels, which
+   inherit it from body. No text sits in ink on the blue: every heading and
+   line on it sets white or yellow (contrast fix, 2026-11-18). */
+html { background: var(--hero-blue); }
 html, body {
   margin: 0;
   padding: 0;
-  background: var(--hero-blue);
   color: var(--ink);
   font-family: 'Fredoka', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;

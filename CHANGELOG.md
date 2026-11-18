@@ -2,7 +2,15 @@
 
 Newest first. One entry per session that changed this repo: what changed, why, what the client asked for, what is still owed. Infrastructure changes also go in `site.json` and `CLAUDE.md`. Entries dated before 2026-09-17 are reconstructed from git history; the reasoning behind them is in `CLAUDE.md` and in `~/fleet/docs/archive`.
 
-## 2026-11-18 — Breadcrumbs rooted at "Gallatin Car Detailing" (not deployed)
+## 2026-11-18 — The two check failures cleared, so the breadcrumbs went live
+
+- **Asked:** Michael, 2026-11-18: "Yes, fix them". This clears the two older `site-kit check` failures that held back the breadcrumb deploy below.
+- **paymentAccepted removed:** "Cash, Credit Card, Debit Card, Venmo, Cash App" is gone from the home page's schema and from `llms.txt`. It came from the 2026-05-01 SEO pass with no recorded source, and no page showed it. `src/facts.md` still holds the `[NEED:]` for how customers pay. Once Maddox confirms it, it can go back on a page and in the schema.
+- **Contrast:** the blue moved from `html, body` to `html` alone, and `body` keeps `color: var(--ink)`. The page renders exactly as before. Checked in the browser that no text sits in ink on the blue: everything on the blue is white or yellow, and the ink text is on the paper panels. The old rule declared ink on blue, which is the pairing the check measured at 3.87:1.
+- **Deployed** with `fleet deploy chumbleys`, and IndexNow accepted 3 URLs. The check passes with two warnings that predate today: a 3-review aggregateRating, and one Review with no source.
+- **Still owed:** the payment facts, from Maddox.
+
+## 2026-11-18 — Breadcrumbs rooted at "Gallatin Car Detailing" (deployed later the same day)
 
 - **Asked:** Michael, 2026-11-18: "all sites present and future should use bread crumbs and never use Home for the homepage it should be a keyword that makes sense."
 - **What:** `about.html` and `privacy.html` gained a visible breadcrumb (`nav.crumbs`, a small paper pill under the header in the comic-panel style, CSS appended to `styles.css`) and their BreadcrumbList root changed from "Home"; the home page's JSON-LD list also reads it at position 1. The root crumb reads **Gallatin Car Detailing** in both the visible crumb and the BreadcrumbList (position 1, item the home URL). The home page, 404 and noindex pages are untouched. `site-kit check` Breadcrumbs pass. **Not deployed.**
