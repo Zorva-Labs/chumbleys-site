@@ -2,6 +2,12 @@
 
 Newest first. One entry per session that changed this repo: what changed, why, what the client asked for, what is still owed. Infrastructure changes also go in `site.json` and `CLAUDE.md`. Entries dated before 2026-09-17 are reconstructed from git history; the reasoning behind them is in `CLAUDE.md` and in `~/fleet/docs/archive`.
 
+## 2026-11-18 — Breadcrumbs rooted at "Gallatin Car Detailing" (not deployed)
+
+- **Asked:** Michael, 2026-11-18: "all sites present and future should use bread crumbs and never use Home for the homepage it should be a keyword that makes sense."
+- **What:** `about.html` and `privacy.html` gained a visible breadcrumb (`nav.crumbs`, a small paper pill under the header in the comic-panel style, CSS appended to `styles.css`) and their BreadcrumbList root changed from "Home"; the home page's JSON-LD list also reads it at position 1. The root crumb reads **Gallatin Car Detailing** in both the visible crumb and the BreadcrumbList (position 1, item the home URL). The home page, 404 and noindex pages are untouched. `site-kit check` Breadcrumbs pass. **Not deployed.**
+- **Still owed:** deploy. `site-kit check` still fails two older, unrelated items: schema `paymentAccepted` has no matching payment facts in `src/facts.md`, and `html, body` contrast is 3.87:1 (var(--ink) on var(--hero-blue)). Fix those, then build and deploy.
+
 ## 2026-11-16 — The client's own /traffic password
 
 - **Michael:** "for every site with a traffic page that is for a client and live. generate a traffic page password and email it to them. Do not remove any existing passwords."
