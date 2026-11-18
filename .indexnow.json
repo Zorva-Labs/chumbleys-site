@@ -2,13 +2,13 @@
   "host": "chumbleysdetailing.com",
   "endpoint": "https://www.bing.com/indexnow",
   "version": 2,
-  "submitted": "2026-11-18T14:57:11.774Z",
+  "submitted": "2026-11-18T16:45:59.186Z",
   "google": {
     "property": "sc-domain:chumbleysdetailing.com",
     "sitemaps": [
       "https://chumbleysdetailing.com/sitemap.xml"
     ],
-    "submitted": "2026-11-18T14:57:13.121Z"
+    "submitted": "2026-11-18T16:46:00.304Z"
   },
   "bing": {
     "site": "https://chumbleysdetailing.com/",
@@ -19,7 +19,7 @@
   },
   "urls": {
     "https://chumbleysdetailing.com/": {
-      "hash": "9f34b24e18883b22",
+      "hash": "1ae230aa335f2ae2",
       "changed": "2026-11-18"
     },
     "https://chumbleysdetailing.com/about": {
@@ -28,6 +28,262 @@
     },
     "https://chumbleysdetailing.com/privacy": {
       "hash": "fccb33b3dfb1aed7",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/mobile-detailing/": {
+      "hash": "d8eb10e224d89b04",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/interior-detailing/": {
+      "hash": "f6a28423c6b24c2b",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/exterior-detailing/": {
+      "hash": "23afe634a45c655c",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/headlight-restoration/": {
+      "hash": "9a29a876c1c33393",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/biweekly-detailing-plan/": {
+      "hash": "62e2236f88f0ceb4",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/gallatin-tn/": {
+      "hash": "99088f851ef642ce",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/cottontown-tn/": {
+      "hash": "f5f5cf9a481d1f4e",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/graball-tn/": {
+      "hash": "aab3f0802234a115",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/shackle-island-tn/": {
+      "hash": "12477a226aa04cf3",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/castalian-springs-tn/": {
+      "hash": "63b8f82d90d572e1",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/hendersonville-tn/": {
+      "hash": "bc3daee8a5ca5921",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/new-deal-tn/": {
+      "hash": "d20a263044ea7305",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/walnut-grove-tn/": {
+      "hash": "692d5e64d9e80d3a",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/bethpage-tn/": {
+      "hash": "1f4c5e4a0d23e37e",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/green-hill-tn/": {
+      "hash": "1b60cca44eba2a0b",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/white-house-tn/": {
+      "hash": "050d219a8322851c",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/mount-juliet-tn/": {
+      "hash": "ce28e6bfbae158aa",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/bransford-tn/": {
+      "hash": "5fbe4917ed4a67e9",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/goodlettsville-tn/": {
+      "hash": "76ef497812bcc636",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/millersville-tn/": {
+      "hash": "4313602c43d620e0",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/oak-grove-tn/": {
+      "hash": "6dbb1b93f11bcf52",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/lebanon-tn/": {
+      "hash": "d5ff20c7d57fe90e",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/portland-tn/": {
+      "hash": "27a5452e7ec729ef",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/cross-plains-tn/": {
+      "hash": "bb86e62816d82445",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/ridgetop-tn/": {
+      "hash": "5cb506ec3ce4339b",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/hartsville-trousdale-county-tn/": {
+      "hash": "5806ef70f787048e",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/westmoreland-tn/": {
+      "hash": "73a8ae1bf64189e7",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/fairfield-tn/": {
+      "hash": "0e3142e72cae83f0",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/mitchellville-tn/": {
+      "hash": "fb501c721536df57",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/greenbrier-tn/": {
+      "hash": "79e538df714a8f13",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/rural-hill-tn/": {
+      "hash": "c54e627fe3b3a247",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/gladeville-tn/": {
+      "hash": "5c578decc0c64c06",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/orlinda-tn/": {
+      "hash": "da9565de7ed92a04",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/tuckers-crossroads-tn/": {
+      "hash": "6edcb550b8080231",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/nashville-tn/": {
+      "hash": "1771700beb2a9d93",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/franklin-ky/": {
+      "hash": "f1ac50c437ed0122",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/springfield-tn/": {
+      "hash": "9a29b3592033dbd4",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/berry-hill-tn/": {
+      "hash": "47013e3976722938",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/la-vergne-tn/": {
+      "hash": "d0376bf2ae5b7fed",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/norene-tn/": {
+      "hash": "11d0c34fa6c75d72",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/lafayette-tn/": {
+      "hash": "d9a9db612379d26a",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/watertown-tn/": {
+      "hash": "f1f461df6ed8e3c6",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/coopertown-tn/": {
+      "hash": "8378cd3f69082ca5",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/oak-hill-tn/": {
+      "hash": "3c5c29bfb98744c1",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/smyrna-tn/": {
+      "hash": "5e80d96d016ca37d",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/scottsville-ky/": {
+      "hash": "6a134aabb75d3ce3",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/belle-meade-tn/": {
+      "hash": "1571ee36d8b625fd",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/adairville-ky/": {
+      "hash": "c58ad7f7a6dc04fd",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/forest-hills-tn/": {
+      "hash": "7ed2507386d23eb3",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/walterhill-tn/": {
+      "hash": "3c19027308736e3f",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/greenvale-tn/": {
+      "hash": "5bb5aed0878a354e",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/south-carthage-tn/": {
+      "hash": "71ea86857886e588",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/madison-tn/": {
+      "hash": "89a19849363b2327",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/old-hickory-tn/": {
+      "hash": "7c45e9b15851e7dd",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/hermitage-tn/": {
+      "hash": "6f12126e9699506d",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/donelson-tn/": {
+      "hash": "37be784ee32dfdc3",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/inglewood-tn/": {
+      "hash": "bfc6f8389bb511f5",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/east-nashville-tn/": {
+      "hash": "269697755036283d",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/antioch-tn/": {
+      "hash": "56b67006f7b4c1a2",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/whites-creek-tn/": {
+      "hash": "02ab10003f6819fe",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/joelton-tn/": {
+      "hash": "789bb8a99949d58b",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/bordeaux-tn/": {
+      "hash": "5d23e9f97a902fe4",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/green-hills-tn/": {
+      "hash": "8b1875b3a1617cbe",
+      "changed": "2026-11-18"
+    },
+    "https://chumbleysdetailing.com/service-areas/": {
+      "hash": "373410a6c3d28f75",
       "changed": "2026-11-18"
     }
   }

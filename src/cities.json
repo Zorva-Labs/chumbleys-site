@@ -1,0 +1,436 @@
+{
+  "center": {
+    "name": "Gallatin, TN",
+    "lat": 36.381524,
+    "lng": -86.467021
+  },
+  "radiusMiles": 30,
+  "generated": "2026-11-18",
+  "source": "US Census Bureau, 2024 Gazetteer of places (https://www2.census.gov/geo/docs/maps-data/data/gazetteer/2024_Gazetteer/2024_Gaz_place_national.zip); counties from the Census geocoder",
+  "note": "Communities of a consolidated metro (Donelson, Bellevue) and unincorporated places are not in this list. Add them to AREAS by hand, with lat and lng.",
+  "cities": [
+    {
+      "city": "Gallatin",
+      "state": "TN",
+      "kind": "incorporated",
+      "miles": 0,
+      "lat": 36.381524,
+      "lng": -86.467021,
+      "county": "Sumner County"
+    },
+    {
+      "city": "Cottontown",
+      "state": "TN",
+      "kind": "cdp",
+      "miles": 5.9,
+      "lat": 36.448941,
+      "lng": -86.533597,
+      "county": "Sumner County"
+    },
+    {
+      "city": "Graball",
+      "state": "TN",
+      "kind": "cdp",
+      "miles": 7.2,
+      "lat": 36.4837,
+      "lng": -86.43953,
+      "county": "Sumner County"
+    },
+    {
+      "city": "Shackle Island",
+      "state": "TN",
+      "kind": "cdp",
+      "miles": 8.3,
+      "lat": 36.377529,
+      "lng": -86.616826,
+      "county": "Sumner County"
+    },
+    {
+      "city": "Castalian Springs",
+      "state": "TN",
+      "kind": "cdp",
+      "miles": 9,
+      "lat": 36.401198,
+      "lng": -86.306778,
+      "county": "Sumner County"
+    },
+    {
+      "city": "Hendersonville",
+      "state": "TN",
+      "kind": "incorporated",
+      "miles": 9,
+      "lat": 36.307294,
+      "lng": -86.598891,
+      "county": "Sumner County"
+    },
+    {
+      "city": "New Deal",
+      "state": "TN",
+      "kind": "cdp",
+      "miles": 10.6,
+      "lat": 36.513864,
+      "lng": -86.562867,
+      "county": "Sumner County"
+    },
+    {
+      "city": "Walnut Grove",
+      "state": "TN",
+      "kind": "cdp",
+      "miles": 10.7,
+      "lat": 36.488977,
+      "lng": -86.605692,
+      "county": "Sumner County"
+    },
+    {
+      "city": "Bethpage",
+      "state": "TN",
+      "kind": "cdp",
+      "miles": 11.3,
+      "lat": 36.484267,
+      "lng": -86.308523,
+      "county": "Sumner County"
+    },
+    {
+      "city": "Green Hill",
+      "state": "TN",
+      "kind": "cdp",
+      "miles": 11.9,
+      "lat": 36.232132,
+      "lng": -86.573154,
+      "county": "Wilson County"
+    },
+    {
+      "city": "White House",
+      "state": "TN",
+      "kind": "incorporated",
+      "miles": 12.6,
+      "lat": 36.464899,
+      "lng": -86.668477,
+      "county": "Robertson County"
+    },
+    {
+      "city": "Mount Juliet",
+      "state": "TN",
+      "kind": "incorporated",
+      "miles": 12.8,
+      "lat": 36.1992,
+      "lng": -86.509489,
+      "county": "Wilson County"
+    },
+    {
+      "city": "Bransford",
+      "state": "TN",
+      "kind": "cdp",
+      "miles": 13.6,
+      "lat": 36.513296,
+      "lng": -86.285261,
+      "county": "Sumner County"
+    },
+    {
+      "city": "Goodlettsville",
+      "state": "TN",
+      "kind": "incorporated",
+      "miles": 13.6,
+      "lat": 36.33303,
+      "lng": -86.704229,
+      "county": "Sumner County"
+    },
+    {
+      "city": "Millersville",
+      "state": "TN",
+      "kind": "incorporated",
+      "miles": 13.6,
+      "lat": 36.396817,
+      "lng": -86.71105,
+      "county": "Sumner County"
+    },
+    {
+      "city": "Oak Grove",
+      "state": "TN",
+      "kind": "cdp",
+      "miles": 14.1,
+      "lat": 36.572167,
+      "lng": -86.37809,
+      "county": "Sumner County"
+    },
+    {
+      "city": "Lebanon",
+      "state": "TN",
+      "kind": "incorporated",
+      "miles": 14.3,
+      "lat": 36.199381,
+      "lng": -86.344634,
+      "county": "Wilson County"
+    },
+    {
+      "city": "Portland",
+      "state": "TN",
+      "kind": "incorporated",
+      "miles": 15.3,
+      "lat": 36.597486,
+      "lng": -86.526621,
+      "county": "Sumner County"
+    },
+    {
+      "city": "Cross Plains",
+      "state": "TN",
+      "kind": "incorporated",
+      "miles": 16,
+      "lat": 36.541247,
+      "lng": -86.676636,
+      "county": "Robertson County"
+    },
+    {
+      "city": "Ridgetop",
+      "state": "TN",
+      "kind": "incorporated",
+      "miles": 16.8,
+      "lat": 36.403749,
+      "lng": -86.767724,
+      "county": "Robertson County"
+    },
+    {
+      "city": "Hartsville/Trousdale County",
+      "state": "TN",
+      "kind": "incorporated",
+      "miles": 17.3,
+      "lat": 36.39303,
+      "lng": -86.156691,
+      "county": "Trousdale County"
+    },
+    {
+      "city": "Westmoreland",
+      "state": "TN",
+      "kind": "incorporated",
+      "miles": 17.7,
+      "lat": 36.565359,
+      "lng": -86.243956,
+      "county": "Sumner County"
+    },
+    {
+      "city": "Fairfield",
+      "state": "TN",
+      "kind": "cdp",
+      "miles": 17.9,
+      "lat": 36.620881,
+      "lng": -86.342491,
+      "county": "Sumner County"
+    },
+    {
+      "city": "Mitchellville",
+      "state": "TN",
+      "kind": "incorporated",
+      "miles": 17.9,
+      "lat": 36.634345,
+      "lng": -86.539957,
+      "county": "Sumner County"
+    },
+    {
+      "city": "Greenbrier",
+      "state": "TN",
+      "kind": "incorporated",
+      "miles": 18.2,
+      "lat": 36.421563,
+      "lng": -86.790152,
+      "county": "Robertson County"
+    },
+    {
+      "city": "Rural Hill",
+      "state": "TN",
+      "kind": "cdp",
+      "miles": 18.4,
+      "lat": 36.118287,
+      "lng": -86.51471,
+      "county": "Wilson County"
+    },
+    {
+      "city": "Gladeville",
+      "state": "TN",
+      "kind": "cdp",
+      "miles": 18.5,
+      "lat": 36.115741,
+      "lng": -86.431547,
+      "county": "Wilson County"
+    },
+    {
+      "city": "Orlinda",
+      "state": "TN",
+      "kind": "incorporated",
+      "miles": 19.6,
+      "lat": 36.593839,
+      "lng": -86.701561,
+      "county": "Robertson County"
+    },
+    {
+      "city": "Tuckers Crossroads",
+      "state": "TN",
+      "kind": "cdp",
+      "miles": 20.6,
+      "lat": 36.206622,
+      "lng": -86.167638,
+      "county": "Wilson County"
+    },
+    {
+      "city": "Nashville",
+      "state": "TN",
+      "kind": "incorporated",
+      "miles": 22.9,
+      "lat": 36.1718,
+      "lng": -86.785002,
+      "county": "Davidson County"
+    },
+    {
+      "city": "Franklin",
+      "state": "KY",
+      "kind": "incorporated",
+      "miles": 23.8,
+      "lat": 36.718029,
+      "lng": -86.557576,
+      "county": "Simpson County"
+    },
+    {
+      "city": "Springfield",
+      "state": "TN",
+      "kind": "incorporated",
+      "miles": 23.8,
+      "lat": 36.493599,
+      "lng": -86.872209,
+      "county": "Robertson County"
+    },
+    {
+      "city": "Berry Hill",
+      "state": "TN",
+      "kind": "incorporated",
+      "miles": 24.7,
+      "lat": 36.119618,
+      "lng": -86.767453,
+      "county": "Davidson County"
+    },
+    {
+      "city": "La Vergne",
+      "state": "TN",
+      "kind": "incorporated",
+      "miles": 25.4,
+      "lat": 36.022237,
+      "lng": -86.559384,
+      "county": "Rutherford County"
+    },
+    {
+      "city": "Norene",
+      "state": "TN",
+      "kind": "cdp",
+      "miles": 26,
+      "lat": 36.054061,
+      "lng": -86.238175,
+      "county": "Wilson County"
+    },
+    {
+      "city": "Lafayette",
+      "state": "TN",
+      "kind": "incorporated",
+      "miles": 26.2,
+      "lat": 36.524047,
+      "lng": -86.030593,
+      "county": "Macon County"
+    },
+    {
+      "city": "Watertown",
+      "state": "TN",
+      "kind": "incorporated",
+      "miles": 26.6,
+      "lat": 36.100677,
+      "lng": -86.13944,
+      "county": "Wilson County"
+    },
+    {
+      "city": "Coopertown",
+      "state": "TN",
+      "kind": "incorporated",
+      "miles": 27.8,
+      "lat": 36.414238,
+      "lng": -86.965786,
+      "county": "Robertson County"
+    },
+    {
+      "city": "Oak Hill",
+      "state": "TN",
+      "kind": "incorporated",
+      "miles": 28.3,
+      "lat": 36.068447,
+      "lng": -86.793127,
+      "county": "Davidson County"
+    },
+    {
+      "city": "Smyrna",
+      "state": "TN",
+      "kind": "incorporated",
+      "miles": 28.7,
+      "lat": 35.969019,
+      "lng": -86.528617,
+      "county": "Rutherford County"
+    },
+    {
+      "city": "Scottsville",
+      "state": "KY",
+      "kind": "incorporated",
+      "miles": 29.2,
+      "lat": 36.749261,
+      "lng": -86.207621,
+      "county": "Allen County"
+    },
+    {
+      "city": "Belle Meade",
+      "state": "TN",
+      "kind": "incorporated",
+      "miles": 29.2,
+      "lat": 36.099441,
+      "lng": -86.85626,
+      "county": "Davidson County"
+    },
+    {
+      "city": "Adairville",
+      "state": "KY",
+      "kind": "incorporated",
+      "miles": 29.7,
+      "lat": 36.67504,
+      "lng": -86.858204,
+      "county": "Logan County"
+    },
+    {
+      "city": "Forest Hills",
+      "state": "TN",
+      "kind": "incorporated",
+      "miles": 29.8,
+      "lat": 36.069968,
+      "lng": -86.83623,
+      "county": "Davidson County"
+    },
+    {
+      "city": "Walterhill",
+      "state": "TN",
+      "kind": "cdp",
+      "miles": 29.8,
+      "lat": 35.957291,
+      "lng": -86.367849,
+      "county": "Rutherford County"
+    },
+    {
+      "city": "Greenvale",
+      "state": "TN",
+      "kind": "cdp",
+      "miles": 29.9,
+      "lat": 36.005486,
+      "lng": -86.201211,
+      "county": "Wilson County"
+    },
+    {
+      "city": "South Carthage",
+      "state": "TN",
+      "kind": "incorporated",
+      "miles": 30,
+      "lat": 36.239702,
+      "lng": -85.957462,
+      "county": "Smith County"
+    }
+  ]
+}

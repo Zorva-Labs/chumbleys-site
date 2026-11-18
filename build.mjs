@@ -60,6 +60,33 @@ const copyDir = (rel) => {
 for (const d of DIRS) copyDir(d);
 console.log(`  dist/ built: ${n} files`);
 
+/* The generated pages (seo-standards §19, 2026-11-18): a page per service, a
+   page per place within 30 miles of Gallatin, and /service-areas/ — from
+   src/data.mjs, src/content/ and the chrome of about.html (src/pages.mjs).
+   They join the sitemap here, before lastmod dates it, and llms.txt's
+   "Service area" section is rewritten in dist/ to link every one. A roster
+   place or a service with no copy stops the build. */
+{
+  const { buildPages, pageIndex, homeAreas } = await import('./src/pages.mjs');
+  const { written, missing } = buildPages(OUT);
+  if (missing.length && !process.env.DRAFT) { console.error(`  ✗ no copy for: ${missing.join(', ')}`); process.exit(1); }
+  const idx = pageIndex();
+  const sm = path.join(OUT, 'sitemap.xml');
+  const urls = written.map((u) => `  <url>\n    <loc>https://chumbleysdetailing.com${u}</loc>\n    <changefreq>monthly</changefreq>\n    <priority>${u === '/service-areas/' || idx.services.some((s) => s.url.endsWith(u)) ? '0.8' : '0.6'}</priority>\n  </url>\n`).join('');
+  fs.writeFileSync(sm, fs.readFileSync(sm, 'utf8').replace('</urlset>', `${urls}</urlset>`));
+  const llms = path.join(OUT, 'llms.txt');
+  const section = `## Service pages\n\n${idx.services.map((s) => `- [${s.name}](${s.url}): ${s.blurb}`).join('\n')}\n\n## Service area\n\nThe business lists Gallatin, Hendersonville, Goodlettsville, Castalian Springs, Bethpage and Madison (most of Sumner County and the north side of Davidson County, TN). Every place within 30 miles of Gallatin has a page: [${idx.hub}](${idx.hub})\n\n${idx.places.map((p) => `- [${p.name}](${p.url}) (${p.county})`).join('\n')}\n\n`;
+  const t = fs.readFileSync(llms, 'utf8');
+  if (!/## Service area\n[\s\S]*?\n## /.test(t)) { console.error('  ✗ llms.txt has no "## Service area" section to rewrite'); process.exit(1); }
+  fs.writeFileSync(llms, t.replace(/## Service area\n[\s\S]*?\n(?=## )/, section));
+  const home = path.join(OUT, 'index.html');
+  const h = fs.readFileSync(home, 'utf8');
+  const re = /(<!-- areas:start[^>]*-->)[\s\S]*?(<!-- areas:end -->)/;
+  if (!re.test(h)) { console.error('  ✗ index.html has no areas markers'); process.exit(1); }
+  fs.writeFileSync(home, h.replace(re, (m, a, b) => `${a}\n${homeAreas()}\n${b}`));
+  console.log(`  generated pages: ${written.length} (services, places, /service-areas/)`);
+}
+
 /* Every local file a page, stylesheet or manifest names should be in dist/ —
    one left off the list is a broken page — so any that is not gets named.
    Function routes (the folders and files in functions/) are not files. */

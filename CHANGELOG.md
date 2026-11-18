@@ -2,6 +2,35 @@
 
 Newest first. One entry per session that changed this repo: what changed, why, what the client asked for, what is still owed. Infrastructure changes also go in `site.json` and `CLAUDE.md`. Entries dated before 2026-09-17 are reconstructed from git history; the reasoning behind them is in `CLAUDE.md` and in `~/fleet/docs/archive`.
 
+## 2026-11-18 — A page per service and a page per place within 30 miles of Gallatin
+
+- **Asked:** the estate rule from Michael, 2026-11-07, that every site with a service area gets a page per city within 30 miles and a page per service (`~/fleet/docs/seo-standards.md` §19). The site already says "we come to you", so the business is mobile and the rule applies.
+- **What:** 64 new pages, all live and submitted:
+  - 5 service pages: `/mobile-detailing/`, `/interior-detailing/`, `/exterior-detailing/`, `/headlight-restoration/` and `/biweekly-detailing-plan/`.
+  - 58 place pages at `/<city>-<st>/`. 47 are the Census places within 30 miles of Gallatin, from `site-kit cities` (`src/cities.json`), three of them in Kentucky (Franklin, Scottsville, Adairville). The other 11 are Metro Nashville communities, each taken by its ZIP area: Madison, Old Hickory, Hermitage, Donelson, Inglewood, East Nashville, Antioch, Whites Creek, Joelton, Bordeaux and Green Hills.
+  - The hub `/service-areas/`, which names all 58.
+- **How it is built:**
+  - `src/pages.mjs` generates every new page into `dist/`; `build.mjs` calls it. It takes the structure from `src/data.mjs`, the words from `src/content/services.mjs` and `areas-1…4.mjs`, and the figures from `src/content/places.json` (`scripts/place-facts.mjs`, ACS 2020–2024 5-year).
+  - The head, header and footer come from `about.html`.
+  - Each page has a visible breadcrumb and a BreadcrumbList, a TL;DR, three question-headed sections, a fact card that cites the Census figures, the six nearest places, the service links, four FAQs (FAQPage written from the page) and the call to action.
+  - The home page gained a "WHERE MADDOX DRIVES" section grouped by county; the build writes it between the `areas:` markers. The nav and footer gained an Areas link, and each service card gained a link to its page.
+  - The build also adds the new pages to the sitemap and the place list to `llms.txt`. `site.json` gained `serviceArea` and `build.check`.
+- **Words:** written on Opus, from `src/facts.md` and the place's own figures only. There are no named roads, landmarks, jobs or customers. The six towns the business itself lists are called "on the list". Every other place says it is off the list and that a call or text settles whether the drive works. Nothing promises travel.
+- **Checked:**
+  - `site-kit check` passes. Its four remaining warnings predate this work: the CSP's unsafe-inline, the 3-review aggregateRating, the unsourced Review, and the 13 `[NEED:]` facts.
+  - The shared-sentence, TL;DR, chunk and title checks are clean, and `fleet audit` shows nothing new for this site.
+  - In the browser at 375 and 1024: no horizontal overflow, and every link is at least 44 px tall.
+  - Live: all 67 sitemap URLs answer 200.
+  - IndexNow accepted 65 URLs, and the sitemap was resubmitted to Search Console and Bing.
+  - `service-area.mjs` shows chumbleys with no gaps.
+- **Doubts the writers flagged, worded carefully on the pages:**
+  - Hartsville's population includes people not living in households.
+  - White House reaches into Sumner County.
+  - Goodlettsville straddles two counties, and its page says so.
+  - Walterhill, Tuckers Crossroads, Norene, Greenvale, Mitchellville, New Deal and Graball rest on small samples, so their pages say "about" and "the estimate".
+  - Bransford's census place records no residents, and its page says so.
+- **Still owed:** from Maddox: whether he drives into Kentucky and how far he travels outside the six listed towns. Once he says, the off-list pages can say it, and `site.json → serviceArea` can name the states. The smallest places' pages are thin by nature and should gain a line of their own once he has done a job there.
+
 ## 2026-11-18 — The two check failures cleared, so the breadcrumbs went live
 
 - **Asked:** Michael, 2026-11-18: "Yes, fix them". This clears the two older `site-kit check` failures that held back the breadcrumb deploy below.

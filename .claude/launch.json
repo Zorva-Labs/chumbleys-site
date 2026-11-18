@@ -12,6 +12,18 @@
         "."
       ],
       "port": 4104
+    },
+    {
+      "name": "chumbleys-dist",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "4117",
+        "--directory",
+        "dist"
+      ],
+      "port": 4117
     }
   ]
 }
